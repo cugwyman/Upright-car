@@ -7,7 +7,7 @@
 
   <Targets>
     <Target>
-      <TargetName>MMA&amp;ENC</TargetName>
+      <TargetName>Freescale Up-Right Car</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
       <pCCUsed>5060061::V5.06 update 1 (build 61)::ARMCC</pCCUsed>
@@ -125,47 +125,6 @@
             <HexOffset>0</HexOffset>
             <Oh166RecLen>16</Oh166RecLen>
           </OPTHX>
-          <Simulator>
-            <UseSimulator>0</UseSimulator>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>1</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Simulator>
-          <Target>
-            <UseTarget>1</UseTarget>
-            <LoadApplicationAtStartup>1</LoadApplicationAtStartup>
-            <RunToMain>1</RunToMain>
-            <RestoreBreakpoints>1</RestoreBreakpoints>
-            <RestoreWatchpoints>1</RestoreWatchpoints>
-            <RestoreMemoryDisplay>1</RestoreMemoryDisplay>
-            <RestoreFunctions>0</RestoreFunctions>
-            <RestoreToolbox>1</RestoreToolbox>
-            <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
-          </Target>
-          <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>6</TargetSelection>
-          <SimDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
-          </SimDlls>
-          <TargetDlls>
-            <CpuDll></CpuDll>
-            <CpuDllArguments></CpuDllArguments>
-            <PeripheralDll></PeripheralDll>
-            <PeripheralDllArguments></PeripheralDllArguments>
-            <InitializationFile></InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
-          </TargetDlls>
         </DebugOption>
         <Utilities>
           <Flash1>
@@ -173,12 +132,12 @@
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
-            <Capability>0</Capability>
-            <DriverSelection>-1</DriverSelection>
+            <Capability>1</Capability>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -369,6 +328,9 @@
             <v6LangP>0</v6LangP>
             <vShortEn>0</vShortEn>
             <vShortWch>0</vShortWch>
+            <v6Lto>0</v6Lto>
+            <v6WtE>0</v6WtE>
+            <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define>MK60D10</Define>
@@ -386,6 +348,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
+            <uClangAs>0</uClangAs>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -466,6 +429,11 @@
               <FileType>1</FileType>
               <FilePath>.\Libraries\drivers\K\src\uart.c</FilePath>
             </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Libraries\drivers\K\src\i2c.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -476,6 +444,11 @@
               <FileType>1</FileType>
               <FilePath>.\Libraries\devices\src\VisualScope.c</FilePath>
             </File>
+            <File>
+              <FileName>LQ12864.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Libraries\devices\src\LQ12864.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -485,16 +458,6 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\src\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>ftmQD.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\src\ftmQD.c</FilePath>
-            </File>
-            <File>
-              <FileName>uart_normal.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\src\uart_normal.c</FilePath>
             </File>
             <File>
               <FileName>System.c</FileName>
@@ -531,6 +494,26 @@
               <FileType>1</FileType>
               <FilePath>.\User\src\Direction.c</FilePath>
             </File>
+            <File>
+              <FileName>ImgProc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\src\ImgProc.c</FilePath>
+            </File>
+            <File>
+              <FileName>TrackIdentify.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\src\TrackIdentify.c</FilePath>
+            </File>
+            <File>
+              <FileName>Display.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\src\Display.c</FilePath>
+            </File>
+            <File>
+              <FileName>Uarts.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\src\Uarts.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -551,10 +534,21 @@
               <FileType>5</FileType>
               <FilePath>.\Documents\ReadMe.txt</FilePath>
             </File>
+            <File>
+              <FileName>TypeDef.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\User\inc\TypeDef.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
     </Target>
   </Targets>
+
+  <RTE>
+    <apis/>
+    <components/>
+    <files/>
+  </RTE>
 
 </Project>

@@ -1,5 +1,6 @@
 #include "VisualScope.h"
 #include "uart.h"
+#include "PinMap.h"
 
 unsigned short CRC_CHECK(unsigned char *Buf, unsigned char CRC_CNT)
 {
@@ -49,7 +50,7 @@ void VisualScope_Output(float data1 ,float data2 ,float data3 ,float data4)
   databuf[9] = CRC16/256;
   for(i=0;i<10;i++)
   {
-		UART_WriteByte(HW_UART0, databuf[i]);
+		UART_WriteByte( DATACOMM_VISUALSCOPE_CHL, databuf[i]);
 	}
 }
 
