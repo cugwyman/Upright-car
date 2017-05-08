@@ -16,11 +16,5 @@ typedef struct PID_speed_mode {
 }
 mode;
 
-/* 状态机定义 */
-typedef enum
-{
-    TRANSFER_IN_PROCESS, //数据在处理
-    NEXT_FRAME,          //下一帧数据
-}OV7620_Status;
 
 #endif

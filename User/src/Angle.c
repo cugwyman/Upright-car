@@ -1,10 +1,10 @@
 #include "Angle.h"
 
 float Kal_Gyro;
-int32_t gyro;
+float gyro;
 int32_t mmax, mmaz;
-int32_t angleMma;
-int32_t angle, angleSpeed;
+float angleMma;
+float angle, angleSpeed;
 float Angle_Kalman;
 float angleSpeedIntegral;
 
@@ -84,11 +84,11 @@ int32_t AngleProc(void) {
 	angleSpeedIntegral += angleSpeed * 0.005;
     Angle_Kalman = KalmanFilter(angle, angleSpeed);
     
-    if( Angle_Kalman > 360 ){
-        Angle_Kalman = 360;
+    if( Angle_Kalman > 370.0 ){
+        Angle_Kalman = 370.0;
     }
-    else if( Angle_Kalman < 80 ){
-        Angle_Kalman = 80;
+    else if( Angle_Kalman < 100.0 ){
+        Angle_Kalman = 100.0;
     }
 
     return -AnglePID(AC_Set, Angle_Kalman);//暂且取相反数

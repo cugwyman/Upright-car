@@ -1,14 +1,18 @@
 #ifndef _IMGPROC_H
 #define _IMGPROC_H
 
-#include "Root.h"
-#include "Uarts.h"
-#include "dma.h"
-#include "TrackIdentify.h"
+#define IMGPROC
+
+#include "root.h"
 
 void ImgProcInit(void);
 
-extern uint8_t imgBuf[OV7725_H][OV7725_W];
+extern uint8_t imgBuf[IMG_ROW][IMG_COL];
 extern uint16_t imgProcFlag;
+extern uint16_t StopFlagAnalyze;
+extern uint16_t StopFlag;
+
+extern float time;
 
 #endif
+

@@ -109,8 +109,8 @@ void MainProcess(void)
 //							}
 //							else
 //							{
-								Left_Out = AC_Out - VC_Out + DC_Out;
-								Right_Out = AC_Out - VC_Out - DC_Out;
+								Left_Out = AC_Out - VC_Out - DC_Out;
+								Right_Out = AC_Out - VC_Out + DC_Out;
 
 								MotorOut(Left_Out, Right_Out);
 //            MotorOut(6600, 6600);//zuoyoubutong
@@ -126,39 +126,10 @@ void MainProcess(void)
     #endif /* SINGLE_VC */
 }
 
-int SCCB_Init(uint32_t I2C_MAP)
-{
-    int r;
-    uint32_t instance;
-		
-    instance = I2C_QuickInit(I2C1_SCL_PE01_SDA_PE00, 50*1000);
-    r = ov7725_probe(instance);
-    if(r)
-    {
-        return 1;
-    }
-    r = ov7725_set_image_size(IMAGE_SIZE);
-    if(r)
-    {
-        printf("OV7725 set image error\r\n");
-        return 1;
-    }
-    return 0;
-}
-
-
-///*0-3级，抢占最大，0比1高，越小越高*/
-//void NVICInit() {
-//    NVIC_SetPriorityGrouping(NVIC_PriorityGroup_3);
-//		NVIC_SetPriority(DMA2_IRQn, NVIC_EncodePriority(NVIC_PriorityGroup_3, 1, 2));
-//    NVIC_SetPriority(VSYN_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_3, 3, 2));
-//    NVIC_SetPriority(TIMR_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_3, 2, 2));
-//}
-
 /*0-3级，抢占最大，0比1高，越小越高*/
 void NVICInit() {
     NVIC_SetPriorityGrouping(NVIC_PriorityGroup_2);
-    NVIC_SetPriority(DMA2_IRQn, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 0));
+    NVIC_SetPriority(HREF_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 0));
     NVIC_SetPriority(VSYN_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 1));
     NVIC_SetPriority(TIMR_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 1, 0));
 }
@@ -166,19 +137,22 @@ void NVICInit() {
 void TimerInit() {
     PIT_QuickInit(PIT_CHL, PIT_PRD);
     PIT_CallbackInstall(PIT_CHL, MainProcess);
-    PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, ENABLE);
+    PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, DISABLE);
 }
 
 void GeneralInit(void) {
     DelayInit();
-    NVICInit();
     GearInit();
-        UartInit();
+    UartInit();
     MotorInit();
-    CollectInit();
+    CollectInit();  
     EncoderInit();
-    TimerInit();
-    SCCB_Init(I2C1_SCL_PE01_SDA_PE00);
-    ImgProcInit();
 //    DisplayInit();
+    NVICInit();
+    TimerInit();
+    ImgProcInit();
+    PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, ENABLE);
+    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
+    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
 }
+

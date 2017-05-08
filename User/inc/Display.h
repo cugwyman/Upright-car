@@ -5,6 +5,7 @@
 
 #include "i2c.h"
 
+#include "LQ12864.h"
 
 void DisplayInit(void);
 void DisTest(void);

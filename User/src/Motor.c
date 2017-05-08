@@ -16,7 +16,7 @@ void MotorInit(void) {
  * @param[in]  LEFT_MOTOR_OUT  左电机输出, 符号决定正倒转
  * \param[in]  RIGHT_MOTOR_OUT 右电机输出, 符号决定正倒转
  */
-void MotorOut(int16_t LEFT_MOTOR_OUT, int16_t RIGHT_MOTOR_OUT) {
+void MotorOut(int32_t LEFT_MOTOR_OUT, int32_t RIGHT_MOTOR_OUT) {
     if( LEFT_MOTOR_OUT > MOTOR_OUT_MAX ){
         LEFT_MOTOR_OUT = MOTOR_OUT_MAX;
     }

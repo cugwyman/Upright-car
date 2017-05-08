@@ -7,7 +7,7 @@
 #include "Root.h"
 
 void MotorInit(void);
-void MotorOut(int16_t LEFT_MOTOR_OUT, int16_t RIGHT_MOTOR_OUT);
+void MotorOut(int32_t LEFT_MOTOR_OUT, int32_t RIGHT_MOTOR_OUT);
 
 
 #endif

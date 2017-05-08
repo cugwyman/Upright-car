@@ -11,9 +11,9 @@
 #define C_0         1
 
 extern float Kal_Gyro;
-extern int32_t gyro;
+extern float gyro;
 extern int32_t mmax, mmaz;
-extern int32_t angle, angleSpeed;
+extern float angle, angleSpeed;
 extern float Angle_Kalman;
 extern float angleSpeedIntegral;
 
