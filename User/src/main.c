@@ -17,9 +17,9 @@ int main(void)
     GeneralInit();
     while(1)
     {
-//        ImgTrans3(imgBuf);
-      VisualScope_Output( angleSpeed , dirAngleSpeed , Angle_Kalman ,  DC_Out );//lianhe
-			DelayMs(5);
+//				ImgTrans3(imgBuf);
+//      VisualScope_Output( angleSpeed , dirAngleSpeed , Angle_Kalman ,  DC_Out );//lianhe
+//		DelayMs(5);
 
 //        DisTest();
 

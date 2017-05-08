@@ -148,7 +148,7 @@ bool LeftBorderSearch(int16_t row) {
 
 bool LeftBorderSearchInRange(int16_t row, int16_t startIndex) {
     for(int16_t j = startIndex; j >= 0; --j) {
-        if(imgBuf[row][j] && !imgBuf[row][j+1]) {
+        if(!imgBuf[row][j] && imgBuf[row][j+1]) {
             LeftEdge[row] = j;
             return true;
         }
@@ -171,7 +171,7 @@ bool RightBorderSearch(int16_t row) {
 
 bool RightBorderSearchInRange(int16_t row, int16_t startIndex) {
     for(int16_t j = startIndex; j < IMG_COL - 1; ++j) {
-        if(!imgBuf[row][j] && imgBuf[row][j+1]) {
+        if(imgBuf[row][j] && !imgBuf[row][j+1]) {
             RightEdge[row] = j;
             return true;       //return后便不再执行
         }
@@ -182,11 +182,11 @@ bool RightBorderSearchInRange(int16_t row, int16_t startIndex) {
 
 
 void MiddleLineUpdate(int16_t row) {
-//  if(imgProcFlag == CIRCLE)
-//	{
-//		MidLine[row] = RightEdge[row] - 65;
-//	}
-//	else
+    if(imgProcFlag == CIRCLE)
+	{
+		MidLine[row] = RightEdge[row] - 80;
+	}
+	else
 	{
     MidLine[row] = (LeftEdge[row] + RightEdge[row]) / 2;
 	}

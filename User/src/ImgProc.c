@@ -30,14 +30,14 @@ uint16_t ImgProcAnalyze(uint8_t imgBuf[IMG_ROW][IMG_COL]) {
 	static uint16_t ZebraFlag;
 	ImgProcFlag = 0 ;
 	/*circle identify start*/
-//  for(i=20;i<IMG_ROW;i++)
-//	{
-//		if(((imgBuf[i][IMG_MIDPOINT]&imgBuf[i+1][IMG_MIDPOINT]&imgBuf[i+2][IMG_MIDPOINT]&imgBuf[i+3][IMG_MIDPOINT]&imgBuf[i+4][IMG_MIDPOINT]) == 1) && (RightEdge[i-1] - LeftEdge[i-1] > 220) && (RightEdge[i-2] - LeftEdge[i-2] > 220) && (RightEdge[i-3] - LeftEdge[i-3] > 220))
-//		{
-//			ImgProcFlag = CIRCLE ;
-//			break;
-//		}
-//	}
+  for(i=20;i<IMG_ROW;i++)
+	{
+		if(((imgBuf[i][IMG_MIDPOINT]|imgBuf[i+1][IMG_MIDPOINT]|imgBuf[i+2][IMG_MIDPOINT]|imgBuf[i+3][IMG_MIDPOINT]|imgBuf[i+4][IMG_MIDPOINT]) ==0) && (RightEdge[i-1] - LeftEdge[i-1] > 220) && (RightEdge[i-2] - LeftEdge[i-2] > 220) && (RightEdge[i-3] - LeftEdge[i-3] > 220))
+		{
+			ImgProcFlag = CIRCLE ;
+			break;
+		}
+	}
 	
 	/*circle identify end*/
 	

@@ -12,9 +12,9 @@ void ImgTrans(uint8_t imgBuf[IMG_ROW][IMG_COL]) {
 		for(j = 0; j < IMG_COL; j++)
 		{
 			if(imgBuf[i][j])
-				UART_WriteByte(DATACOMM_IMG_TRANS_CHL, IMG_BLACK);
-			else
 				UART_WriteByte(DATACOMM_IMG_TRANS_CHL, IMG_WHITE);
+			else
+				UART_WriteByte(DATACOMM_IMG_TRANS_CHL, IMG_BLACK);
 		}
 	}
 	UART_WriteByte(DATACOMM_IMG_TRANS_CHL, IMG_FRAME_FIN);
@@ -32,9 +32,9 @@ void ImgTrans2(uint8_t imgBuf[IMG_ROW][IMG_COL])
 			else 
 					{
 						if(imgBuf[i][j]==0x00)	
-							UART_WriteByte(HW_UART0,IMG_WHITE);
-						else
 							UART_WriteByte(HW_UART0,0xa0);
+						else
+							UART_WriteByte(HW_UART0,IMG_WHITE);
 					}
 		}						
 	}
@@ -63,9 +63,9 @@ void ImgTrans3(uint8_t imgBuf[IMG_ROW][IMG_COL])
 			else 
 					{
 						if(imgBuf[i][j]==0x00)	
-							UART_WriteByte(HW_UART0,IMG_WHITE);
+							UART_WriteByte(HW_UART0,IMG_BLACK);
 						else
-							UART_WriteByte(HW_UART0,0x00);
+							UART_WriteByte(HW_UART0,IMG_WHITE);
 					}
 		}						
 	}

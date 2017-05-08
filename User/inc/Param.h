@@ -59,7 +59,7 @@
 #define TURN_FLAG	       200
 
 /* 角度和速度设定目标 */
-#define AC_Set              260//156//170zero,小往后
+#define AC_Set              228//156//170zero,小往后
 //#define VSET_GEAR4          40
 //#define VSET_GEAR3          37
 //#define VSET_GEAR2          34

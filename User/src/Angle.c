@@ -87,8 +87,8 @@ int32_t AngleProc(void) {
     if( Angle_Kalman > 370 ){
         Angle_Kalman = 370;
     }
-    else if( Angle_Kalman < 120 ){
-        Angle_Kalman = 120;
+    else if( Angle_Kalman < 150 ){
+        Angle_Kalman = 150;
     }
 
     return -AnglePID(AC_Set, Angle_Kalman);//暂且取相反数

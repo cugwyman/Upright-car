@@ -109,8 +109,8 @@ void MainProcess(void)
 //							}
 //							else
 //							{
-								Left_Out = AC_Out - VC_Out + DC_Out;
-								Right_Out = AC_Out - VC_Out - DC_Out;
+								Left_Out = AC_Out - VC_Out - DC_Out;
+								Right_Out = AC_Out - VC_Out + DC_Out;
 
 								MotorOut(Left_Out, Right_Out);
 //            MotorOut(6600, 6600);//zuoyoubutong

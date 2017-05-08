@@ -30,20 +30,20 @@ void GearInit(void)
 
 void Mode3(void)//大漂
 {
-    MODE.VC_Set = 49;
-    MODE.foresight = 32;
+    MODE.VC_Set = 55;
+    MODE.foresight = 27;
     
-    MODE.DC_PID_P_COEF = 76;
-    MODE.DC_P_MIN = 800;
-    MODE.DC_P_MAX = 2500;
-    MODE.DC_PID_D = 3;
-    MODE.DC_Out_MAX = 2800;
+    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_P_MIN = 600;
+    MODE.DC_P_MAX = 2000;
+    MODE.DC_PID_D = 2.7;
+    MODE.DC_Out_MAX = 2500;
 }
     
 void Mode2(void)//小漂
 {
-    MODE.VC_Set = 45;
-    MODE.foresight = 29;
+    MODE.VC_Set = 63;
+    MODE.foresight = 30;
     
     MODE.DC_PID_P_COEF = 74;
     MODE.DC_P_MIN = 800;
@@ -54,26 +54,26 @@ void Mode2(void)//小漂
 
 void Mode1(void)
 {
-    MODE.VC_Set = 38;
-    MODE.foresight = 27;
+    MODE.VC_Set = 53;
+    MODE.foresight = 25;
     
-    MODE.DC_PID_P_COEF = 70;
-    MODE.DC_P_MIN = 800;
-    MODE.DC_P_MAX = 2200;
-    MODE.DC_PID_D = 2.8;
+    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_P_MIN = 600;
+    MODE.DC_P_MAX = 2000;
+    MODE.DC_PID_D = 2.7;
     MODE.DC_Out_MAX = 2500;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set = 33;
-    MODE.foresight = 24;
+    MODE.VC_Set = 45;
+    MODE.foresight = 25;
     
-    MODE.DC_PID_P_COEF = 68;
-    MODE.DC_P_MIN = 800;
-    MODE.DC_P_MAX = 2100;
+    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_P_MIN = 600;
+    MODE.DC_P_MAX = 2000;
     MODE.DC_PID_D = 2.7;
-    MODE.DC_Out_MAX = 2400;
+    MODE.DC_Out_MAX = 2500;
 }
     
     
