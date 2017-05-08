@@ -4,15 +4,12 @@
 #define UARTS
 
 #include "uart.h"
-#include "root.h"
-#include "TrackIdentify.h"
-extern mode MODE;
+#include "Root.h"
 
 void UartInit(void);
-void ImgTrans(uint8_t imgBuf[IMG_ROW][IMG_COL]);
-void ImgTrans2(uint8_t imgBuf[IMG_ROW][IMG_COL]);
-void ImgTrans3(uint8_t imgBuf[IMG_ROW][IMG_COL]);
+void vcan_sendimg(uint8_t *imgaddr, uint32_t imgsize);
+void uart_putbuff (uint8_t *buff, uint32_t len);
+void ImgTrans(void);
+#include "TrackIdentify.h"
 
 #endif
-
-

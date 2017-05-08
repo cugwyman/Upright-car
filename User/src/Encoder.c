@@ -25,8 +25,8 @@ int32_t EncoderGet(void) {
     
 //    VisualScope_Output( leftSpeed , rightSpeed , 0 ,  0);//lianhe
 
-//    rightSpeed = -rightSpeed;
-        leftSpeed = -leftSpeed;
+    rightSpeed = -rightSpeed;
+//        leftSpeed = -leftSpeed;
 
 	return (leftSpeed + rightSpeed) / 2;
 }

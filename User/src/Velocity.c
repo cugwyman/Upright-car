@@ -15,65 +15,77 @@ int16_t VC_Min;
 void GearInit(void)
 {
     MODE.VC_Set = 0;
-//    GPIO_QuickInit(DIP_PORT, DIP1_PIN, kGPIO_Mode_IPU);
+    GPIO_QuickInit(DIP_PORT, DIP1_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP2_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP3_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP4_PIN, kGPIO_Mode_IPU);
-    if     ( !GPIO_ReadBit(DIP_PORT,DIP4_PIN) ) { Mode3();}
-    else if( !GPIO_ReadBit(DIP_PORT,DIP3_PIN) ) { Mode2();}
-    else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode1();}
-//    else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { MODE.VC_Set = VSET_GEAR1; }
+    if     ( !GPIO_ReadBit(DIP_PORT,DIP4_PIN) ) { Mode4();}
+    else if( !GPIO_ReadBit(DIP_PORT,DIP3_PIN) ) { Mode3();}
+    else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode2();}
+    else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { Mode1();}
     else                                        { Mode0();}
 	VC_Max = MODE.VC_Set;
 	VC_Min = MODE.VC_Set * 3 / 4;
 }
 
+void Mode4(void)//大漂
+{
+    MODE.VC_Set = 45;
+    MODE.foresight = 32;
+    
+    MODE.DC_PID_P_COEF = 76;
+    MODE.DC_P_MIN = 800;
+    MODE.DC_P_MAX = 2500;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 2800;
+}
+
 void Mode3(void)//大漂
 {
-    MODE.VC_Set = 55;
-    MODE.foresight = 27;
+    MODE.VC_Set = 30;
+    MODE.foresight = 10;
     
-    MODE.DC_PID_P_COEF = 66;
-    MODE.DC_P_MIN = 600;
-    MODE.DC_P_MAX = 2000;
-    MODE.DC_PID_D = 2.7;
-    MODE.DC_Out_MAX = 2500;
+    MODE.DC_PID_P_COEF = 26;
+    MODE.DC_P_MIN = 100;
+    MODE.DC_P_MAX = 1000;
+    MODE.DC_PID_D = 1;
+    MODE.DC_Out_MAX = 2800;
 }
     
 void Mode2(void)//小漂
 {
-    MODE.VC_Set = 63;
-    MODE.foresight = 30;
+    MODE.VC_Set = 10;
+    MODE.foresight = 14;
     
-    MODE.DC_PID_P_COEF = 74;
+    MODE.DC_PID_P_COEF = 76;
     MODE.DC_P_MIN = 800;
-    MODE.DC_P_MAX = 2400;
-    MODE.DC_PID_D = 2.9;
-    MODE.DC_Out_MAX = 2700;
+    MODE.DC_P_MAX = 2500;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 2800;
 }
 
 void Mode1(void)
 {
-    MODE.VC_Set = 53;
-    MODE.foresight = 25;
+    MODE.VC_Set = 0;
+    MODE.foresight = 12;
     
-    MODE.DC_PID_P_COEF = 66;
-    MODE.DC_P_MIN = 600;
-    MODE.DC_P_MAX = 2000;
-    MODE.DC_PID_D = 2.7;
-    MODE.DC_Out_MAX = 2500;
+    MODE.DC_PID_P_COEF = 76;
+    MODE.DC_P_MIN = 800;
+    MODE.DC_P_MAX = 2500;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 2800;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set = 45;
-    MODE.foresight = 25;
+    MODE.VC_Set = 1;
+    MODE.foresight = 24;
     
-    MODE.DC_PID_P_COEF = 66;
-    MODE.DC_P_MIN = 600;
-    MODE.DC_P_MAX = 2000;
-    MODE.DC_PID_D = 2.7;
-    MODE.DC_Out_MAX = 2500;
+    MODE.DC_PID_P_COEF = 20;
+    MODE.DC_P_MIN = 50;
+    MODE.DC_P_MAX = 300;
+    MODE.DC_PID_D = 1.7;
+    MODE.DC_Out_MAX = 2400;
 }
     
     

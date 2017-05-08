@@ -19,9 +19,9 @@ bool RightBorderSearch(int16_t row);
 bool RightBorderSearchInRange(int16_t row, int16_t startIndex);
 void MiddleLineUpdate(int16_t row);
 
-extern uint16_t LeftEdge[IMG_ROW];
-extern uint16_t RightEdge[IMG_ROW];
-extern uint16_t MidLine[IMG_ROW];
+extern uint16_t LeftEdge[OV7725_H];
+extern uint16_t RightEdge[OV7725_H];
+extern uint16_t MidLine[OV7725_H];
 extern  bool LeftFlag,RightFlag;
 extern mode MODE;
 

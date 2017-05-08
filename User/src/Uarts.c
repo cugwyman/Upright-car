@@ -1,75 +1,43 @@
 #include "Uarts.h"
-//mode MODE;
 
 void UartInit(void) {
-    UART_QuickInit(UART0_RX_PB16_TX_PB17, 115200);
+     UART_QuickInit(UART4_RX_PE25_TX_PE24, 115200);
+//			printf("aaaa");
 }
 
-void ImgTrans(uint8_t imgBuf[IMG_ROW][IMG_COL]) {
-    int16_t i, j;
-	for(i = IMG_ROW - 1; i >= 0; i--)
-	{
-		for(j = 0; j < IMG_COL; j++)
-		{
-			if(imgBuf[i][j])
-				UART_WriteByte(DATACOMM_IMG_TRANS_CHL, IMG_WHITE);
-			else
-				UART_WriteByte(DATACOMM_IMG_TRANS_CHL, IMG_BLACK);
-		}
-	}
-	UART_WriteByte(DATACOMM_IMG_TRANS_CHL, IMG_FRAME_FIN);
-}
-
-void ImgTrans2(uint8_t imgBuf[IMG_ROW][IMG_COL])
+void uart_putbuff (uint8_t *buff, uint32_t len)
 {
-	int i,j;
-	for(i=IMG_ROW-1;i>=0;i--)
-	{
-		for(j=0;j<=IMG_COL-1;j++)
-		{
-			if((j==LeftEdge[i])||(j==RightEdge[i])||(j==MidLine[i]))
-				UART_WriteByte(DATACOMM_IMG_TRANS_CHL,0x00);
-			else 
-					{
-						if(imgBuf[i][j]==0x00)	
-							UART_WriteByte(HW_UART0,0xa0);
-						else
-							UART_WriteByte(HW_UART0,IMG_WHITE);
-					}
-		}						
-	}
-	UART_WriteByte(DATACOMM_IMG_TRANS_CHL,IMG_FRAME_FIN);
+    while(len--)
+    {
+			  UART_WriteByte(HW_UART4,0x00|(*buff));
+        buff++;
+    }
 }
 
-void ImgTrans3(uint8_t imgBuf[IMG_ROW][IMG_COL])
+void vcan_sendimg(uint8_t *imgaddr, uint32_t imgsize)
 {
-	int i,j;
-	for(i=IMG_ROW-1;i>=0;i--)
+#define CMD_IMG     1
+    uint8_t cmdf[2] = {0x01, 0xfe};    
+    uint8_t cmdr[2] = {0xfe, 0x01};   
+    uart_putbuff(cmdf, sizeof(cmdf));    
+
+    uart_putbuff((uint8_t *)imgaddr, imgsize); 
+
+    uart_putbuff(cmdr, sizeof(cmdr));
+}
+
+void ImgTrans(void)
+{
+	uint16_t i,j;
+	uint8_t proimgBuf[OV7725_H][OV7725_W];
+	for(i=0;i<OV7725_H;i++)
 	{
-		if(i==MODE.foresight) {
-			for(j=0;j<=IMG_COL-1;j++)
+		for(j=0;j<OV7725_W;j++)
 			{
 				if((j==LeftEdge[i])||(j==RightEdge[i])||(j==MidLine[i]))
-				UART_WriteByte(DATACOMM_IMG_TRANS_CHL,0x00);
-				else
-				UART_WriteByte(DATACOMM_IMG_TRANS_CHL,0xa0);
+					proimgBuf[i][j] = 0;
+				else proimgBuf[i][j] = imgBuf[i][j];
 			}
-		}
-		else {
-		for(j=0;j<=IMG_COL-1;j++)
-		{
-			if((j==LeftEdge[i])||(j==RightEdge[i])||(j==MidLine[i]))
-				UART_WriteByte(DATACOMM_IMG_TRANS_CHL,0x00);
-			else 
-					{
-						if(imgBuf[i][j]==0x00)	
-							UART_WriteByte(HW_UART0,IMG_BLACK);
-						else
-							UART_WriteByte(HW_UART0,IMG_WHITE);
-					}
-		}						
 	}
+	vcan_sendimg((uint8_t *)proimgBuf,sizeof (proimgBuf));
 }
-	UART_WriteByte(DATACOMM_IMG_TRANS_CHL,IMG_FRAME_FIN);
-}
-

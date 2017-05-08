@@ -84,11 +84,11 @@ int32_t AngleProc(void) {
 	angleSpeedIntegral += angleSpeed * 0.005;
     Angle_Kalman = KalmanFilter(angle, angleSpeed);
     
-    if( Angle_Kalman > 370 ){
-        Angle_Kalman = 370;
+    if( Angle_Kalman > 360 ){
+        Angle_Kalman = 360;
     }
-    else if( Angle_Kalman < 150 ){
-        Angle_Kalman = 150;
+    else if( Angle_Kalman < 80 ){
+        Angle_Kalman = 80;
     }
 
     return -AnglePID(AC_Set, Angle_Kalman);//暂且取相反数

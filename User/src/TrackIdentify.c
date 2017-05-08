@@ -1,8 +1,8 @@
 #include "TrackIdentify.h"
 //mode MODE;
 
-uint16_t MidLine[IMG_ROW];
-uint16_t  LeftEdge[IMG_ROW],RightEdge[IMG_ROW];
+uint16_t MidLine[OV7725_H];
+uint16_t  LeftEdge[OV7725_H],RightEdge[OV7725_H];
  bool LeftFlag,RightFlag;
 static bool LeftBorderSearchInRange(int16_t row, int16_t startIndex);
 static bool RightBorderSearchInRange(int16_t row, int16_t startIndex);
@@ -67,7 +67,7 @@ uint16_t FittingLine_R( uint16_t n )
 	uint16_t i,j,k;
 
 	i=IMG_MIDPOINT;           //search from the midpoint
-	for(j=i,k=i;(j<=i+108) && (k>=i-108);j++,k--)
+	for(j=i,k=i;(j<=i+35) && (k>=i-35);j++,k--)
 	{
 //		if((imgBuf[n][j]&imgBuf[n][j-1]&imgBuf[n][j-2]&imgBuf[n][j-3]==1)&&(imgBuf[n][j+1]|imgBuf[n][j+2]|imgBuf[n][j+3]|imgBuf[n][j+4]==0))
 		if(imgBuf[n][j] && !imgBuf[n][j+1] )
@@ -126,7 +126,7 @@ void SensorGet(float* farimg, float* nearimg)
 		nearsum+=MidLine[i];
 	}
 	*nearimg = nearsum/8;
-	for(i=21;i<IMG_ROW;i++)
+	for(i=21;i<OV7725_H;i++)
 	{
 		farsum+=MidLine[i];
 	}
@@ -136,7 +136,7 @@ void SensorGet(float* farimg, float* nearimg)
 
 bool LeftBorderSearch(int16_t row) {
     if(row == 0) { //first line
-        return LeftBorderSearchInRange(row, IMG_COL / 2 + IMG_BORDER_SCAN_COMPENSATION);
+        return LeftBorderSearchInRange(row, OV7725_W / 2 + IMG_BORDER_SCAN_COMPENSATION);
     } else {
            if(RightEdge[row - 1] - LeftEdge[row - 1] <= WIDE_ROAD_SIZE) {
             return LeftBorderSearchInRange(row, MidLine[row - 1]);
@@ -159,7 +159,7 @@ bool LeftBorderSearchInRange(int16_t row, int16_t startIndex) {
 
 bool RightBorderSearch(int16_t row) {
     if(row == 0) { //first line
-        return RightBorderSearchInRange(row, IMG_COL / 2 - IMG_BORDER_SCAN_COMPENSATION);
+        return RightBorderSearchInRange(row, OV7725_W / 2 - IMG_BORDER_SCAN_COMPENSATION);
     } else {
         if(RightEdge[row - 1] - LeftEdge[row - 1] <= WIDE_ROAD_SIZE) {
             return RightBorderSearchInRange(row, MidLine[row - 1]);
@@ -170,21 +170,21 @@ bool RightBorderSearch(int16_t row) {
 }
 
 bool RightBorderSearchInRange(int16_t row, int16_t startIndex) {
-    for(int16_t j = startIndex; j < IMG_COL - 1; ++j) {
+    for(int16_t j = startIndex; j < OV7725_W - 1; ++j) {
         if(imgBuf[row][j] && !imgBuf[row][j+1]) {
             RightEdge[row] = j;
             return true;       //return后便不再执行
         }
     }
-    RightEdge[row] = IMG_COL - 1;
+    RightEdge[row] = OV7725_W - 1;
     return false;
 }
 
 
 void MiddleLineUpdate(int16_t row) {
-    if(imgProcFlag == CIRCLE)
+  if(imgProcFlag == CIRCLE)
 	{
-		MidLine[row] = RightEdge[row] - 80;
+		MidLine[row] = LeftEdge[row] + 20;
 	}
 	else
 	{
@@ -231,13 +231,13 @@ void MiddleLineUpdate(int16_t row) {
 //		 curve+=MidLine[i]-sum/n;
 //		 else curve-=MidLine[i]-sum/n;
 	 }
-	 curve=curve/n;
-	 if (curve < 100 ) {
-   		 RoadFlag = STRAIGHTROAD;
-	 }
-	 else {
-		   RoadFlag = CURVEROAD;
-	 }
+//	 curve=curve/n;
+//	 if (curve < 100 ) {
+//   		 RoadFlag = STRAIGHTROAD;
+//	 }
+//	 else {
+//		   RoadFlag = CURVEROAD;
+//	 }
 	 		 return RoadFlag;
  }
  

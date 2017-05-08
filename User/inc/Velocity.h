@@ -11,6 +11,7 @@ extern int16_t VC_Max;
 extern int16_t VC_Min;
 
 void GearInit(void);
+void Mode4(void);
 void Mode3(void);
 void Mode2(void);
 void Mode1(void);
