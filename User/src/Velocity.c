@@ -7,6 +7,7 @@ mode MODE;
 
 int16_t VC_Max;
 int16_t VC_Min;
+int16_t VC_Set;
 //int16_t MODE.VC_Set;
 
 /**
@@ -15,65 +16,77 @@ int16_t VC_Min;
 void GearInit(void)
 {
     MODE.VC_Set = 0;
-//    GPIO_QuickInit(DIP_PORT, DIP1_PIN, kGPIO_Mode_IPU);
+    GPIO_QuickInit(DIP_PORT, DIP1_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP2_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP3_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP4_PIN, kGPIO_Mode_IPU);
-    if     ( !GPIO_ReadBit(DIP_PORT,DIP4_PIN) ) { Mode3();}
+    if     ( !GPIO_ReadBit(DIP_PORT,DIP4_PIN) ) { Mode1();}
     else if( !GPIO_ReadBit(DIP_PORT,DIP3_PIN) ) { Mode2();}
-    else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode1();}
-//    else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { MODE.VC_Set = VSET_GEAR1; }
+    else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode3();}
+    else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { Mode4();}
     else                                        { Mode0();}
-	VC_Max = MODE.VC_Set;
-	VC_Min = MODE.VC_Set * 3 / 4;
+	  VC_Max = MODE.VC_Set;
+	  VC_Min = MODE.VC_Set * 3 / 4;
+		VC_Set = MODE.VC_Set;
+}
+void Mode4(void)//不错good?!
+{
+    MODE.VC_Set = 66;
+    MODE.foresight = 28;
+    
+    MODE.DC_PID_P_COEF = 90;
+    MODE.DC_P_MIN = 2000;
+    MODE.DC_P_MAX = 5800;
+    MODE.DC_PID_D = 5;
+    MODE.DC_Out_MAX = 2500;
 }
 
-void Mode3(void)
+void Mode3(void)//不错good?!
 {
-    MODE.VC_Set = 80;
-    MODE.foresight = 20;
+    MODE.VC_Set = 64;
+    MODE.foresight = 27;
     
-    MODE.DC_PID_P_COEF = 110;
-    MODE.DC_P_MIN = 3000;
-    MODE.DC_P_MAX = 8000;
-    MODE.DC_PID_D = 6;
-    MODE.DC_Out_MAX = 9500;
+    MODE.DC_PID_P_COEF = 90;
+    MODE.DC_P_MIN = 2000;
+    MODE.DC_P_MAX = 5500;
+    MODE.DC_PID_D = 5;
+    MODE.DC_Out_MAX = 2500;
 }
     
-void Mode2(void)
+void Mode2(void)//不错good?!
 {
-    MODE.VC_Set = 78;
-    MODE.foresight = 20;
+    MODE.VC_Set = 62;
+    MODE.foresight = 28;
     
-    MODE.DC_PID_P_COEF = 100;
-    MODE.DC_P_MIN = 3000;
-    MODE.DC_P_MAX = 7000;
-    MODE.DC_PID_D = 5.5;
-    MODE.DC_Out_MAX = 8500;
+    MODE.DC_PID_P_COEF = 88;
+    MODE.DC_P_MIN = 2500;
+    MODE.DC_P_MAX = 5000;
+    MODE.DC_PID_D = 4;
+    MODE.DC_Out_MAX = 2500;
 }
 
-void Mode1(void)//ok
+void Mode1(void)
 {
-    MODE.VC_Set = 78;
-    MODE.foresight = 17;
+    MODE.VC_Set = 60;
+    MODE.foresight = 28;
     
-    MODE.DC_PID_P_COEF = 100;
-    MODE.DC_P_MIN = 3000;
-    MODE.DC_P_MAX = 7000;
-    MODE.DC_PID_D = 5.5;
-    MODE.DC_Out_MAX = 8500;
+    MODE.DC_PID_P_COEF = 85;
+    MODE.DC_P_MIN = 2000;
+    MODE.DC_P_MAX = 5000;
+    MODE.DC_PID_D = 4;
+    MODE.DC_Out_MAX = 2500;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set = 78;
-    MODE.foresight = 17;
+    MODE.VC_Set = 59;
+    MODE.foresight = 27;
     
-    MODE.DC_PID_P_COEF = 100;
-    MODE.DC_P_MIN = 3000;
-    MODE.DC_P_MAX = 7000;
-    MODE.DC_PID_D = 5.5;
-    MODE.DC_Out_MAX = 8500;
+    MODE.DC_PID_P_COEF = 90;
+    MODE.DC_P_MIN = 2000;
+    MODE.DC_P_MAX = 5800;
+    MODE.DC_PID_D = 4;
+    MODE.DC_Out_MAX = 2500;
 }
     
     
@@ -116,15 +129,15 @@ int32_t VelocityProc(int32_t speed) {
     {
         count = 0;
         VC_Out_Old = VC_Out_New;
-					VC_Out_New = VelocityPID(MODE.VC_Set, speed);
-        if( VC_Out_New > VC_Out_MAX )
-        {
-            VC_Out_New = VC_Out_MAX;
-        }
-        else if( VC_Out_New < -VC_Out_MAX )
-        {
-            VC_Out_New = -VC_Out_MAX;
-        }
+        VC_Out_New = VelocityPID(MODE.VC_Set, speed);
+//        if( VC_Out_New > VC_Out_MAX )
+//        {
+//            VC_Out_New = VC_Out_MAX;
+//        }
+//        else if( VC_Out_New < -VC_Out_MAX )
+//        {
+//            VC_Out_New = -VC_Out_MAX;
+//        }
     }
     count++;
     

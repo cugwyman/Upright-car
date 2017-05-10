@@ -16,5 +16,11 @@ typedef struct PID_speed_mode {
 }
 mode;
 
+typedef enum _road_type_type {
+    Unknown,
+    Curve,
+    CrossRoad
+}
+road_type_type;
 
 #endif

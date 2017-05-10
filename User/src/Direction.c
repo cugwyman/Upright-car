@@ -31,14 +31,22 @@ static int32_t Direction_PID(float farimg, float nearimg, int32_t dirAngleSpeed
                              ) {
     int32_t P, D;
     int32_t incpid;
-    
+    int8_t absState;
     state = (nearimg - IMG_MIDPOINT) ;
     if(state > 110)
 			state = 110;
 		if(state < -110)
 			state = -110;
-		
-    P = DC_PID_P * state / 50;//200;
+//		if(state >= 0)
+//			absState = state;
+//		else
+//			absState = -state;
+//   if(imgProcFlag == STRAIGHT_ROAD) 
+//        P = DC_PID_P * state * absState / 2500;    //  50 / 50 
+////        P =400 * state;                            //  4000/50
+//    else 
+//		P = DC_PID_P * state * absState / 2500;    //  50 / 50 
+		P = DC_PID_P * state/ 50 ;
     D = DC_PID_D * dirAngleSpeed;
     
     incpid = P + D;
@@ -106,14 +114,14 @@ int32_t DirectionProc(int32_t speed) {
                                    #endif
                                    );
             
-        if( DC_Out_New > MODE.DC_Out_MAX )
-        {
-            DC_Out_New = MODE.DC_Out_MAX;
-        }
-        else if( DC_Out_New < -MODE.DC_Out_MAX )
-        {
-            DC_Out_New = -MODE.DC_Out_MAX;
-        }
+//        if( DC_Out_New > MODE.DC_Out_MAX )
+//        {
+//            DC_Out_New = MODE.DC_Out_MAX;
+//        }
+//        else if( DC_Out_New < -MODE.DC_Out_MAX )
+//        {
+//            DC_Out_New = -MODE.DC_Out_MAX;
+//        }
 
     }
     count++;

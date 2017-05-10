@@ -2,9 +2,11 @@
 #include "TrackIdentify.h"
 
 uint8_t imgBuf[IMG_ROW][IMG_COL];
+uint8_t img_undist[IMG_ROW][IMG_COL];
 uint16_t imgProcFlag;
 uint16_t StopFlagAnalyze;
 uint16_t StopFlag;
+int16_t HugeCurve;
 
 float time;
 static uint8_t imgBufRow;
@@ -32,16 +34,33 @@ uint16_t ImgProcAnalyze(uint8_t imgBuf[IMG_ROW][IMG_COL]) {
 	/*circle identify start*/
   for(i=20;i<40;i++)
 	{
-		if(((imgBuf[i][IMG_MIDPOINT]|imgBuf[i+1][IMG_MIDPOINT]|imgBuf[i+2][IMG_MIDPOINT]|imgBuf[i+3][IMG_MIDPOINT]|imgBuf[i+4][IMG_MIDPOINT]) ==0) && (RightEdge[i-1] - LeftEdge[i-1] > 220) && (RightEdge[i-2] - LeftEdge[i-2] > 220) && (RightEdge[i-3] - LeftEdge[i-3] > 220))
+		if(((imgBuf[i][IMG_MIDPOINT]&imgBuf[i+1][IMG_MIDPOINT]&imgBuf[i+2][IMG_MIDPOINT]&imgBuf[i+3][IMG_MIDPOINT]&imgBuf[i+4][IMG_MIDPOINT]) ==1) && (RightEdge[i-1] - LeftEdge[i-1] > 220) && (RightEdge[i-2] - LeftEdge[i-2] > 220) && (RightEdge[i-3] - LeftEdge[i-3] > 220))
 		{
 			ImgProcFlag = CIRCLE ;
 			break;
 		}
 	}
-	
 	/*circle identify end*/
-	
-//	if(ImgProcFlag != CIRCLE )
+//	for(i=0;i<IMG_ROW;i++) {
+//			ImgRevise(i);
+//	}
+//	if(ImgProcFlag != CIRCLE)
+//	{
+//	switch(GetRoadType()) {
+//            case Curve:
+//						{ImgProcFlag = CURVE;
+//                CurveCompensate();
+//                break;}
+//            case CrossRoad:
+//						{ ImgProcFlag = CROSSROAD;
+//                CrossRoadCompensate();
+//                break;}
+//            default: {ImgProcFlag = 6 ;
+//                break;}
+//        }
+//	}
+//	
+////	if(ImgProcFlag != CIRCLE )
 //	{
 //		ImgProcFlag = CurveCal(1);
 //	}
@@ -66,6 +85,14 @@ uint16_t ImgProcAnalyze(uint8_t imgBuf[IMG_ROW][IMG_COL]) {
 //	  }
 //  }
 	/*stopline identify end*/
+	if(ImgProcFlag != CIRCLE)
+	{
+		if(StraightRoadJudge()) {
+			ImgProcFlag = STRAIGHT_ROAD;
+//			BUZZER_ON;
+		}
+//		else BUZZER_OFF;
+	}
     return ImgProcFlag;
 }
 
@@ -83,15 +110,18 @@ void ImgProcHREF(uint32_t pinxArray) {
 				
 				if(imgRealRow % IMG_ROW_INTV ==1) {
 					LeftFlag = LeftBorderSearch(imgBufRow);
+					RightFlag = RightBorderSearch(imgBufRow);
+//					BUZZER_ON;
 				}
 				
 				if(imgRealRow % IMG_ROW_INTV ==2) {
-					RightFlag = RightBorderSearch(imgBufRow);
+					MiddleLineUpdate(imgBufRow);
+					CurveSlopeUpdate(imgBufRow);					
 				}
 				
 				if(imgRealRow % IMG_ROW_INTV ==3) {
-					MiddleLineUpdate(imgBufRow);
-					imgBufRow++;
+//					HugeCurveDeal(imgBufRow);
+					imgBufRow++; 
 				}
 				
     }
@@ -102,5 +132,10 @@ void ImgProcVSYN(uint32_t pinxArray) {
     //if pinxArray & (1 << CAMERA_VSYN_PIN) then
     imgRealRow = 0;
     imgBufRow = 0;
+//	  leftBorderNotFoundCnt = 0;
+//	 rightBorderNotFoundCnt = 0;
     imgProcFlag = ImgProcAnalyze(imgBuf);
+		leftBorderNotFoundCnt = 0;
+	  rightBorderNotFoundCnt = 0;
+	  HugeCurve=0;
 }

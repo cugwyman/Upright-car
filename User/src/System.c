@@ -13,6 +13,7 @@ float distance;
 static void NVICInit(void);
 static void TimerInit(void);
 static void MainProcess(void);
+static void BuzzleInit(void);
 
 //#ifdef RS_JUDGE
 //static bool startFlag;
@@ -27,7 +28,20 @@ void MainProcess(void)
 {
 //		int32_t stopCnt = 0;
 //	
-//		time += 0.005;
+		static bool cnt = true;
+//	  int16_t VC_Set_Temp;
+		time += 0.005;
+//	  VC_Set = MODE.VC_Set;
+		if(cnt)
+		{
+				if(time < 1)
+						MODE.VC_Set = 0;
+				else
+				{
+						MODE.VC_Set = VC_Set;
+						cnt = false;
+				}
+		}
 //		if(time > 0)
 //				StopFlagAnalyze = 1;
 //    switch ( imgProcFlag ) {
@@ -109,11 +123,11 @@ void MainProcess(void)
 //							}
 //							else
 //							{
-								Left_Out = AC_Out - VC_Out - DC_Out;
-								Right_Out = AC_Out - VC_Out + DC_Out;
+								Left_Out = AC_Out - VC_Out + DC_Out;
+								Right_Out = AC_Out - VC_Out - DC_Out;
 
 								MotorOut(Left_Out, Right_Out);
-//            MotorOut(6600, 6600);//zuoyoubutong
+//            MotorOut(0, 0);//zuoyoubutong
 //							}
         #if defined(OUT_JUDGE) || defined(RS_JUDGE)
             }
@@ -140,6 +154,10 @@ void TimerInit() {
     PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, DISABLE);
 }
 
+void BuzzerInit() {
+    GPIO_QuickInit(BUZZER_PORT, BUZZER_PIN, kGPIO_Mode_IPU);
+}
+
 void GeneralInit(void) {
     DelayInit();
     GearInit();
@@ -147,6 +165,7 @@ void GeneralInit(void) {
     MotorInit();
     CollectInit();  
     EncoderInit();
+		BuzzerInit();
 //    DisplayInit();
     NVICInit();
     TimerInit();

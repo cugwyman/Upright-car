@@ -14,25 +14,29 @@
 #define x__DEBUG__
 
 ///* 传感器采样滤波 */
-//#define SENSOR_FLTR_SAMPLE  10
+//#define SENSOR_FLTR_SAMPLE  10、
+
+
+/* 角度和速度设定目标 */
+#define AC_Set              237//156//170zero,小往后
 
 /* 角度环 */
 #define Kalman_Sample_Time   0.0055
-#define AC_PID_P           200.0 // 160.0
-#define AC_PID_D             4.5 //   3.5
-#define MMAX_ZERO         1956
-#define MMAZ_ZERO          716
-#define GYRO_ZERO_SAMPLE  1000
-#define MMA_GAIN          0.073//0.232//    //0-90°，即正反车测值z-x的max减min=2000多，90/2000多得比例
-#define MMA_SCALE         3.178//*1.2//send to Kalman scale, end is 0.232
+#define AC_PID_P             160.0 // 160.0
+#define AC_PID_D             6 //   3.5
+#define MMAX_ZERO            1932
+#define MMAZ_ZERO            716
+#define GYRO_ZERO_SAMPLE     1000
+#define MMA_GAIN             0.073//0.232//    //0-90°，即正反车测值z-x的max减min=2000多，90/2000多得比例
+#define MMA_SCALE            3.178//*1.2//send to Kalman scale, end is 0.232
 
 /* 速度环 */
-#define VC_PID_P           200.0 //190.0// 
-#define VC_PID_I             0.15//   0.25
-#define VC_PID_D             40
-#define VC_Out_MAX       15000//25000
-#define VC_PERIOD            4
-//#define MODE.VC_Set           50//27//21// 18//  10//40设定，速度为30
+#define VC_PID_P           190.0 //190.0// 
+#define VC_PID_I           0.35//   0.25
+#define VC_PID_D           80//40
+#define VC_Out_MAX         15000//25000
+#define VC_PERIOD          4
+//#define MODE.VC_Set      50//27//21// 18//  10//40设定，速度为30
 //#define VC_MAX           52
 //#define VC_MIN           48
 
@@ -58,17 +62,12 @@
 #define OUT_JUDGE_STD       50
 #define TURN_FLAG	       200
 
-/* 角度和速度设定目标 */
-#define AC_Set              238//156//170zero,小往后
+
 //#define VSET_GEAR4          40
 //#define VSET_GEAR3          37
 //#define VSET_GEAR2          34
-////#define VSET_GEAR1          38
-//#define VSET_GEAR0           0
-
-//#define  foresight4       30//23//17//15
-//#define  foresight3       28//23//17//15
-//#define  foresight2       26//23//17//15
+////#define VSET_GEAR1        38
+//#define VSET_GEAR0          0
 
 //Camera
 #define  IMG_ROW        50
@@ -86,8 +85,9 @@
 #define  CIRCLE       1
 #define  STOP         2    
 #define  START        3
-#define  STRAIGHTROAD 4
-#define  CURVEROAD    5
+#define  CROSSROAD    4
+#define  CURVE        5
+#define STRAIGHT_ROAD 6
 
 #define  IMG_BORDER_SCAN_COMPENSATION  30  //边界补偿变量
 #define  WIDE_ROAD_SIZE                80

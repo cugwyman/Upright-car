@@ -5,13 +5,13 @@
 //#ifdef MOTOR
 #define LEFT_MOTOR_FORWARD_MAP  FTM0_CH7_PD07//PWM3ºÚ  ±³¶Ô¾µÍ·£¬ÓÒ±ßÊÇÓÒ
 #define LEFT_MOTOR_REVERSE_MAP  FTM0_CH6_PD06//PWM4°×
-#define RIGHT_MOTOR_FORWARD_MAP FTM0_CH5_PD05//PWM2×Ï
-#define RIGHT_MOTOR_REVERSE_MAP FTM0_CH4_PD04//PWM1»Ò
+#define RIGHT_MOTOR_REVERSE_MAP FTM0_CH5_PD05//PWM2×Ï
+#define RIGHT_MOTOR_FORWARD_MAP FTM0_CH4_PD04//PWM1»Ò
 #define MOTOR_PORT              HW_FTM0
 #define LEFT_MOTOR_FORWARD_CHL  HW_FTM_CH7
 #define LEFT_MOTOR_REVERSE_CHL  HW_FTM_CH6
-#define RIGHT_MOTOR_FORWARD_CHL HW_FTM_CH5
-#define RIGHT_MOTOR_REVERSE_CHL HW_FTM_CH4
+#define RIGHT_MOTOR_REVERSE_CHL HW_FTM_CH5
+#define RIGHT_MOTOR_FORWARD_CHL HW_FTM_CH4
 //#endif
 
 /* Encoder */    //1 GND  2 3.3-5V  3 A  4 B
@@ -36,11 +36,11 @@
 
 /* Dipswitch */
 #ifdef DIPSWITCH
-#define DIP_PORT                HW_GPIOC
-//#define DIP1_PIN                0
-#define DIP2_PIN                1
-#define DIP3_PIN                2
-#define DIP4_PIN                3
+#define DIP_PORT                HW_GPIOA
+#define DIP1_PIN                17
+#define DIP2_PIN                16
+#define DIP3_PIN                15
+#define DIP4_PIN                14
 #endif
 
 
@@ -63,26 +63,26 @@
 /* Camera */
 //#ifdef IMGPROC
 #define  CAMERA_HREF_PORT  HW_GPIOD
-#define  CAMERA_HREF_PIN   1
+#define  CAMERA_HREF_PIN   0
 #define  CAMERA_VSYN_PORT  HW_GPIOC
 #define  CAMERA_VSYN_PIN   18
-#define  CAMERA_DATA_PORT  HW_GPIOC
-#define  CAMERA_DATA_PIN   17
+#define  CAMERA_DATA_PORT  HW_GPIOD
+#define  CAMERA_DATA_PIN   1
 #define  CAMERA_ODEV_PORT  HW_GPIOD
-#define  CAMERA_ODEV_PIN   0
-#define  CAMERA_DATA_READ  PCin(17)
+#define  CAMERA_ODEV_PIN   3
+#define  CAMERA_DATA_READ  PDin(CAMERA_DATA_PIN)
 //#endif
 
 /* Buzzer */
-#ifdef BUZZER
-#define BUZ_PORT                HW_GPIOB
-#define BUZ_PIN                 21
-#endif
+//#ifdef BUZZER
+//#define BUZ_PORT                HW_GPIOD
+//#define BUZ_PIN                 3
+//#endif
 
 /* IR */
-#ifdef IR
-#define BUZ_PORT                HW_GPIOE
-#define BUZ_PIN                 24
-#endif
+#define BUZZER_PORT                HW_GPIOD
+#define BUZZER_PIN                 2
+#define BUZZER_ON    (PDout(BUZZER_PIN) = 1)
+#define BUZZER_OFF   (PDout(BUZZER_PIN) = 0)
 
 #endif

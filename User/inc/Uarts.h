@@ -12,6 +12,7 @@ void UartInit(void);
 void ImgTrans(uint8_t imgBuf[IMG_ROW][IMG_COL]);
 void ImgTrans2(uint8_t imgBuf[IMG_ROW][IMG_COL]);
 void ImgTrans3(uint8_t imgBuf[IMG_ROW][IMG_COL]);
+void ImgTrans4(uint8_t imgBuf[IMG_ROW][IMG_COL]);
 
 #endif
 
