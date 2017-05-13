@@ -1,13 +1,14 @@
 #include "Direction.h"
-
-//mode MODE;
+#include "ImgProc.h"
 
 //int32_t dirGyro;
 int32_t dirAngleSpeed;
 //float dirAngleSpeedIntegral;
 
-float state;//传感器融合
-float farimg, nearimg;
+int16_t state;//传感器融合
+
+int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle);
+
 #if defined(OUT_JUDGE) || defined(RS_JUDGE)
 bool out;
 #endif
@@ -24,7 +25,7 @@ float DC_PID_P;
  * \param[in]  DC_PID_P 动态P, 经过计算得到(可选)
  * @retval 方向环输出, 作为标准电机输出的一环
  */
-static int32_t Direction_PID(float farimg, float nearimg, int32_t dirAngleSpeed
+static int32_t Direction_PID(int32_t dirAngleSpeed
                              #ifdef DYNAMIC_DC_PID
                              , float DC_PID_P, int16_t DC_PID_D
                              #endif
@@ -32,7 +33,7 @@ static int32_t Direction_PID(float farimg, float nearimg, int32_t dirAngleSpeed
     int32_t P, D;
     int32_t incpid;
     int8_t absState;
-    state = (nearimg - IMG_MIDPOINT) ;
+    state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
     if(state > 110)
 			state = 110;
 		if(state < -110)
@@ -53,6 +54,17 @@ static int32_t Direction_PID(float farimg, float nearimg, int32_t dirAngleSpeed
     
     return incpid;
 }
+
+
+int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle) {
+    float avgMiddle = 0;
+    for(int16_t i = MODE.pre_sight - 3; i < MODE.pre_sight + 3; ++i) {
+        avgMiddle += middleLine[i];
+    }
+    avgMiddle /= 6;
+    return avgMiddle - expectMiddle;
+}
+
 
 /**
  * @brief  标准方向环处理, 根据周期平滑输出, 周期在头文件Param.h中定义为DC_PERIOD
@@ -87,14 +99,12 @@ int32_t DirectionProc(int32_t speed) {
 //        dirGyro = -dirAngleSpeed;
 //        dirAngleSpeed = 0;
 
-        SensorGet(&farimg, &nearimg);
-
-        #ifdef OUT_JUDGE
-            if( farimg < OUT_JUDGE_STD && nearimg < OUT_JUDGE_STD )
-            {
-                out = true;
-            }
-        #endif /* OUT_JUDGE */
+//        #ifdef OUT_JUDGE
+//            if( farimg < OUT_JUDGE_STD && nearimg < OUT_JUDGE_STD )
+//            {
+//                out = true;
+//            }
+//        #endif /* OUT_JUDGE */
                 
         #ifdef DYNAMIC_DC_PID
             DC_PID_P = MODE.DC_PID_P_COEF * speed ;//* speed;
@@ -108,7 +118,7 @@ int32_t DirectionProc(int32_t speed) {
             }
         #endif
                 
-        DC_Out_New = Direction_PID(farimg, nearimg, dirAngleSpeed
+        DC_Out_New = Direction_PID(dirAngleSpeed
                                    #ifdef DYNAMIC_DC_PID
                                    , DC_PID_P, MODE.DC_PID_D
                                    #endif
@@ -126,7 +136,6 @@ int32_t DirectionProc(int32_t speed) {
     }
     count++;
 
-    
     DC_Out = DC_Out_Old + (DC_Out_New - DC_Out_Old) * count / DC_PERIOD;
     return DC_Out;
 }

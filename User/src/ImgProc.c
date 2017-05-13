@@ -1,141 +1,161 @@
 #include "ImgProc.h"
-#include "TrackIdentify.h"
+#include "gpio.h"
+#include "DirectionControl.h"
+#include "SpeedControl.h"
+#include "ImgUtility.h"
+#include "DataComm.h"
+#include "uart.h"
 
-uint8_t imgBuf[IMG_ROW][IMG_COL];
-uint8_t img_undist[IMG_ROW][IMG_COL];
-uint16_t imgProcFlag;
-uint16_t StopFlagAnalyze;
-uint16_t StopFlag;
-int16_t HugeCurve;
+#ifdef USE_BMP
+byte imgBuf[IMG_ROW][1 + IMG_COL / 8]; // Important extra 1 byte against overflow
+#else
+byte imgBuf[IMG_ROW][IMG_COL];
+#endif
 
-float time;
-static uint8_t imgBufRow;
-static uint8_t imgRealRow;
+int16_t dirError;
+bool direction_control_on;
+img_proc_struct resultSet;
+
+static uint8_t imgBufRow = 0;
+static uint8_t imgRealRow = 0;
+static int16_t searchForBordersStartIndex = IMG_COL / 2;
 
 static void ImgProcHREF(uint32_t pinxArray);
 static void ImgProcVSYN(uint32_t pinxArray);
+static void ImgProc0(void);
+static void ImgProc1(void);
+static void ImgProc2(void);
+static void ImgProc3(void);
+static void ImgProcSummary(void);
+
+static img_proc_type_array imgProc = { ImgProc0, ImgProc1, ImgProc2 ,ImgProc3 };
+
+#ifdef USE_BMP
+inline void SetImgBufAsBitMap(int16_t row, int16_t col) {
+    imgBuf[row][col >> SHIFT] |= (1 << (col & MASK));
+}
+
+inline void ClrImgBufAsBitMap(int16_t row, int16_t col) {
+    imgBuf[row][col >> SHIFT] &= ~(1 << (col & MASK));
+}
+
+inline bool TstImgBufAsBitMap(int16_t row, int16_t col) {
+    return imgBuf[row][col >> SHIFT] & (1 << (col & MASK));
+}
+#endif
 
 void ImgProcInit(void) {
     GPIO_QuickInit(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_Mode_IPU);
     GPIO_CallbackInstall(CAMERA_HREF_PORT, ImgProcHREF);
     GPIO_CallbackInstall(CAMERA_VSYN_PORT, ImgProcVSYN);
-    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, DISABLE );
-    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, DISABLE );
+    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, DISABLE);
+    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, DISABLE);
     
     GPIO_QuickInit(CAMERA_DATA_PORT, CAMERA_DATA_PIN, kGPIO_Mode_IPU);
-	  GPIO_QuickInit(CAMERA_ODEV_PORT, CAMERA_ODEV_PIN, kGPIO_Mode_IPU);
-}
-
-uint16_t ImgProcAnalyze(uint8_t imgBuf[IMG_ROW][IMG_COL]) {
-	uint16_t ImgProcFlag,i,j;
-	static uint16_t ZebraFlag;
-	ImgProcFlag = 0 ;
-	/*circle identify start*/
-  for(i=20;i<40;i++)
-	{
-		if(((imgBuf[i][IMG_MIDPOINT]&imgBuf[i+1][IMG_MIDPOINT]&imgBuf[i+2][IMG_MIDPOINT]&imgBuf[i+3][IMG_MIDPOINT]&imgBuf[i+4][IMG_MIDPOINT]) ==1) && (RightEdge[i-1] - LeftEdge[i-1] > 220) && (RightEdge[i-2] - LeftEdge[i-2] > 220) && (RightEdge[i-3] - LeftEdge[i-3] > 220))
-		{
-			ImgProcFlag = CIRCLE ;
-			break;
-		}
-	}
-	/*circle identify end*/
-//	for(i=0;i<IMG_ROW;i++) {
-//			ImgRevise(i);
-//	}
-//	if(ImgProcFlag != CIRCLE)
-//	{
-//	switch(GetRoadType()) {
-//            case Curve:
-//						{ImgProcFlag = CURVE;
-//                CurveCompensate();
-//                break;}
-//            case CrossRoad:
-//						{ ImgProcFlag = CROSSROAD;
-//                CrossRoadCompensate();
-//                break;}
-//            default: {ImgProcFlag = 6 ;
-//                break;}
-//        }
-//	}
-//	
-////	if(ImgProcFlag != CIRCLE )
-//	{
-//		ImgProcFlag = CurveCal(1);
-//	}
-	
-	/*stopline identify start*/
-//	if(StopFlagAnalyze)
-//	{
-//		for(i=0;i<IMG_ROW;i++)
-//		{
-//			
-//			for(j=10;j<IMG_COL-10;j++)
-//			{
-//				if((imgBuf[i][j] == 0) && (imgBuf[i][j+1] == 1))
-//					ZebraFlag++;
-//			}
-//			if(ZebraFlag > 20)
-//			{
-//				ZebraFlag = 0;
-//				StopFlag++;
-//					 break;
-//			}
-//	  }
-//  }
-	/*stopline identify end*/
-	if(ImgProcFlag != CIRCLE)
-	{
-		if(StraightRoadJudge()) {
-			ImgProcFlag = STRAIGHT_ROAD;
-//			BUZZER_ON;
-		}
-//		else BUZZER_OFF;
-	}
-    return ImgProcFlag;
+	GPIO_QuickInit(CAMERA_ODEV_PORT, CAMERA_ODEV_PIN, kGPIO_Mode_IPU);
 }
 
 void ImgProcHREF(uint32_t pinxArray) {
-    int16_t i;
     //if pinxArray & (1 << CAMERA_HREF_PIN) then
     if(imgBufRow < IMG_ROW && imgRealRow > IMG_ABDN_ROW)
     {
-        if(!(imgRealRow % IMG_ROW_INTV)) {
-            for(i = 0; i <= 90; i++);//140
-            for(i = IMG_COL - 1; i >= 0; i--)
-                imgBuf[imgBufRow][i] = CAMERA_DATA_READ ;
-//            imgBufRow++;
-        }
-				
-				if(imgRealRow % IMG_ROW_INTV ==1) {
-					LeftFlag = LeftBorderSearch(imgBufRow);
-					RightFlag = RightBorderSearch(imgBufRow);
-//					BUZZER_ON;
-				}
-				
-				if(imgRealRow % IMG_ROW_INTV ==2) {
-					MiddleLineUpdate(imgBufRow);
-					CurveSlopeUpdate(imgBufRow);					
-				}
-				
-				if(imgRealRow % IMG_ROW_INTV ==3) {
-//					HugeCurveDeal(imgBufRow);
-					imgBufRow++; 
-				}
-				
+        imgProc[imgRealRow % IMG_ROW_INTV]();
     }
     imgRealRow++;
 }
 
 void ImgProcVSYN(uint32_t pinxArray) {
     //if pinxArray & (1 << CAMERA_VSYN_PIN) then
+    ImgProcSummary();
     imgRealRow = 0;
     imgBufRow = 0;
-//	  leftBorderNotFoundCnt = 0;
-//	 rightBorderNotFoundCnt = 0;
-    imgProcFlag = ImgProcAnalyze(imgBuf);
-		leftBorderNotFoundCnt = 0;
-	  rightBorderNotFoundCnt = 0;
-	  HugeCurve=0;
+    resultSet.leftBorderNotFoundCnt = 0;
+    resultSet.rightBorderNotFoundCnt = 0;
+    resultSet.imgProcFlag = 0;
+    searchForBordersStartIndex = IMG_COL / 2;
+}
+
+void ImgProc0() {
+    int16_t i;
+    for(i = 0; i <= IMG_READ_DELAY; i++) { } //ignore points near the border
+    #ifdef USE_BMP
+        static byte tmpBuf[IMG_COL]; //cache
+        for(i = IMG_COL - 1; i >= 0; i--) {
+            tmpBuf[i] = CAMERA_DATA_READ;
+            __ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");
+            __ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");
+        }
+        for(i = IMG_COL - 1; i >= 0; i--) {
+            if(tmpBuf[i])
+                SetImgBufAsBitMap(imgBufRow, i);
+            else
+                ClrImgBufAsBitMap(imgBufRow, i);
+        }
+    #else
+        for(i = IMG_COL - 1; i >= 0; i--) {
+            imgBuf[imgBufRow][i] = CAMERA_DATA_READ;
+        }
+    #endif
+}
+
+void ImgProc1() {
+    resultSet.foundLeftBorder[imgBufRow] = LeftBorderSearchFrom(imgBufRow, searchForBordersStartIndex);
+    resultSet.foundRightBorder[imgBufRow] = RightBorderSearchFrom(imgBufRow, searchForBordersStartIndex);
+}
+
+void ImgProc2() {
+    MiddleLineUpdate(imgBufRow);
+    searchForBordersStartIndex = resultSet.middleLine[imgBufRow];
+}
+
+void ImgProc3() {
+    CurveSlopeUpdate(imgBufRow);
+    imgBufRow++;
+}
+
+void ImgProcSummary() {
+//		BUZZLE_ON; OutOfRoadJudge()
+    if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
+			while(1){
+        MOTOR_STOP;
+			}
+//			printf("123\n");
+    } else {
+        if(StraightLineJudge()) {
+            resultSet.imgProcFlag |= STRAIGHT_ROAD;
+						BUZZLE_OFF;
+        }
+       else switch(GetRoadType()) {
+            case Ring:
+                BUZZLE_OFF;
+                RingCompensateGoLeft();
+                break;
+            case RingEnd:
+                BUZZLE_OFF;
+                RingEndCompensateFromLeft();
+                break;
+            case LeftCurve:
+                BUZZLE_ON;
+                LeftCurveCompensate();
+                break;
+            case RightCurve:
+                BUZZLE_ON;
+                RightCurveCompensate();
+                break;
+            case CrossRoad:
+                BUZZLE_OFF;
+                resultSet.imgProcFlag |= CROSS_ROAD;
+                CrossRoadCompensate();
+                break;
+            case LeftBarrier:
+                BUZZLE_OFF;
+                return;
+            case RightBarrier:
+                BUZZLE_OFF;
+                return;
+            default:
+                BUZZLE_OFF;
+        }
+    }
 }

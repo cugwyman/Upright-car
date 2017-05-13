@@ -1,104 +1,31 @@
-#ifndef __PARAM_H
-#define __PARAM_H
+#ifndef _PARAM_H
+#define _PARAM_H
 
-/* 宏开关 */
-#define AC
-#define VC
-#define DC
-#define xOUT_JUDGE
-#define xSINGLE_VC
-#define DYNAMIC_DC_PID
-#define xFIX
-//#define RS_JUDGE
-//#define SLOW_DOWN
-#define x__DEBUG__
+//Angle
+#define AC_Set              264
 
-///* 传感器采样滤波 */
-//#define SENSOR_FLTR_SAMPLE  10、
-
-
-/* 角度和速度设定目标 */
-#define AC_Set              237//156//170zero,小往后
-
-/* 角度环 */
 #define Kalman_Sample_Time   0.0055
 #define AC_PID_P             160.0 // 160.0
 #define AC_PID_D             6 //   3.5
 #define MMAX_ZERO            1932
 #define MMAZ_ZERO            716
 #define GYRO_ZERO_SAMPLE     1000
-#define MMA_GAIN             0.073//0.232//    //0-90°，即正反车测值z-x的max减min=2000多，90/2000多得比例
+#define MMA_GAIN             0.073//0.232//    //0-90�,??????z-x?max?min=2000?,90/2000????
 #define MMA_SCALE            3.178//*1.2//send to Kalman scale, end is 0.232
 
-/* 速度环 */
+/* Speed */
 #define VC_PID_P           190.0 //190.0// 
 #define VC_PID_I           0.35//   0.25
 #define VC_PID_D           80//40
-#define VC_Out_MAX         15000//25000
+//#define VC_Out_MAX         15000//25000
 #define VC_PERIOD          4
-//#define MODE.VC_Set      50//27//21// 18//  10//40设定，速度为30
-//#define VC_MAX           52
-//#define VC_MIN           48
 
-/* 方向环 */
-//#ifdef DYNAMIC_DC_PID               //按MODE.VC_Set
-//#define MODE.DC_PID_P_COEF      70 //3// 100 // 120 //70 //90  //            470.0
-//#define MODE.DC_P_MIN           800//2200// 1000//500//700 //            3200
-//#define MODE.DC_P_MAX           2200//3300// 1314//800//1212//            50000
-//#else  /* xDYNAMIC_DC_PID */
-//#define DC_PID_P         1314
-//#endif /* DYNAMIC_DC_PID */
-
-//#define MODE.DC_PID_D           2.8//3// 1.6//1.3// 8.0 // 10.5
-//#define MODE.DC_Out_MAX       2500//4000//
+/* Direction */
 #define DC_PERIOD            2
 
-#define DC_OUT_COEF_LEFT   1
-#define DC_OUT_COEF_RIGHT  1
-
-//#define dirAngleSpeedMax    300
-//#define dirAngleSpeedMin    -300
-
-#define OUT_JUDGE_STD       50
-#define TURN_FLAG	       200
-
-
-//#define VSET_GEAR4          40
-//#define VSET_GEAR3          37
-//#define VSET_GEAR2          34
-////#define VSET_GEAR1        38
-//#define VSET_GEAR0          0
-
-//Camera
-#define  IMG_ROW        50
-#define  IMG_COL        225
-#define  IMG_ABDN_ROW   19
-#define  IMG_ROW_INTV   4
-
-#define  IMG_WHITE      0xfe
-#define  IMG_BLACK      0x00
-#define  IMG_FRAME_FIN  0xff
-
-#define  IMG_MIDPOINT    112
-
-//Road Flag
-#define  CIRCLE       1
-#define  STOP         2    
-#define  START        3
-#define  CROSSROAD    4
-#define  CURVE        5
-#define STRAIGHT_ROAD 6
-
-#define  IMG_BORDER_SCAN_COMPENSATION  30  //边界补偿变量
-#define  WIDE_ROAD_SIZE                80
-
-
-/* 电机参数 */
+/* Motor */
 #define MOTOR_OUT_MAX     7000
 #define FIX_OUT           0
-
-/* 发车延时 */
-#define BEGIN_DELAY       4000
 
 //NVIC
 #define  HREF_IRQ  PORTD_IRQn
@@ -109,5 +36,34 @@
 #define  PIT_CHL  HW_PIT_CH0
 #define  PIT_PRD  5000
 
+//Camera
+#define  IMG_ABDN_ROW    47
+#define  IMG_ROW_INTV    4
+#define  IMG_READ_DELAY  135 //170 for 8 nops
+
+//Image Proc Bit Map Relative
+/* byte is 8 (2^3) bits */
+#define  SHIFT  3
+/* make the after-shifted bit no more than 1 << 0x07 */
+#define  MASK   0x07
+
+#define  IMG_ROW    50
+#define  IMG_COL    225
+#define  WHITE_VAL  0
+#define  IMG_WHITE  0xfe
+#define  IMG_BLACK  0x00
+#define  IMG_EOF    0xff
+
+//Image Proc Flag
+#define  STRAIGHT_ROAD  0x0001
+#define  CROSS_ROAD     0x0002
+
+//Double Car Relative
+#define  ULTRA_SONIC_TIMER_CHL  HW_PIT_CH1
+#define  ULTRA_SONIC_TIMER_PRD  50000
+#define  TIMER_INIT_COUNT       2349993uL
+#define  AVG_DISTANCE_BETWEEN   100
+#define  DIFF_DISTANCE_MAX      20
+#define  OVER_TAKING            0x0001
 
 #endif

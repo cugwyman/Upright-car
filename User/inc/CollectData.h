@@ -1,8 +1,6 @@
 #ifndef __COLLECTION_H
 #define __COLLECTION_H
 
-#define COLLECTDATA
-
 #include "Root.h"
 
 void CollectInit(void);

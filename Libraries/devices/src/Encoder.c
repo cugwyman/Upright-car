@@ -1,6 +1,5 @@
 #include "Encoder.h"
 #include "ftm.h"
-#include "VisualScope.h"
 
 /**
  * @brief  编码器初始化, 使用两个正交解码通道, MAP在头文件PinMap.h中定义

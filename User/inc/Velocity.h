@@ -1,8 +1,6 @@
 #ifndef __VELOCITY_H
 #define __VELOCITY_H
 
-#define DIPSWITCH
-
 #include "Root.h"
 
 extern mode MODE;

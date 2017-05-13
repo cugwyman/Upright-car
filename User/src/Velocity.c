@@ -1,14 +1,12 @@
 #include "Velocity.h"
-#include "TrackIdentify.h"
-//int VC_Max = VC_MAX;
-//int VC_Min = VC_MIN;
-//int MODE.VC_Set = MODE.VC_Set ;
+#include "gpio.h"
+//#include "TrackIdentify.h"
+
 mode MODE;
 
 int16_t VC_Max;
 int16_t VC_Min;
 int16_t VC_Set;
-//int16_t MODE.VC_Set;
 
 /**
  * @brief  拨码开关获取速度档位, 共4+1档速度, 于头文件Param.h中定义
@@ -25,71 +23,66 @@ void GearInit(void)
     else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode3();}
     else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { Mode4();}
     else                                        { Mode0();}
-	  VC_Max = MODE.VC_Set;
-	  VC_Min = MODE.VC_Set * 3 / 4;
+		VC_Max = MODE.VC_Set;
+		VC_Min = MODE.VC_Set * 3 / 4;
 		VC_Set = MODE.VC_Set;
 }
+
 void Mode4(void)//不错good?!
 {
     MODE.VC_Set = 66;
-    MODE.foresight = 28;
+    MODE.pre_sight = 28;
     
     MODE.DC_PID_P_COEF = 90;
     MODE.DC_P_MIN = 2000;
     MODE.DC_P_MAX = 5800;
     MODE.DC_PID_D = 5;
-    MODE.DC_Out_MAX = 2500;
 }
 
 void Mode3(void)//不错good?!
 {
     MODE.VC_Set = 64;
-    MODE.foresight = 27;
+    MODE.pre_sight = 27;
     
     MODE.DC_PID_P_COEF = 90;
     MODE.DC_P_MIN = 2000;
     MODE.DC_P_MAX = 5500;
     MODE.DC_PID_D = 5;
-    MODE.DC_Out_MAX = 2500;
 }
     
 void Mode2(void)//不错good?!
 {
-    MODE.VC_Set = 62;
-    MODE.foresight = 28;
+    MODE.VC_Set = 40;
+    MODE.pre_sight = 6;
     
-    MODE.DC_PID_P_COEF = 88;
-    MODE.DC_P_MIN = 2500;
-    MODE.DC_P_MAX = 5000;
+    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 4800;
     MODE.DC_PID_D = 4;
-    MODE.DC_Out_MAX = 2500;
 }
 
 void Mode1(void)
 {
-    MODE.VC_Set = 60;
-    MODE.foresight = 28;
+    MODE.VC_Set = 35;
+    MODE.pre_sight = 6;
     
-    MODE.DC_PID_P_COEF = 85;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 5000;
+    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 4800;
     MODE.DC_PID_D = 4;
-    MODE.DC_Out_MAX = 2500;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set = 59;
-    MODE.foresight = 27;
+    MODE.VC_Set = 30;
+    MODE.pre_sight = 6;
     
-    MODE.DC_PID_P_COEF = 90;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 5800;
+    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 4800;
     MODE.DC_PID_D = 4;
-    MODE.DC_Out_MAX = 2500;
 }
-    
-    
+
 /**
  * @brief  速度PID闭环
  * @param[in]  set 设定目标速度, 不可小于0也不应过大, 在头文件Param.h中定义为MODE.VC_Set
@@ -98,7 +91,7 @@ void Mode0(void)
  */
 int32_t VelocityPID(int32_t set, int32_t nextpoint) {
 	float error;
-    static float lastError = 0, prevError = 0;
+  static float lastError = 0, prevError = 0;
 	float P, I, D;
 	static int32_t incpid = 0;
 
@@ -130,14 +123,6 @@ int32_t VelocityProc(int32_t speed) {
         count = 0;
         VC_Out_Old = VC_Out_New;
         VC_Out_New = VelocityPID(MODE.VC_Set, speed);
-//        if( VC_Out_New > VC_Out_MAX )
-//        {
-//            VC_Out_New = VC_Out_MAX;
-//        }
-//        else if( VC_Out_New < -VC_Out_MAX )
-//        {
-//            VC_Out_New = -VC_Out_MAX;
-//        }
     }
     count++;
     
