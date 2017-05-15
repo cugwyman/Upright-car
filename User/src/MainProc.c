@@ -34,7 +34,9 @@ void MainInit() {
     EncoderInit();
         
     DataCommInit();
-    
+	
+		Oled_Init_n();
+	
     BuzzleInit();
     
     NVICInit();

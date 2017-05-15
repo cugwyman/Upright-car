@@ -2,6 +2,7 @@
 #define _TYPEDEF_H
 
 #include "common.h"
+#include "stdint.h"
 
 #define SPEED_BUF_SIZE 5
 

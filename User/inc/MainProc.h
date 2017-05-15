@@ -14,6 +14,7 @@
 #include "Angle.h"
 #include "Velocity.h"
 #include "Direction.h"
+#include "OLED.h"
 
 extern int32_t AC_Out;
 extern int32_t VC_Out;

@@ -1,0 +1,12 @@
+.\objects\flash.o: Libraries\drivers\K\src\flash.c
+.\objects\flash.o: .\Libraries\drivers\K\inc\flash.h
+.\objects\flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\flash.o: .\Libraries\drivers\K\inc\common.h
+.\objects\flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\flash.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\flash.o: .\Libraries\startup\DeviceSupport\MK10D10.h
+.\objects\flash.o: .\Libraries\startup\CoreSupport\core_cm4.h
+.\objects\flash.o: .\Libraries\startup\CoreSupport\core_cmInstr.h
+.\objects\flash.o: .\Libraries\startup\CoreSupport\core_cmFunc.h
+.\objects\flash.o: .\Libraries\startup\CoreSupport\core_cm4_simd.h
+.\objects\flash.o: .\Libraries\startup\DeviceSupport\system_MK10D10.h

@@ -1,0 +1,13 @@
+.\objects\adc.o: Libraries\drivers\K\src\adc.c
+.\objects\adc.o: .\Libraries\drivers\K\inc\common.h
+.\objects\adc.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\adc.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\adc.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\adc.o: .\Libraries\startup\DeviceSupport\MK10D10.h
+.\objects\adc.o: .\Libraries\startup\CoreSupport\core_cm4.h
+.\objects\adc.o: .\Libraries\startup\CoreSupport\core_cmInstr.h
+.\objects\adc.o: .\Libraries\startup\CoreSupport\core_cmFunc.h
+.\objects\adc.o: .\Libraries\startup\CoreSupport\core_cm4_simd.h
+.\objects\adc.o: .\Libraries\startup\DeviceSupport\system_MK10D10.h
+.\objects\adc.o: .\Libraries\drivers\K\inc\adc.h
+.\objects\adc.o: .\Libraries\drivers\K\inc\gpio.h

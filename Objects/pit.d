@@ -1,0 +1,12 @@
+.\objects\pit.o: Libraries\drivers\K\src\pit.c
+.\objects\pit.o: .\Libraries\drivers\K\inc\pit.h
+.\objects\pit.o: .\Libraries\drivers\K\inc\common.h
+.\objects\pit.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\pit.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\pit.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\pit.o: .\Libraries\startup\DeviceSupport\MK10D10.h
+.\objects\pit.o: .\Libraries\startup\CoreSupport\core_cm4.h
+.\objects\pit.o: .\Libraries\startup\CoreSupport\core_cmInstr.h
+.\objects\pit.o: .\Libraries\startup\CoreSupport\core_cmFunc.h
+.\objects\pit.o: .\Libraries\startup\CoreSupport\core_cm4_simd.h
+.\objects\pit.o: .\Libraries\startup\DeviceSupport\system_MK10D10.h

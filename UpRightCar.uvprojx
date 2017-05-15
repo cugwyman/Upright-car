@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>MK10D10</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Libraries\devices\inc;.\Libraries\drivers\K\inc;.\Libraries\startup\CoreSupport;.\Libraries\startup\DeviceSupport;.\User\inc</IncludePath>
+              <IncludePath>.\Libraries\devices\inc;.\Libraries\drivers\K\inc;.\Libraries\startup\CoreSupport;.\Libraries\startup\DeviceSupport;.\User\inc;.\Debug\inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -454,6 +454,26 @@
               <FileType>1</FileType>
               <FilePath>.\Libraries\drivers\K\src\lptmr.c</FilePath>
             </File>
+            <File>
+              <FileName>asc12.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Debug\src\asc12.c</FilePath>
+            </File>
+            <File>
+              <FileName>asc16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Debug\src\asc16.c</FilePath>
+            </File>
+            <File>
+              <FileName>hz12.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Debug\src\hz12.c</FilePath>
+            </File>
+            <File>
+              <FileName>hz16.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Debug\src\hz16.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -568,6 +588,21 @@
               <FileName>ImgUtility.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\User\inc\ImgUtility.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Debug</GroupName>
+          <Files>
+            <File>
+              <FileName>OLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Debug\src\OLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>oledbase.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Debug\src\oledbase.c</FilePath>
             </File>
           </Files>
         </Group>

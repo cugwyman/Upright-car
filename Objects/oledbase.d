@@ -1,0 +1,16 @@
+.\objects\oledbase.o: Debug\src\oledbase.c
+.\objects\oledbase.o: .\Debug\inc\oledbase.h
+.\objects\oledbase.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\oledbase.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
+.\objects\oledbase.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+.\objects\oledbase.o: .\Libraries\drivers\K\inc\gpio.h
+.\objects\oledbase.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\oledbase.o: .\Libraries\drivers\K\inc\common.h
+.\objects\oledbase.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\oledbase.o: .\Libraries\startup\DeviceSupport\MK10D10.h
+.\objects\oledbase.o: .\Libraries\startup\CoreSupport\core_cm4.h
+.\objects\oledbase.o: .\Libraries\startup\CoreSupport\core_cmInstr.h
+.\objects\oledbase.o: .\Libraries\startup\CoreSupport\core_cmFunc.h
+.\objects\oledbase.o: .\Libraries\startup\CoreSupport\core_cm4_simd.h
+.\objects\oledbase.o: .\Libraries\startup\DeviceSupport\system_MK10D10.h
+.\objects\oledbase.o: .\Debug\inc\fonts.h

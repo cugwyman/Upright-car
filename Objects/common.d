@@ -1,0 +1,12 @@
+.\objects\common.o: Libraries\drivers\K\src\common.c
+.\objects\common.o: .\Libraries\drivers\K\inc\common.h
+.\objects\common.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\common.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
+.\objects\common.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+.\objects\common.o: .\Libraries\startup\DeviceSupport\MK10D10.h
+.\objects\common.o: .\Libraries\startup\CoreSupport\core_cm4.h
+.\objects\common.o: .\Libraries\startup\CoreSupport\core_cmInstr.h
+.\objects\common.o: .\Libraries\startup\CoreSupport\core_cmFunc.h
+.\objects\common.o: .\Libraries\startup\CoreSupport\core_cm4_simd.h
+.\objects\common.o: .\Libraries\startup\DeviceSupport\system_MK10D10.h
+.\objects\common.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
