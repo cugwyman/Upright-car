@@ -39,7 +39,7 @@
 //Camera
 #define  IMG_ABDN_ROW    47
 #define  IMG_ROW_INTV    4
-#define  IMG_READ_DELAY  135 //170 for 8 nops
+#define  IMG_READ_DELAY  105 //170 for 8 nops
 
 //Image Proc Bit Map Relative
 /* byte is 8 (2^3) bits */
@@ -57,6 +57,9 @@
 //Image Proc Flag
 #define  STRAIGHT_ROAD  0x0001
 #define  CROSS_ROAD     0x0002
+#define  CIRCLE         0x0003
+#define  LEFTCURVE      0x0004
+#define  RIGHTCURVE     0x0005
 
 //Double Car Relative
 #define  ULTRA_SONIC_TIMER_CHL  HW_PIT_CH1

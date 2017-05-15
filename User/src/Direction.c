@@ -38,16 +38,16 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
 			state = 110;
 		if(state < -110)
 			state = -110;
-//		if(state >= 0)
-//			absState = state;
-//		else
-//			absState = -state;
-//   if(imgProcFlag == STRAIGHT_ROAD) 
-//        P = DC_PID_P * state * absState / 2500;    //  50 / 50 
-////        P =400 * state;                            //  4000/50
-//    else 
-//		P = DC_PID_P * state * absState / 2500;    //  50 / 50 
-		P = DC_PID_P * state/ 50 ;
+		if(state >= 0)
+			absState = state;
+		else
+			absState = -state;
+		if(resultSet.imgProcFlag == STRAIGHT_ROAD) 
+//        P = DC_PID_P * state * absState / 2500;    //  50 / 50
+        P =300 * state;                            //  4000/50
+    else 
+		P = DC_PID_P * state * absState / 2500;    //  50 / 50 
+		//P = DC_PID_P * state/ 50 ;
     D = DC_PID_D * dirAngleSpeed;
     
     incpid = P + D;

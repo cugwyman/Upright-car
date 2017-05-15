@@ -31,31 +31,31 @@ void GearInit(void)
 void Mode4(void)//不错good?!
 {
     MODE.VC_Set = 66;
-    MODE.pre_sight = 28;
+    MODE.pre_sight = 20;
     
-    MODE.DC_PID_P_COEF = 90;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 5800;
-    MODE.DC_PID_D = 5;
+    MODE.DC_PID_P_COEF = 61;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 6000;
+    MODE.DC_PID_D = 4;
 }
 
 void Mode3(void)//不错good?!
 {
-    MODE.VC_Set = 64;
-    MODE.pre_sight = 27;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 20;
     
-    MODE.DC_PID_P_COEF = 90;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 5500;
-    MODE.DC_PID_D = 5;
+    MODE.DC_PID_P_COEF = 59;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 6000;
+    MODE.DC_PID_D = 4;
 }
     
 void Mode2(void)//不错good?!
 {
-    MODE.VC_Set = 40;
-    MODE.pre_sight = 6;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 20;
     
-    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_PID_P_COEF = 57;
     MODE.DC_P_MIN = 1000;
     MODE.DC_P_MAX = 4800;
     MODE.DC_PID_D = 4;
@@ -63,10 +63,10 @@ void Mode2(void)//不错good?!
 
 void Mode1(void)
 {
-    MODE.VC_Set = 35;
-    MODE.pre_sight = 6;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 20;
     
-    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_PID_P_COEF = 55;
     MODE.DC_P_MIN = 1000;
     MODE.DC_P_MAX = 4800;
     MODE.DC_PID_D = 4;
@@ -74,10 +74,10 @@ void Mode1(void)
 
 void Mode0(void)
 {
-    MODE.VC_Set = 30;
+    MODE.VC_Set = 20;
     MODE.pre_sight = 6;
     
-    MODE.DC_PID_P_COEF = 66;
+    MODE.DC_PID_P_COEF = 50;
     MODE.DC_P_MIN = 1000;
     MODE.DC_P_MAX = 4800;
     MODE.DC_PID_D = 4;

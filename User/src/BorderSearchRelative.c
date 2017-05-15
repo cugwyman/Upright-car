@@ -1,4 +1,5 @@
 #include "BorderSearchRelative.h"
+#include "PatternMatch.h"
 #include "ImgProc.h"
 #include "gpio.h"
 
@@ -11,6 +12,8 @@ bool LeftBorderSearchFrom(int16_t row, int16_t startIndex) {
     }
     resultSet.leftBorder[row] = 0;
     ++resultSet.leftBorderNotFoundCnt;
+		if(resultSet.imgProcFlag == CROSS_ROAD)
+			CrossRoadCompensate();
     return false;
 }
 
@@ -23,11 +26,20 @@ bool RightBorderSearchFrom(int16_t row, int16_t startIndex) {
     }
     resultSet.rightBorder[row] = IMG_COL - 1;
     ++resultSet.rightBorderNotFoundCnt;
+		if(resultSet.imgProcFlag == CROSS_ROAD)
+			CrossRoadCompensate();
     return false;
 }
 
 void MiddleLineUpdate(int16_t row) {
-    resultSet.middleLine[row] = (resultSet.leftBorder[row] + resultSet.rightBorder[row]) / 2;
+	if(resultSet.imgProcFlag == CIRCLE )
+		resultSet.middleLine[row] = resultSet.rightBorder[row] - 60;
+	else if(resultSet.imgProcFlag == LEFTCURVE) 
+						LeftCurveCompensate();
+			else if(resultSet.imgProcFlag == RIGHTCURVE)
+						RightCurveCompensate();
+					else
+						resultSet.middleLine[row] = (resultSet.leftBorder[row] + resultSet.rightBorder[row]) / 2;
 }
 
 void MiddleLineUpdateAll() {

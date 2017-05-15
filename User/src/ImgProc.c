@@ -53,7 +53,7 @@ void ImgProcInit(void) {
     GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, DISABLE);
     
     GPIO_QuickInit(CAMERA_DATA_PORT, CAMERA_DATA_PIN, kGPIO_Mode_IPU);
-	GPIO_QuickInit(CAMERA_ODEV_PORT, CAMERA_ODEV_PIN, kGPIO_Mode_IPU);
+		GPIO_QuickInit(CAMERA_ODEV_PORT, CAMERA_ODEV_PIN, kGPIO_Mode_IPU);
 }
 
 void ImgProcHREF(uint32_t pinxArray) {
@@ -72,7 +72,6 @@ void ImgProcVSYN(uint32_t pinxArray) {
     imgBufRow = 0;
     resultSet.leftBorderNotFoundCnt = 0;
     resultSet.rightBorderNotFoundCnt = 0;
-    resultSet.imgProcFlag = 0;
     searchForBordersStartIndex = IMG_COL / 2;
 }
 
@@ -115,13 +114,15 @@ void ImgProc3() {
 }
 
 void ImgProcSummary() {
+	    resultSet.imgProcFlag = 0;
 //		BUZZLE_ON; OutOfRoadJudge()
-    if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
-			while(1){
-        MOTOR_STOP;
-			}
-//			printf("123\n");
-    } else {
+//    if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
+//			while(1){
+//        MOTOR_STOP;
+//			}
+////			printf("123\n");
+//    } else {
+	BUZZLE_OFF;
         if(StraightLineJudge()) {
             resultSet.imgProcFlag |= STRAIGHT_ROAD;
 						BUZZLE_OFF;
@@ -129,33 +130,40 @@ void ImgProcSummary() {
        else switch(GetRoadType()) {
             case Ring:
                 BUZZLE_OFF;
-                RingCompensateGoLeft();
+//                RingCompensateGoLeft();
+								resultSet.imgProcFlag = CIRCLE;
                 break;
             case RingEnd:
                 BUZZLE_OFF;
-                RingEndCompensateFromLeft();
+//                RingEndCompensateFromLeft();
                 break;
             case LeftCurve:
                 BUZZLE_ON;
-                LeftCurveCompensate();
+//                LeftCurveCompensate();
+								resultSet.imgProcFlag = LEFTCURVE;
                 break;
             case RightCurve:
-                BUZZLE_ON;
-                RightCurveCompensate();
+                BUZZLE_OFF;
+								resultSet.imgProcFlag = RIGHTCURVE;
+//                RightCurveCompensate();
                 break;
             case CrossRoad:
                 BUZZLE_OFF;
                 resultSet.imgProcFlag |= CROSS_ROAD;
-                CrossRoadCompensate();
+//                CrossRoadCompensate();
                 break;
             case LeftBarrier:
                 BUZZLE_OFF;
-                return;
+                break;
             case RightBarrier:
                 BUZZLE_OFF;
-                return;
+                break;
             default:
-                BUZZLE_OFF;
-        }
+						if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
+												while(1){
+																MOTOR_STOP;
+																}
+																																		}
     }
 }
+
