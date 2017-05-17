@@ -6,20 +6,20 @@
 
 #define SPEED_BUF_SIZE 5
 
-typedef struct _PID {
-    int16_t currentValue;
-    int16_t valueBuf[SPEED_BUF_SIZE];
-    uint8_t cursor;
-    int16_t targetValue;
-    double kp;
-    double ki;
-    double kd;
-    int16_t lastError;
-    int16_t prevError;
-    int16_t sumError;
-    double output;
-}
-PID;
+//typedef struct _PID {
+//    int16_t currentValue;
+//    int16_t valueBuf[SPEED_BUF_SIZE];
+//    uint8_t cursor;
+//    int16_t targetValue;
+//    double kp;
+//    double ki;
+//    double kd;
+//    int16_t lastError;
+//    int16_t prevError;
+//    int16_t sumError;
+//    double output;
+//}
+//PID;
 
 typedef uint8_t byte;
 

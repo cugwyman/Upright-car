@@ -35,7 +35,7 @@ void MainInit() {
         
     DataCommInit();
 	
-		Oled_Init_n();
+//		Oled_Init_n();
 	
     BuzzleInit();
     
@@ -53,8 +53,8 @@ void MainInit() {
 
 void NVICInit() {
     NVIC_SetPriorityGrouping(NVIC_PriorityGroup_2);
-    NVIC_SetPriority(HREF_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 1));
-    NVIC_SetPriority(VSYN_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 0));
+    NVIC_SetPriority(HREF_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 0));
+    NVIC_SetPriority(VSYN_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 1));
     NVIC_SetPriority(TIMR_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 1, 0));
 }
 
@@ -84,7 +84,6 @@ void MainProc() {
                     cnt = false;
             }
     }
-
     dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
         if(dirAngleSpeed > TURN_FLAG || dirAngleSpeed < -TURN_FLAG) {

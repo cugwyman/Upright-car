@@ -2,11 +2,11 @@
 #define _PARAM_H
 
 //Angle
-#define AC_Set              264
+#define AC_Set              256
 
 #define Kalman_Sample_Time   0.0055
-#define AC_PID_P             160.0 // 160.0
-#define AC_PID_D             6 //   3.5
+#define AC_PID_P             190.0 // 160.0
+#define AC_PID_D             8 //   3.5
 #define MMAX_ZERO            1932
 #define MMAZ_ZERO            716
 #define GYRO_ZERO_SAMPLE     1000
@@ -14,9 +14,9 @@
 #define MMA_SCALE            3.178//*1.2//send to Kalman scale, end is 0.232
 
 /* Speed */
-#define VC_PID_P           190.0 //190.0// 
-#define VC_PID_I           0.35//   0.25
-#define VC_PID_D           80//40
+#define VC_PID_P           210.0 //190.0// 
+#define VC_PID_I           0.25//   0.25
+#define VC_PID_D           90//40
 //#define VC_Out_MAX         15000//25000
 #define VC_PERIOD          4
 
