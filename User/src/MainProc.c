@@ -19,60 +19,53 @@ static void TimerInit(void);
 static void MainProc(void);
 //static void SwitchAndParamLoad(void);
 
-void MainInit() {
+void MainInit() 
+{
     DelayInit();
-    
 //    SwitchAndParamLoad();
-    GearInit();
-    
-//    ModeSelect();
-    
-    MotorInit();
-    
-    CollectInit();  
-
-    EncoderInit();
-        
+    GearInit();    
+//    ModeSelect();   
+    MotorInit();   
+    CollectInit(); 
+    EncoderInit();       
     DataCommInit();
-	
 //		Oled_Init_n();
-	
     BuzzleInit();
-    
-    NVICInit();
-    
-    ImgProcInit();
-        
+    NVICInit(); 
+    ImgProcInit();     
     TimerInit();
     
     PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, ENABLE);
     GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
     GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
-
 }
 
-void NVICInit() {
+void NVICInit() 
+{
     NVIC_SetPriorityGrouping(NVIC_PriorityGroup_2);
     NVIC_SetPriority(HREF_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 0));
     NVIC_SetPriority(VSYN_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 0, 1));
     NVIC_SetPriority(TIMR_IRQ, NVIC_EncodePriority(NVIC_PriorityGroup_2, 1, 0));
 }
 
-void BuzzleInit() {
+void BuzzleInit() 
+{
     GPIO_QuickInit(BUZZLE_PORT, BUZZLE_PIN, kGPIO_Mode_OOD);
 		BUZZLE_OFF;
 }
 
-void TimerInit() {
+void TimerInit() 
+{
     PIT_QuickInit(PIT_CHL, PIT_PRD);
     PIT_CallbackInstall(PIT_CHL, MainProc);
     PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, DISABLE);
 }
 
-void MainProc() {
+void MainProc() 
+{
     static float time = 0;
-
     static bool cnt = true;
+	  static int16_t ring_time = 0;
     time += 0.005;
     if(cnt)
     {
@@ -86,19 +79,55 @@ void MainProc() {
     }
     dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
-        if(dirAngleSpeed > TURN_FLAG || dirAngleSpeed < -TURN_FLAG) {
-            if(MODE.VC_Set > VC_Min) {
-                MODE.VC_Set--;
-            } else if(MODE.VC_Set < VC_Min) {
-                MODE.VC_Set++;
-            }
-        } else {
-            if(MODE.VC_Set < VC_Max) {
-                MODE.VC_Set++;
-            } else if(MODE.VC_Set > VC_Max) {
-                MODE.VC_Set--;
-            }
+		    if( ring_time > 0 ) 
+				{
+						ring_time--;
+						if(MODE.VC_Set > VC_Min) 
+						{
+								MODE.VC_Set--;
+						} 
+						else if(MODE.VC_Set < VC_Min) 
+						{
+								MODE.VC_Set++;
+						}
         }
+				else
+				{
+						if( resultSet.imgProcFlag == STRAIGHT_ROAD ) 
+						{
+								if(MODE.VC_Set < VC_Max) 
+								{
+										MODE.VC_Set++;
+								} 
+								else if(MODE.VC_Set > VC_Max) 
+								{
+										MODE.VC_Set--;
+								}
+						} 
+						else if( resultSet.imgProcFlag == CIRCLE || resultSet.imgProcFlag == RAMP) 
+						{
+								ring_time = 300;
+								if(MODE.VC_Set > VC_Min) 
+								{
+										MODE.VC_Set--;
+								} 
+								else if(MODE.VC_Set < VC_Min) 
+								{
+										MODE.VC_Set++;
+								}
+						}
+						else
+						{
+								if(MODE.VC_Set > VC_Set) 
+								{
+										MODE.VC_Set--;
+								} 
+								else if(MODE.VC_Set < VC_Set) 
+								{
+										MODE.VC_Set++;
+								}
+						}
+			  }
     #endif
 
     #if defined(VC) || defined(DC)
@@ -131,10 +160,12 @@ void MainProc() {
         }
     #endif
 
-    if(inRing || ringEndDelay) {
+    if(inRing || ringEndDelay) 
+    {
         ringDistance += speed * 5;
     }
-    if(aroundBarrier) {
+    if(aroundBarrier) 
+    {
         barrierDistance += speed * 5;
     }
 //    if(speed_control_on) {
@@ -167,8 +198,7 @@ void MainProc() {
 //    rightPid.ki = 5;
 //    rightPid.kd = 10;
 //    
-//    
-////    MODE.pre_sight = 28;
+//    MODE.pre_sight = 28;
 //    
 //    direction_control_kd = 0.2;
 //    direction_control_kpj = 0.025;

@@ -31,20 +31,24 @@ static void ImgProcSummary(void);
 static img_proc_type_array imgProc = { ImgProc0, ImgProc1, ImgProc2 ,ImgProc3 };
 
 #ifdef USE_BMP
-inline void SetImgBufAsBitMap(int16_t row, int16_t col) {
+inline void SetImgBufAsBitMap(int16_t row, int16_t col) 
+{
     imgBuf[row][col >> SHIFT] |= (1 << (col & MASK));
 }
 
-inline void ClrImgBufAsBitMap(int16_t row, int16_t col) {
+inline void ClrImgBufAsBitMap(int16_t row, int16_t col) 
+{
     imgBuf[row][col >> SHIFT] &= ~(1 << (col & MASK));
 }
 
-inline bool TstImgBufAsBitMap(int16_t row, int16_t col) {
+inline bool TstImgBufAsBitMap(int16_t row, int16_t col) 
+{
     return imgBuf[row][col >> SHIFT] & (1 << (col & MASK));
 }
 #endif
 
-void ImgProcInit(void) {
+void ImgProcInit(void) 
+{
     GPIO_QuickInit(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_Mode_IPU);
     GPIO_CallbackInstall(CAMERA_HREF_PORT, ImgProcHREF);
@@ -56,7 +60,8 @@ void ImgProcInit(void) {
 		GPIO_QuickInit(CAMERA_ODEV_PORT, CAMERA_ODEV_PIN, kGPIO_Mode_IPU);
 }
 
-void ImgProcHREF(uint32_t pinxArray) {
+void ImgProcHREF(uint32_t pinxArray) 
+{
     //if pinxArray & (1 << CAMERA_HREF_PIN) then
 //		static bool cnt = true;
 //		static uint32_t debug_cnt = 0;
@@ -74,7 +79,8 @@ void ImgProcHREF(uint32_t pinxArray) {
     imgRealRow++;
 }
 
-void ImgProcVSYN(uint32_t pinxArray) {
+void ImgProcVSYN(uint32_t pinxArray) 
+{
     //if pinxArray & (1 << CAMERA_VSYN_PIN) then
 //			static uint32_t debug_cnt = 0;
 //		if(debug_cnt > 50)
@@ -92,45 +98,53 @@ void ImgProcVSYN(uint32_t pinxArray) {
     searchForBordersStartIndex = IMG_COL / 2;
 }
 
-void ImgProc0() {
+void ImgProc0() 
+{
     int16_t i;
     for(i = 0; i <= IMG_READ_DELAY; i++) { } //ignore points near the border
     #ifdef USE_BMP
         static byte tmpBuf[IMG_COL]; //cache
-        for(i = IMG_COL - 1; i >= 0; i--) {
+        for(i = IMG_COL - 1; i >= 0; i--)
+        {
             tmpBuf[i] = CAMERA_DATA_READ;
             __ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");
             __ASM("nop");__ASM("nop");__ASM("nop");__ASM("nop");
         }
-        for(i = IMG_COL - 1; i >= 0; i--) {
+        for(i = IMG_COL - 1; i >= 0; i--) 
+        {
             if(tmpBuf[i])
                 SetImgBufAsBitMap(imgBufRow, i);
             else
                 ClrImgBufAsBitMap(imgBufRow, i);
         }
     #else
-        for(i = IMG_COL - 1; i >= 0; i--) {
+        for(i = IMG_COL - 1; i >= 0; i--) 
+        {
             imgBuf[imgBufRow][i] = CAMERA_DATA_READ;
         }
     #endif
 }
 
-void ImgProc1() {
+void ImgProc1() 
+{
     resultSet.foundLeftBorder[imgBufRow] = LeftBorderSearchFrom(imgBufRow, searchForBordersStartIndex);
     resultSet.foundRightBorder[imgBufRow] = RightBorderSearchFrom(imgBufRow, searchForBordersStartIndex);
 }
 
-void ImgProc2() {
+void ImgProc2() 
+{
     MiddleLineUpdate(imgBufRow);
     searchForBordersStartIndex = resultSet.middleLine[imgBufRow];
 }
 
-void ImgProc3() {
+void ImgProc3()
+{
     CurveSlopeUpdate(imgBufRow);
     imgBufRow++;
 }
 
-void ImgProcSummary() {
+void ImgProcSummary() 
+{
 	    resultSet.imgProcFlag = 0;
 //		BUZZLE_ON; OutOfRoadJudge()
 //    if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
@@ -140,35 +154,57 @@ void ImgProcSummary() {
 ////			printf("123\n");
 //    } else {
 	BUZZLE_OFF;
-        if(StraightLineJudge()) {
+        if(StraightLineJudge())
+        {
+					if(
+//						resultSet.leftBorder[IMG_ROW-1] < resultSet.leftSlope[5]*(IMG_ROW-1) + resultSet.leftZero[5]
+//						&& resultSet.leftBorder[IMG_ROW-2] < resultSet.leftSlope[5]*(IMG_ROW-2) + resultSet.leftZero[5]
+//						&& resultSet.leftBorder[IMG_ROW-3] < resultSet.leftSlope[0]*(IMG_ROW-3) + resultSet.leftZero[0]
+//						&& resultSet.rightBorder[IMG_ROW-1] > resultSet.rightSlope[5]*(IMG_ROW-1) + resultSet.rightZero[5] ) 
+//						&& resultSet.rightBorder[IMG_ROW-2] > resultSet.rightSlope[5]*(IMG_ROW-2) + resultSet.rightZero[5] )
+//						&& resultSet.rightBorder[IMG_ROW-3] > resultSet.rightSlope[0]*(IMG_ROW-3) + resultSet.rightZero[0] )
+					resultSet.rightBorder[MODE.pre_sight] - resultSet.leftBorder[MODE.pre_sight] > 190
+				&& resultSet.rightBorder[MODE.pre_sight-1] - resultSet.leftBorder[MODE.pre_sight-1] > 200
+				&& resultSet.rightBorder[MODE.pre_sight+1] - resultSet.leftBorder[MODE.pre_sight+1] > 180)
+					{
+						resultSet.imgProcFlag = RAMP;
+						BUZZLE_ON;
+					}
+					else
+					{
             resultSet.imgProcFlag = STRAIGHT_ROAD;
-//						BUZZLE_OFF;
+						BUZZLE_OFF;
+					}
         }
-       else switch(GetRoadType()) {
+       switch(GetRoadType()) 
+       {
             case Ring:
-//                BUZZLE_OFF;
-//                RingCompensateGoLeft();
-								resultSet.imgProcFlag = CIRCLE;
+                BUZZLE_OFF;
+                RingCompensateGoRight();
+																resultSet.imgProcFlag = CIRCLE;
                 break;
             case RingEnd:
-//                BUZZLE_OFF;
-//                RingEndCompensateFromLeft();
+                BUZZLE_OFF;
+//								resultSet.imgProcFlag = RINGEND;
+                RingEndCompensateFromRight();
                 break;
             case LeftCurve:
-//                BUZZLE_ON;
+                BUZZLE_OFF;
 //                LeftCurveCompensate();
-								resultSet.imgProcFlag = LEFTCURVE;
+																resultSet.imgProcFlag = LEFTCURVE;
+								ring_offset = 0;
                 break;
             case RightCurve:
-//                BUZZLE_ON;
-								resultSet.imgProcFlag = RIGHTCURVE;
+                BUZZLE_OFF;
+																resultSet.imgProcFlag = RIGHTCURVE;
 //                RightCurveCompensate();
+								ring_offset = 0;
+								break;
+            case CrossRoad:
+                BUZZLE_OFF;
+                                resultSet.imgProcFlag = CROSS_ROAD;
+//                CrossRoadCompensate();
                 break;
-//            case CrossRoad:
-//                BUZZLE_ON;
-//                resultSet.imgProcFlag = CROSS_ROAD;
-////                CrossRoadCompensate();
-//                break;
             case LeftBarrier:
 //                BUZZLE_OFF;
                 break;
@@ -176,12 +212,15 @@ void ImgProcSummary() {
 //                BUZZLE_OFF;
                 break;
             default:
-////						if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
-////												while(1){
-////																MOTOR_STOP;
-////																}
-////																																		}
+                if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) 
+                    {
+                        while(1)
+                            {
+                                MOTOR_STOP;
+                            }
+                    }
 						break;
-    }
+                         
+        }
 }
 

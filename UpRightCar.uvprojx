@@ -13,16 +13,16 @@
       <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
       <TargetOption>
         <TargetCommonOption>
-          <Device>MK10DN512xxx10</Device>
+          <Device>MK60DN512xxx10</Device>
           <Vendor>NXP</Vendor>
-          <PackID>Keil.Kinetis_K10_DFP.1.2.0</PackID>
+          <PackID>Keil.Kinetis_K60_DFP.1.4.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IRAM(0x20000000,0x00010000) IRAM2(0x1FFF0000,0x00010000) IROM(0x00000000,0x00080000) CPUTYPE("Cortex-M4") CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000,0x10000) IRAM2(0x1FFF0000,0x10000) IROM(0x00000000,0x80000) CPUTYPE("Cortex-M4") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0MK_P512 -FS00 -FL080000 -FP0($$Device:MK10DN512xxx10$Flash\MK_P512.FLM))</FlashDriverDll>
-          <DeviceId>5843</DeviceId>
-          <RegisterFile>$$Device:MK10DN512xxx10$Device\Include\MK10D10.h</RegisterFile>
+          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0MK_P512 -FS00 -FL080000 -FP0($$Device:MK60DN512xxx10$Flash\MK_P512.FLM))</FlashDriverDll>
+          <DeviceId>5854</DeviceId>
+          <RegisterFile>$$Device:MK60DN512xxx10$Device\Include\MK60D10.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -32,7 +32,7 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:MK10DN512xxx10$SVD\MK10D10.svd</SFDFile>
+          <SFDFile>$$Device:MK60DN512xxx10$SVD\MK60D10.svd</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
@@ -137,7 +137,7 @@
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3>"" ()</Flash3>
+          <Flash3></Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -191,7 +191,7 @@
             <uLtcg>0</uLtcg>
             <nSecure>0</nSecure>
             <RoSelD>3</RoSelD>
-            <RwSelD>4</RwSelD>
+            <RwSelD>3</RwSelD>
             <CodeSel>0</CodeSel>
             <OptFeed>0</OptFeed>
             <NoZi1>0</NoZi1>
@@ -333,7 +333,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>MK10D10</Define>
+              <Define>MK60D10</Define>
               <Undefine></Undefine>
               <IncludePath>.\Libraries\devices\inc;.\Libraries\drivers\K\inc;.\Libraries\startup\CoreSupport;.\Libraries\startup\DeviceSupport;.\User\inc;.\Debug\inc</IncludePath>
             </VariousControls>

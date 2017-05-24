@@ -23,63 +23,63 @@ void GearInit(void)
     else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode3();}
     else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { Mode4();}
     else                                        { Mode0();}
-		VC_Max = MODE.VC_Set;
-		VC_Min = MODE.VC_Set * 3 / 4;
+		VC_Max = MODE.VC_Set + 6;
+		VC_Min = MODE.VC_Set - 6;
 		VC_Set = MODE.VC_Set;
 }
 
 void Mode4(void)//不错good?!
 {
-    MODE.VC_Set = 40;
-    MODE.pre_sight = 27;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 28;
     
-    MODE.DC_PID_P_COEF = 68;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 8000;
-    MODE.DC_PID_D = 4;
+    MODE.DC_PID_P_COEF = 105;
+    MODE.DC_P_MIN = 3000;
+    MODE.DC_P_MAX = 10000;
+    MODE.DC_PID_D = 5;
 }
 
 void Mode3(void)//不错good?!
 {
-    MODE.VC_Set = 40;
-    MODE.pre_sight = 26;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 27;
     
-    MODE.DC_PID_P_COEF = 68;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 8000;
-    MODE.DC_PID_D = 4;
+    MODE.DC_PID_P_COEF = 105;
+    MODE.DC_P_MIN = 3000;
+    MODE.DC_P_MAX = 10000;
+    MODE.DC_PID_D = 5;
 }
     
 void Mode2(void)//不错good?!
 {
-    MODE.VC_Set = 40;
-    MODE.pre_sight = 25;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 26;
     
-    MODE.DC_PID_P_COEF = 68;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 8000;
+    MODE.DC_PID_P_COEF = 105;
+    MODE.DC_P_MIN = 3000;
+    MODE.DC_P_MAX = 10000;
     MODE.DC_PID_D = 4;
 }
 
 void Mode1(void)
 {
-    MODE.VC_Set = 40;
-    MODE.pre_sight = 24;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 25;
     
-    MODE.DC_PID_P_COEF = 68;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 8000;
+    MODE.DC_PID_P_COEF = 105;
+    MODE.DC_P_MIN = 3000;
+    MODE.DC_P_MAX = 10000;
     MODE.DC_PID_D = 4;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set = 40;
-    MODE.pre_sight = 23;
+    MODE.VC_Set = 66;
+    MODE.pre_sight = 24;
     
-    MODE.DC_PID_P_COEF = 68;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 8000;
+    MODE.DC_PID_P_COEF = 105;
+    MODE.DC_P_MIN = 3000;
+    MODE.DC_P_MAX = 10000;
     MODE.DC_PID_D = 4;
 }
 
@@ -89,7 +89,8 @@ void Mode0(void)
  * \param[in]  nextPoint 当前速度值(左右轮平均速度)
  * @retval 速度环输出, 作为标准电机输出的一环
  */
-int32_t VelocityPID(int32_t set, int32_t nextpoint) {
+int32_t VelocityPID(int32_t set, int32_t nextpoint) 
+{
 	float error;
   static float lastError = 0, prevError = 0;
 	float P, I, D;
@@ -113,7 +114,8 @@ int32_t VelocityPID(int32_t set, int32_t nextpoint) {
  * @param[in]  speed 由编码器采集的速度, 用于PID闭环控制
  * @retval 速度环输出, 作为标准电机输出的一环, 有限幅, 在头文件Param.h中定义为VC_Out_MAX
  */
-int32_t VelocityProc(int32_t speed) {
+int32_t VelocityProc(int32_t speed) 
+{
     static uint8_t count = 0;
     static int32_t VC_Out_Old = 0, VC_Out_New = 0;
     int32_t VC_Out;

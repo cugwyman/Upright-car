@@ -14,7 +14,8 @@ float angleSpeedIntegral;
  * \param[in]  angle_speed_kal 由陀螺仪得到的角速度参量
  * @retval 稳定可靠的角度值, 用于直立控制
  */
-static float KalmanFilter(float angle_kal, float angle_speed_kal) {
+static float KalmanFilter(float angle_kal, float angle_speed_kal) 
+{
     static float angle_kalman = 0;
     static float Pk[2][2] = {{1, 0}, {0, 1}};
     float Pdot[4] ={0,0,0,0};
@@ -54,7 +55,8 @@ static float KalmanFilter(float angle_kal, float angle_speed_kal) {
  * \param[in]  nextPoint 当前角度值
  * @retval 角度环输出, 作为标准电机输出的一环
  */
-static int32_t AnglePID(float set, float nextPoint) { 
+static int32_t AnglePID(float set, float nextPoint) 
+{ 
     float error;
 //    static float lastError;
     float P, D;
@@ -75,7 +77,8 @@ static int32_t AnglePID(float set, float nextPoint) {
  * @brief  标准角度环处理
  * @retval 角度环输出, 作为标准电机输出的一环
  */
-int32_t AngleProc(void) {
+int32_t AngleProc(void) 
+{
     gyro = GyroGet();
     AcceGet(&mmax, &mmaz);
     angleMma = (mmaz - mmax) * MMA_GAIN;

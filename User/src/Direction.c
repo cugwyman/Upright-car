@@ -29,25 +29,35 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
                              #ifdef DYNAMIC_DC_PID
                              , float DC_PID_P, int16_t DC_PID_D
                              #endif
-                             ) {
+) 
+{
     int32_t P, D;
     int32_t incpid;
-    int8_t absState;
+    int16_t absState;
+	  int16_t absMiddleSlope;
+
     state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
     if(state > 110)
 			state = 110;
-		if(state < -110)
-			state = -110;
-		if(state >= 0)
-			absState = state;
+    if(state < -110)
+        state = -110;
+    if(state >= 0)		
+				absState = state;
 		else
-			absState = -state;
-//		if(resultSet.imgProcFlag == STRAIGHT_ROAD) 
+        absState = -state;
+    if(resultSet.middleSlope[MODE.pre_sight] >= 0)		
+				absMiddleSlope = resultSet.middleSlope[MODE.pre_sight];
+		else
+        absMiddleSlope = -resultSet.middleSlope[MODE.pre_sight];
+		if(resultSet.imgProcFlag == STRAIGHT_ROAD)
+				P = DC_PID_P * state/ 50 ;
+
 //        P = DC_PID_P * state * absState / 2500;    //  50 / 50
 //        P =300 * state;                            //  4000/50
-//    else 
-//		P = DC_PID_P * state * absState / 2500;    //  50 / 50 
-		P = DC_PID_P * state/ 50 ;
+    else 
+				P = DC_PID_P * state * absState / 2800 + absMiddleSlope * 300;    //  50 / 50 
+//		P = DC_PID_P * state/ 50 + absMiddleSlope * 300;    //  50 / 50 
+		
     D = DC_PID_D * dirAngleSpeed;
     
     incpid = P + D;
@@ -56,9 +66,11 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
 }
 
 
-int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle) {
+int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle) 
+{
     float avgMiddle = 0;
-    for(int16_t i = MODE.pre_sight - 3; i < MODE.pre_sight + 3; ++i) {
+    for(int16_t i = MODE.pre_sight - 3; i < MODE.pre_sight + 3; ++i) 
+    {
         avgMiddle += middleLine[i];
     }
     avgMiddle /= 6;
@@ -71,12 +83,12 @@ int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle) {
  * @param[in]  speed 由编码器采集的速度, 用于计算动态P
  * @retval 方向环输出, 作为标准电机输出的一环
  */
-int32_t DirectionProc(int32_t speed) {
+int32_t DirectionProc(int32_t speed)
+{
     static uint8_t count = 0;
     static int32_t DC_Out_Old = 0, DC_Out_New = 0;
     int32_t DC_Out;
     
-
     if( count >= DC_PERIOD )
     {
         count = 0;

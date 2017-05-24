@@ -18,6 +18,7 @@ void BarrierCompensate(void);
 bool StartLineJudge(int16_t row);
 bool StraightLineJudge(void);
 
+extern int16_t ring_offset;
 extern int32_t ringDistance;
 extern bool inRing;
 extern bool ringEndDelay;

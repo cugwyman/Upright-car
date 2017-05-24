@@ -11,11 +11,11 @@ int main(void)
 {
 		MainInit();
 		while(1) {
-//			BUZZLE_ON;
+//			BUZZLE_OFF;
 		ImgTrans(&resultSet);
 //		StateTrans(Angle_Kalman,0,0,0);
 //		printf("%d\n",resultSet.imgProcFlag);
-					DelayMs(5);
+					DelayMs(50);
 //			Oled_PrintfPhoto1(imgBuf);
 	}
 }
