@@ -143,8 +143,9 @@ void ImgProc3()
     imgBufRow++;
 }
 
-void ImgProcSummary() 
+void ImgProcSummary()
 {
+	int i;
 	    resultSet.imgProcFlag = 0;
 //		BUZZLE_ON; OutOfRoadJudge()
 //    if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
@@ -156,30 +157,28 @@ void ImgProcSummary()
 	BUZZLE_OFF;
         if(StraightLineJudge())
         {
-					if(
-//						resultSet.leftBorder[IMG_ROW-1] < resultSet.leftSlope[5]*(IMG_ROW-1) + resultSet.leftZero[5]
-//						&& resultSet.leftBorder[IMG_ROW-2] < resultSet.leftSlope[5]*(IMG_ROW-2) + resultSet.leftZero[5]
-//						&& resultSet.leftBorder[IMG_ROW-3] < resultSet.leftSlope[0]*(IMG_ROW-3) + resultSet.leftZero[0]
-//						&& resultSet.rightBorder[IMG_ROW-1] > resultSet.rightSlope[5]*(IMG_ROW-1) + resultSet.rightZero[5] ) 
-//						&& resultSet.rightBorder[IMG_ROW-2] > resultSet.rightSlope[5]*(IMG_ROW-2) + resultSet.rightZero[5] )
-//						&& resultSet.rightBorder[IMG_ROW-3] > resultSet.rightSlope[0]*(IMG_ROW-3) + resultSet.rightZero[0] )
-					resultSet.rightBorder[MODE.pre_sight] - resultSet.leftBorder[MODE.pre_sight] > 190
-				&& resultSet.rightBorder[MODE.pre_sight-1] - resultSet.leftBorder[MODE.pre_sight-1] > 200
-				&& resultSet.rightBorder[MODE.pre_sight+1] - resultSet.leftBorder[MODE.pre_sight+1] > 180)
+			for(i=1;i<IMG_ROW;i++)
+			{
+				if(
+					(resultSet.rightBorder[i] - resultSet.leftBorder[i] > resultSet.rightBorder[i-1] - resultSet.leftBorder[i-1]) && ((Angle_Kalman - Pre_Angle_Kalman) > 10 && time > 3)
+				
+					)
 					{
 						resultSet.imgProcFlag = RAMP;
-						BUZZLE_ON;
+						BUZZLE_OFF;
+						break;
 					}
-					else
+				}
+					if(i==IMG_ROW)
 					{
-            resultSet.imgProcFlag = STRAIGHT_ROAD;
+						resultSet.imgProcFlag = STRAIGHT_ROAD;
 						BUZZLE_OFF;
 					}
         }
-       switch(GetRoadType()) 
+       switch(GetRoadType())
        {
             case Ring:
-                BUZZLE_OFF;
+                BUZZLE_ON;
                 RingCompensateGoRight();
 																resultSet.imgProcFlag = CIRCLE;
                 break;
@@ -212,7 +211,7 @@ void ImgProcSummary()
 //                BUZZLE_OFF;
                 break;
             default:
-                if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) 
+                if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight ))
                     {
                         while(1)
                             {

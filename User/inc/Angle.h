@@ -14,7 +14,8 @@ extern float Kal_Gyro;
 extern float gyro;
 extern int32_t mmax, mmaz;
 extern float angle, angleSpeed;
-extern float Angle_Kalman;
+extern int16_t Angle_Kalman;
+extern int16_t Pre_Angle_Kalman;
 extern float angleSpeedIntegral;
 
 int32_t AngleProc(void);

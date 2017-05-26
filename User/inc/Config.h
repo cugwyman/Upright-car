@@ -8,6 +8,6 @@
 #define xOUT_JUDGE
 #define DYNAMIC_DC_PID
 #define xFIX
-#define SLOW_DOWN
+//#define SLOW_DOWN
 
 #endif

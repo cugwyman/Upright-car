@@ -11,6 +11,8 @@ int32_t Left_Out, Right_Out;
 #if defined(SINGLE_VC) || defined(VC) || defined(DC)
 int32_t speed;
 float distance;
+float time;
+
 #endif
 
 static void NVICInit(void);
@@ -24,12 +26,11 @@ void MainInit()
     DelayInit();
 //    SwitchAndParamLoad();
     GearInit();    
-//    ModeSelect();   
     MotorInit();   
     CollectInit(); 
     EncoderInit();       
     DataCommInit();
-//		Oled_Init_n();
+		Oled_Init_n();
     BuzzleInit();
     NVICInit(); 
     ImgProcInit();     
@@ -61,9 +62,8 @@ void TimerInit()
     PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, DISABLE);
 }
 
-void MainProc() 
+void MainProc()
 {
-    static float time = 0;
     static bool cnt = true;
 	  static int16_t ring_time = 0;
     time += 0.005;
@@ -79,7 +79,7 @@ void MainProc()
     }
     dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
-		    if( ring_time > 0 ) 
+		    if( ring_time > 0 )
 				{
 						ring_time--;
 						if(MODE.VC_Set > VC_Min) 
@@ -132,6 +132,15 @@ void MainProc()
 
     #if defined(VC) || defined(DC)
         speed = EncoderGet();
+	if(inRing || ringEndDelay) 
+    {
+        ringDistance += speed * 5;
+    }
+    if(aroundBarrier) 
+    {
+        barrierDistance += speed * 5;
+    }
+
     #endif
     #ifdef AC
         AC_Out = AngleProc();
@@ -155,19 +164,11 @@ void MainProc()
             Right_Out = AC_Out - VC_Out - DC_Out;
 
             MotorOut(Left_Out, Right_Out);
-//            MotorOut(0, 0);
+//            MotorOut(3000, 3000);
     #if defined(OUT_JUDGE) || defined(RS_JUDGE)
         }
     #endif
 
-    if(inRing || ringEndDelay) 
-    {
-        ringDistance += speed * 5;
-    }
-    if(aroundBarrier) 
-    {
-        barrierDistance += speed * 5;
-    }
 //    if(speed_control_on) {
 //        SpeedControlProc(leftSpeed, rightSpeed);
 //    }

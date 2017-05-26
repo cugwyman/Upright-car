@@ -55,8 +55,8 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
 //        P = DC_PID_P * state * absState / 2500;    //  50 / 50
 //        P =300 * state;                            //  4000/50
     else 
-				P = DC_PID_P * state * absState / 2800 + absMiddleSlope * 300;    //  50 / 50 
-//		P = DC_PID_P * state/ 50 + absMiddleSlope * 300;    //  50 / 50 
+//				P = DC_PID_P * state * absState / 3000 + absMiddleSlope * 200;    //  50 / 50 
+		P = DC_PID_P * state/ 50 + absMiddleSlope * 300;    //  50 / 50 
 		
     D = DC_PID_D * dirAngleSpeed;
     

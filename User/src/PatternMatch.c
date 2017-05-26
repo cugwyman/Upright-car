@@ -342,32 +342,35 @@ void RingCompensateGoLeft()
 
 void RingCompensateGoRight()
 {
-//    int row;
-//    for (row = IMG_ROW - 1;row >= 30 && IsWhite(row, IMG_COL / 2); --row) { }
-//    for (; row >= 10 && IsBlack(row, IMG_COL / 2); --row) { }
-//    int col;
-//    for (col = IMG_COL / 2; col < IMG_COL && IsBlack(row + 1, col); ++col) { }
-//    for (int i = row; i > 0; --i)
-//    {
-//        resultSet.leftBorder[i] = col - (row + 1 - i) * (col - resultSet.leftBorder[0]) / row;
-//        resultSet.middleLine[i] = (resultSet.leftBorder[i] + resultSet.rightBorder[i]) / 2;
-//    }
-//    int16_t borderSearchStart = col + (IMG_COL - col) / 2;
-//    for (int i = row; i < IMG_ROW; ++i)
-//    {
-//        LeftBorderSearchFrom(i, borderSearchStart);
-//        RightBorderSearchFrom(i, borderSearchStart);
-//        resultSet.middleLine[i] = (resultSet.leftBorder[i] + resultSet.rightBorder[i]) / 2;
-//        borderSearchStart = resultSet.middleLine[i];
-//    }
+    int row;
+    for (row = IMG_ROW - 1;row >= 30 && IsWhite(row, IMG_COL / 2); --row) { }
+    for (; row >= 10 && IsBlack(row, IMG_COL / 2); --row) { }
+    int col;
+    for (col = IMG_COL / 2; col < IMG_COL && IsBlack(row + 1, col); ++col) { }
+    for (int i = row; i > 0; --i)
+    {
+        resultSet.leftBorder[i] = col - (row + 1 - i) * (col - resultSet.leftBorder[0]) / (3*row);
+        resultSet.middleLine[i] = (resultSet.leftBorder[i] + resultSet.rightBorder[i]) / 2;
+    }
+    int16_t borderSearchStart = col + (IMG_COL - col) / 2;
+    for (int i = row; i < IMG_ROW; ++i)
+    {
+        LeftBorderSearchFrom(i, borderSearchStart);
+        RightBorderSearchFrom(i, borderSearchStart);
+        resultSet.middleLine[i] = (resultSet.leftBorder[i] + resultSet.rightBorder[i]) / 2;
+        borderSearchStart = resultSet.middleLine[i];
+    }
 	
 //	for(int i = 0;i < IMG_ROW;++i) {
 //		resultSet.middleLine[i] = resultSet.rightBorder[i] - 50;
 //	}
-		ring_offset += 4;
-    for (int i=MODE.pre_sight-3; i < MODE.pre_sight+3; ++i) {
-			resultSet.middleLine[i] = ring_offset + 118;
-		}
+//		if(ring_offset >= 40)
+//				ring_offset = ring_offset;
+//		else
+//				ring_offset += 4;
+//    for (int i=MODE.pre_sight-3; i < MODE.pre_sight+3; ++i) {
+//			resultSet.middleLine[i] = ring_offset + 118;
+//		}
 
 }
 

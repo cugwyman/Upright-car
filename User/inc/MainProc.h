@@ -23,6 +23,8 @@ extern int32_t Left_Out, Right_Out;
 #if defined(SINGLE_VC) || defined(VC) || defined(DC)
 extern int32_t speed;
 extern float distance;
+extern float time;
+
 #endif
 
 void MainInit(void);

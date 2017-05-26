@@ -5,7 +5,8 @@ float gyro;
 int32_t mmax, mmaz;
 float angleMma;
 float angle, angleSpeed;
-float Angle_Kalman;
+int16_t Angle_Kalman;
+int16_t Pre_Angle_Kalman;
 float angleSpeedIntegral;
 
 /**
@@ -55,9 +56,9 @@ static float KalmanFilter(float angle_kal, float angle_speed_kal)
  * \param[in]  nextPoint 当前角度值
  * @retval 角度环输出, 作为标准电机输出的一环
  */
-static int32_t AnglePID(float set, float nextPoint) 
+static int32_t AnglePID(int16_t set, int16_t nextPoint) 
 { 
-    float error;
+    int16_t error;
 //    static float lastError;
     float P, D;
     int32_t incpid;
@@ -79,12 +80,19 @@ static int32_t AnglePID(float set, float nextPoint)
  */
 int32_t AngleProc(void) 
 {
+	static int16_t cnt = 0;
     gyro = GyroGet();
     AcceGet(&mmax, &mmaz);
     angleMma = (mmaz - mmax) * MMA_GAIN;
     angle = angleMma * MMA_SCALE;
     angleSpeed = -gyro;
 	angleSpeedIntegral += angleSpeed * 0.005;
-    Angle_Kalman = KalmanFilter(angle, angleSpeed);
+    Angle_Kalman = (int16_t)KalmanFilter(angle, angleSpeed);
+	cnt++;
+	if(cnt > 200)
+	{
+		Pre_Angle_Kalman = Angle_Kalman;
+		cnt = 0;
+	}
     return -AnglePID(AC_Set, Angle_Kalman);//暂且取相反数
 }
