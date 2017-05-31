@@ -62,7 +62,7 @@
 #define DISABLE_WDOG    1
 
 #ifndef CLOCK_SETUP
-#define CLOCK_SETUP     3
+#define CLOCK_SETUP     4
 #endif
 /* Predefined clock setups
    0 ... Internal clock 32.768KHz  FLL output   Core clock = 41.94MHz   BusClock = 41.94MHz
