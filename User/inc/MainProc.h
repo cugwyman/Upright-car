@@ -20,10 +20,11 @@ extern int32_t AC_Out;
 extern int32_t VC_Out;
 extern int32_t DC_Out;
 extern int32_t Left_Out, Right_Out;
-#if defined(SINGLE_VC) || defined(VC) || defined(DC)
-extern int32_t speed;
 extern float distance;
 extern float time;
+
+#if defined(SINGLE_VC) || defined(VC) || defined(DC)
+extern int32_t speed;
 
 #endif
 

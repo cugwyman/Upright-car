@@ -8,11 +8,11 @@ int32_t AC_Out;
 int32_t VC_Out;
 int32_t DC_Out;
 int32_t Left_Out, Right_Out;
-#if defined(SINGLE_VC) || defined(VC) || defined(DC)
-int32_t speed;
 float distance;
 float time;
 
+#if defined(SINGLE_VC) || defined(VC) || defined(DC)
+int32_t speed;
 #endif
 
 static void NVICInit(void);
@@ -30,8 +30,8 @@ void MainInit()
     CollectInit(); 
     EncoderInit();       
     DataCommInit();
-		Oled_Init_n();
-    BuzzleInit();
+    Oled_Init_n();
+//    BuzzleInit();
     NVICInit(); 
     ImgProcInit();     
     TimerInit();
@@ -52,7 +52,7 @@ void NVICInit()
 void BuzzleInit() 
 {
     GPIO_QuickInit(BUZZLE_PORT, BUZZLE_PIN, kGPIO_Mode_OOD);
-		BUZZLE_OFF;
+    BUZZLE_OFF;
 }
 
 void TimerInit() 
@@ -65,10 +65,10 @@ void TimerInit()
 void MainProc()
 {
     static bool cnt = true;
-	  static int16_t ring_time = 0;
+    static int16_t ring_time = 0;
     time += 0.005;
     if(cnt)
-    {
+        {
             if(time < 1)
                     MODE.VC_Set = 0;
             else
@@ -76,7 +76,7 @@ void MainProc()
                     MODE.VC_Set = VC_Set;
                     cnt = false;
             }
-    }
+        }
     dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
 		    if( ring_time > 0 )

@@ -58,21 +58,48 @@ static float KalmanFilter(float angle_kal, float angle_speed_kal)
  */
 static int32_t AnglePID(int16_t set, int16_t nextPoint) 
 { 
-    int16_t error;
+    int16_t error, kernelError;
 //    static float lastError;
-    float P, D;
-    int32_t incpid;
+    static int16_t lastError = 0, prevError = 0, lastKernelError = 0, prevKernelError = 0;
+
+    float P, I, D, kernelP, kernelI, kernelD;
+    static int32_t incpid = 0, anglePID = 0, angleSpeedPID = 0;
     
     error = set - nextPoint;
-    P = AC_PID_P * error;
-    D = AC_PID_D * angleSpeed;
+    P = AC_PID_P * ( error - lastError );
+	I = AC_PID_I * error;
+    D = AC_PID_D * ( error - 2 * lastError + prevError );
     
+    if (I > 20)
+        I = 0;
+    else if (I < -20)
+        I = 0;
+
+    prevError = lastError;
+    lastError = error;
+
 //    lastError = error;
     
-    incpid = P - D;
+    anglePID += ( P + I + D );
     
+    kernelError = anglePID + angleSpeed;
+    kernelP = AC_KERNEL_PID_P * ( kernelError - lastKernelError );
+	kernelI = AC_KERNEL_PID_I * kernelError;
+    kernelD = AC_KERNEL_PID_D * ( kernelError - 2 * lastKernelError + prevKernelError );
+
+    if (kernelI > 20)
+        kernelI = 0;
+    else if (kernelI < -20)
+        kernelI = 0;
+
+    prevKernelError = lastKernelError;
+    lastKernelError = kernelError;
+    angleSpeedPID += ( kernelP + kernelI + kernelD );
+    
+    incpid = anglePID * 0.8 + angleSpeedPID / 2;
     return(incpid);
 }
+
 
 /**
  * @brief  标准角度环处理

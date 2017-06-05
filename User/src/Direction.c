@@ -34,29 +34,30 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
     int32_t P, D;
     int32_t incpid;
     int16_t absState;
-	  int16_t absMiddleSlope;
+    int16_t absMiddleSlope;
 
     state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
     if(state > 110)
-			state = 110;
+        state = 110;
     if(state < -110)
         state = -110;
     if(state >= 0)		
-				absState = state;
-		else
+        absState = state;
+    else
         absState = -state;
+    
     if(resultSet.middleSlope[MODE.pre_sight] >= 0)		
-				absMiddleSlope = resultSet.middleSlope[MODE.pre_sight];
-		else
+        absMiddleSlope = resultSet.middleSlope[MODE.pre_sight];
+    else
         absMiddleSlope = -resultSet.middleSlope[MODE.pre_sight];
 //		if(resultSet.imgProcFlag == STRAIGHT_ROAD)
-				P = DC_PID_P * state/ 50 ;
+//				P = DC_PID_P * state/ 50 ;
 
 //        P = DC_PID_P * state * absState / 2500;    //  50 / 50
 //        P =300 * state;                            //  4000/50
 //    else 
 //				P = DC_PID_P * state * absState / 3000 + absMiddleSlope * 200;    //  50 / 50 
-//		P = DC_PID_P * state/ 50 + absMiddleSlope * 300;    //  50 / 50 
+    P = DC_PID_P * state/ 50;//+ absMiddleSlope * 200;    //  50 / 50 
 		
     D = DC_PID_D * dirAngleSpeed;
     

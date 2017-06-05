@@ -4,10 +4,9 @@
 /* ºê¿ª¹Ø */
 #define AC
 #define VC
-#define DC
-#define xOUT_JUDGE
+//#define DC
 #define DYNAMIC_DC_PID
-#define xFIX
 //#define SLOW_DOWN
+//#define STOP
 
 #endif

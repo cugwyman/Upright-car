@@ -175,6 +175,15 @@ void ImgProcSummary()
 						BUZZLE_OFF;
 					}
         }
+        #ifdef STOP
+        if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight ))
+        {
+            while(1)
+                {
+                    MOTOR_STOP;
+                }
+        }
+        #endif
        switch(GetRoadType())
        {
             case Ring:
@@ -210,15 +219,8 @@ void ImgProcSummary()
             case RightBarrier:
 //                BUZZLE_OFF;
                 break;
-            default:
-                if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight ))
-                    {
-                        while(1)
-                            {
-                                MOTOR_STOP;
-                            }
-                    }
-						break;
+            default:    
+                break;
                          
         }
 }

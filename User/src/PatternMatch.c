@@ -349,7 +349,7 @@ void RingCompensateGoRight()
     for (col = IMG_COL / 2; col < IMG_COL && IsBlack(row + 1, col); ++col) { }
     for (int i = row; i > 0; --i)
     {
-        resultSet.leftBorder[i] = col - (row + 1 - i) * (col - resultSet.leftBorder[0]) / (3*row);
+        resultSet.leftBorder[i] = col - (row + 1 - i) * (col - resultSet.leftBorder[0]) / (2*row);
         resultSet.middleLine[i] = (resultSet.leftBorder[i] + resultSet.rightBorder[i]) / 2;
     }
     int16_t borderSearchStart = col + (IMG_COL - col) / 2;
