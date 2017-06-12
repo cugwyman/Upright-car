@@ -14,9 +14,9 @@ int main(void)
     {
 //        BUZZLE_OFF;
 //        ImgTrans(&resultSet);
-//        StateTrans(Angle_Kalman, angleSpeedIntegral, angleSpeedIntegral, angle);
+        StateTrans(Angle_Kalman, angleSpeed, angleSpeedIntegral, angle);
 //        printf("%d    %d     %d\n",Angle_Kalman, mmax, mmaz);
-//        DelayMs(50);
+        DelayMs(50);
 //        Oled_PrintfPhoto1(imgBuf);
     }
 }

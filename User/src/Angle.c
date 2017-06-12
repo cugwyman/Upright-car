@@ -1,5 +1,6 @@
 #include "Angle.h"
-
+#include "Velocity.h"
+#include "Encoder.h"
 float Kal_Gyro;
 float gyro;
 int32_t mmax, mmaz;
@@ -56,9 +57,10 @@ static float KalmanFilter(float angle_kal, float angle_speed_kal)
  * \param[in]  nextPoint 当前角度值
  * @retval 角度环输出, 作为标准电机输出的一环
  */
-static int32_t AnglePID(int16_t set, int16_t nextPoint) 
+static int32_t AnglePID(int16_t set, int16_t nextPoint, int32_t vcSet, int32_t vcSpeed) 
 { 
     int16_t error, kernelError;
+    int32_t vcError;
 //    static float lastError;
     static int16_t lastError = 0, prevError = 0, lastKernelError = 0, prevKernelError = 0;
 
@@ -66,6 +68,9 @@ static int32_t AnglePID(int16_t set, int16_t nextPoint)
     static int32_t incpid = 0, anglePID = 0, angleSpeedPID = 0;
     
     error = set - nextPoint;
+    vcError = vcSet - vcSpeed ;
+    error += 1 * vcError;
+    
     P = AC_PID_P * ( error - lastError );
 	I = AC_PID_I * error;
     D = AC_PID_D * ( error - 2 * lastError + prevError );
@@ -82,7 +87,7 @@ static int32_t AnglePID(int16_t set, int16_t nextPoint)
     
     anglePID += ( P + I + D );
     
-    kernelError = anglePID + angleSpeed;
+    kernelError = anglePID - angleSpeed;
     kernelP = AC_KERNEL_PID_P * ( kernelError - lastKernelError );
 	kernelI = AC_KERNEL_PID_I * kernelError;
     kernelD = AC_KERNEL_PID_D * ( kernelError - 2 * lastKernelError + prevKernelError );
@@ -108,11 +113,21 @@ static int32_t AnglePID(int16_t set, int16_t nextPoint)
 int32_t AngleProc(void) 
 {
 	static int16_t cnt = 0;
+    static uint8_t count = 0;
+    static int32_t angleSpeedOld = 0, angleSpeedNew = 0;
+
     gyro = GyroGet();
     AcceGet(&mmax, &mmaz);
     angleMma = (mmaz - mmax) * MMA_GAIN;
     angle = angleMma * MMA_SCALE;
-    angleSpeed = -gyro;
+    if( count >= 4 )
+    {
+        count = 0;
+        angleSpeedOld = angleSpeedNew;
+        angleSpeedNew = -gyro;
+    }
+    count++;
+    angleSpeed = angleSpeedOld + (angleSpeedNew - angleSpeedOld) * count / 4;
 	angleSpeedIntegral += angleSpeed * 0.005;
     Angle_Kalman = (int16_t)KalmanFilter(angle, angleSpeed);
 	cnt++;
@@ -121,5 +136,5 @@ int32_t AngleProc(void)
 		Pre_Angle_Kalman = Angle_Kalman;
 		cnt = 0;
 	}
-    return -AnglePID(AC_Set, Angle_Kalman);//暂且取相反数
+    return -AnglePID(AC_Set, Angle_Kalman, MODE.VC_Set, speed);//暂且取相反数
 }

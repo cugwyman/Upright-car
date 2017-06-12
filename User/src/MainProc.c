@@ -146,7 +146,7 @@ void MainProc()
         AC_Out = AngleProc();
     #endif
     #ifdef VC
-        VC_Out = VelocityProc(speed);
+//        VC_Out = VelocityProc(speed);
     #endif
     #ifdef DC
         DC_Out = DirectionProc(speed);
@@ -160,8 +160,10 @@ void MainProc()
         else
         {
     #endif
-            Left_Out = AC_Out - VC_Out + DC_Out;
-            Right_Out = AC_Out - VC_Out - DC_Out;
+//            Left_Out = AC_Out - VC_Out + DC_Out;
+//            Right_Out = AC_Out - VC_Out - DC_Out;
+            Left_Out = AC_Out + DC_Out;
+            Right_Out = AC_Out - DC_Out;
 
             MotorOut(Left_Out, Right_Out);
 //            MotorOut(3000, 3000);

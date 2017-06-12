@@ -74,7 +74,7 @@ void Mode1(void)
 
 void Mode0(void)
 {
-    MODE.VC_Set = 70;
+    MODE.VC_Set = 0;
     MODE.pre_sight = 18;
     
     MODE.DC_PID_P_COEF = 60;

@@ -2,15 +2,15 @@
 #define _PARAM_H
 
 //Angle
-#define AC_Set              -4//262
+#define AC_Set              0//262
 
 #define Kalman_Sample_Time   0.0055
-#define AC_PID_P             30//160//120// 160.0
-#define AC_PID_I             0
+#define AC_PID_P             10//160//120// 160.0
+#define AC_PID_I             0.5
 #define AC_PID_D             0//8//6//3 //   3.5
-#define AC_KERNEL_PID_P      20
-#define AC_KERNEL_PID_I      0
-#define AC_KERNEL_PID_D      2
+#define AC_KERNEL_PID_P      65
+#define AC_KERNEL_PID_I      3
+#define AC_KERNEL_PID_D      8
 #define MMAX_ZERO            1500//2370//1932//
 #define MMAZ_ZERO            780//716//
 #define GYRO_ZERO_SAMPLE     1000
