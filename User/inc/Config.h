@@ -4,7 +4,7 @@
 /* ºê¿ª¹Ø */
 #define AC
 #define VC
-//#define DC
+#define DC
 #define DYNAMIC_DC_PID
 //#define SLOW_DOWN
 //#define STOP

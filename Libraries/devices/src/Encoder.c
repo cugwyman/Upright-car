@@ -1,6 +1,8 @@
 #include "Encoder.h"
 #include "ftm.h"
 #include "uart.h"
+#include "DataComm.h"
+
 /**
  * @brief  编码器初始化, 使用两个正交解码通道, MAP在头文件PinMap.h中定义
  */
@@ -22,10 +24,12 @@ int32_t EncoderGet(void) {
     FTM_QD_GetData(RIGHT_ENCODER_CHL, &rightSpeed, &rightDir);
     FTM_QD_ClearCount(RIGHT_ENCODER_CHL);
     
-//    VisualScope_Output( leftSpeed , rightSpeed , 0 ,  0);//lianhe
+//    StateTrans( leftSpeed , rightSpeed , speed ,  0);//lianhe
 //	printf("%d, %d\n", leftSpeed, rightSpeed);
 //    rightSpeed = -rightSpeed;
         leftSpeed = -leftSpeed;
 
 	return (leftSpeed + rightSpeed) / 2;
+//    	return rightSpeed;
+
 }

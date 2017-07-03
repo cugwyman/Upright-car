@@ -2,33 +2,30 @@
 #define _PARAM_H
 
 //Angle
-#define AC_Set              0//262
+#define AC_Set              20//262
+#define AC_Out_MAX         8000//25000
 
 #define Kalman_Sample_Time   0.0055
-#define AC_PID_P             10//160//120// 160.0
-#define AC_PID_I             0.5
-#define AC_PID_D             0//8//6//3 //   3.5
-#define AC_KERNEL_PID_P      65
-#define AC_KERNEL_PID_I      3
-#define AC_KERNEL_PID_D      8
-#define MMAX_ZERO            1500//2370//1932//
-#define MMAZ_ZERO            780//716//
+#define AC_PID_P             100//160//120// 160.0
+#define AC_PID_D             5//8//6//3 //   3.5
+#define MMAX_ZERO            1932
+#define MMAZ_ZERO            716
 #define GYRO_ZERO_SAMPLE     1000
 #define MMA_GAIN             0.073//0.232//    //0-90°,??????z-x?max?min=2000?,90/2000????
 #define MMA_SCALE            3.178//*1.2//send to Kalman scale, end is 0.232
 
 /* Speed */
-#define VC_PID_P             160//90//150//180//250//150.0 //190.0// 
-#define VC_PID_I             0.2//0.3//   0.25
-#define VC_PID_D             50//20//20//30//60//90
-//#define VC_Out_MAX         15000//25000
-#define VC_PERIOD            4
+#define VC_PID_P             32//90//150//180//250//150.0 //190.0// 
+#define VC_PID_I             0.01//0.3//   0.25
+#define VC_PID_D             6//20//20//30//60//90
+#define VC_Out_MAX         8000//25000
+#define VC_PERIOD            4//4
 
 /* Direction */
 #define DC_PERIOD            2
 
 /* Motor */
-#define MOTOR_OUT_MAX     7800
+#define MOTOR_OUT_MAX     7500
 #define FIX_OUT           0
 
 //NVIC
@@ -41,9 +38,9 @@
 #define  PIT_PRD  5000
 
 //Camera
-#define  IMG_ABDN_ROW    19//47
+#define  IMG_ABDN_ROW    19//33//50//47
 #define  IMG_ROW_INTV    4
-#define  IMG_READ_DELAY  116 //170 for 8 nops
+#define  IMG_READ_DELAY  105 //170 for 8 nops
 
 //Image Proc Bit Map Relative
 /* byte is 8 (2^3) bits */

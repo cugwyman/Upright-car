@@ -554,6 +554,11 @@
               <FileType>1</FileType>
               <FilePath>.\User\src\Velocity.c</FilePath>
             </File>
+            <File>
+              <FileName>Fuzzy.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\src\Fuzzy.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -15,6 +15,7 @@
 #include "Velocity.h"
 #include "Direction.h"
 #include "OLED.h"
+#include "Fuzzy.h"
 
 extern int32_t AC_Out;
 extern int32_t VC_Out;
@@ -25,6 +26,7 @@ extern float time;
 
 #if defined(SINGLE_VC) || defined(VC) || defined(DC)
 extern int32_t speed;
+extern int32_t preSpeed;
 
 #endif
 

@@ -30,6 +30,8 @@ bool RightBorderSearchFrom(int16_t row, int16_t startIndex)
                     return true;
                 }
         }
+//         else if(resultSet.imgProcFlag == CROSS_ROAD)
+//                CrossRoadCompensate();
     resultSet.rightBorder[row] = IMG_COL - 1;
     ++resultSet.rightBorderNotFoundCnt;
 //		if(resultSet.imgProcFlag == CROSS_ROAD)
@@ -44,8 +46,6 @@ void MiddleLineUpdate(int16_t row)
 //	resultSet.middleLine[row] = resultSet.rightBorder[row] - 65;
 //    else if(resultSet.imgProcFlag == RINGEND)
 //                RingEndCompensateFromRight();
-//         else if(resultSet.imgProcFlag == CROSS_ROAD)
-//                CrossRoadCompensate();
 //              else 
                 resultSet.middleLine[row] = (resultSet.leftBorder[row] + resultSet.rightBorder[row]) / 2;
 }

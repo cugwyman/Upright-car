@@ -30,57 +30,62 @@ void GearInit(void)
 
 void Mode4(void)//不错good?!
 {
-    MODE.VC_Set = 70;
-    MODE.pre_sight = 26;
+    MODE.VC_Set = 55;
+    MODE.pre_sight = 20;
     
-    MODE.DC_PID_P_COEF = 60;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 6000;
-    MODE.DC_PID_D = 4;
+    MODE.DC_PID_P_COEF = 50;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 5000;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 6000;
 }
 
 void Mode3(void)//不错good?!
 {
-    MODE.VC_Set = 70;
-    MODE.pre_sight = 24;
+    MODE.VC_Set = 55;
+    MODE.pre_sight = 19;
     
-    MODE.DC_PID_P_COEF = 80;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 6000;
-    MODE.DC_PID_D = 4;
+    MODE.DC_PID_P_COEF = 40;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 4500;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 5000;
 }
     
 void Mode2(void)//不错good?!
 {
-    MODE.VC_Set = 70;
-    MODE.pre_sight = 22;
+    MODE.VC_Set = 55;
+    MODE.pre_sight = 18;
     
-    MODE.DC_PID_P_COEF = 70;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 6500;
-    MODE.DC_PID_D = 4;
+    MODE.DC_PID_P_COEF = 40;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 4000;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 4000;
 }
 
 void Mode1(void)
 {
-    MODE.VC_Set = 70;
-    MODE.pre_sight = 20;
+    MODE.VC_Set = 55;
+    MODE.pre_sight = 17;
     
-    MODE.DC_PID_P_COEF = 65;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 6500;
-    MODE.DC_PID_D = 4;
+    MODE.DC_PID_P_COEF = 40;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 4000;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 4000;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set = 0;
-    MODE.pre_sight = 18;
+    MODE.VC_Set = 55;
+    MODE.pre_sight = 16;
     
-    MODE.DC_PID_P_COEF = 60;
-    MODE.DC_P_MIN = 2000;
-    MODE.DC_P_MAX = 6500;
-    MODE.DC_PID_D = 4;
+    MODE.DC_PID_P_COEF = 40;
+    MODE.DC_P_MIN = 1000;
+    MODE.DC_P_MAX = 4000;
+    MODE.DC_PID_D = 3;
+    MODE.DC_Out_MAX = 4000;
 }
 
 /**
@@ -97,13 +102,15 @@ int32_t VelocityPID(int32_t set, int32_t nextpoint)
 	static int32_t incpid = 0;
 
 	error = set - nextpoint;
+    if(error > 20)
+        error = 20;
+    if(error < -20)
+        error = -20;
+
 	P = VC_PID_P * ( error - lastError );
 	I = VC_PID_I * error;
 	D = VC_PID_D * ( error - 2 * lastError + prevError );
-	if (I > 20)
-        I = 0;
-    else if (I < -20)
-        I = 0;
+	
 	prevError = lastError;
 	lastError = error;
 	 
@@ -129,6 +136,14 @@ int32_t VelocityProc(int32_t speed)
         count = 0;
         VC_Out_Old = VC_Out_New;
         VC_Out_New = VelocityPID(MODE.VC_Set, speed);
+        if( VC_Out_New > VC_Out_MAX )
+        {
+            VC_Out_New = VC_Out_MAX;
+        }
+        else if( VC_Out_New < -VC_Out_MAX )
+        {
+            VC_Out_New = -VC_Out_MAX;
+        }
     }
     count++;
     

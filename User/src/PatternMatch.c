@@ -153,28 +153,25 @@ bool IsRing()
         {
             continue;
         }
-    for(col = IMG_COL / 2 - 1; IsBlack(row, col) && col >= 0; --col) { }
+        for(col = IMG_COL / 2 - 1; IsBlack(row, col) && col >= 0; --col) { }
         if(!InRange(col, 0, IMG_COL / 2 - 5))
         {
             continue;
         }
-    for(whiteCol = col; IsWhite(row, whiteCol) && whiteCol >= 0; --whiteCol) { }
+        for(whiteCol = col; IsWhite(row, whiteCol) && whiteCol >= 0; --whiteCol) { }
         width = col - whiteCol;
-    for (col = IMG_COL / 2 + 1; IsBlack(row, col) && col < IMG_COL; ++col) { }
-    if(InRange(col, IMG_COL / 2 + 4, IMG_COL))
+        for (col = IMG_COL / 2 + 1; IsBlack(row, col) && col < IMG_COL; ++col) { }
+        if(InRange(col, IMG_COL / 2 + 4, IMG_COL))
         {
             for(whiteCol = col; IsWhite(row, whiteCol) && whiteCol < IMG_COL; ++whiteCol) { }
-            if(Abs((whiteCol - col) - width) < 50) 
-            {
+            if(Abs((whiteCol - col) - width) < 30) {
                 ++blackBlockRowsCnt;
-                if(blackBlockRowsCnt > 6) 
-                {
-                    return /*inRing =*/ true;
-                }
             }
         }
     }
-    
+    if(blackBlockRowsCnt > 6) {
+        return inRing = true;
+    }
     return false;
 }
 

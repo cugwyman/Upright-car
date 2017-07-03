@@ -187,7 +187,7 @@ void ImgProcSummary()
        switch(GetRoadType())
        {
             case Ring:
-                BUZZLE_ON;
+                BUZZLE_OFF;
                 RingCompensateGoRight();
 																resultSet.imgProcFlag = CIRCLE;
                 break;
@@ -219,8 +219,8 @@ void ImgProcSummary()
             case RightBarrier:
 //                BUZZLE_OFF;
                 break;
-            default:    
-                break;
+            default:
+						break;
                          
         }
 }

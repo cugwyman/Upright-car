@@ -13,6 +13,8 @@ float time;
 
 #if defined(SINGLE_VC) || defined(VC) || defined(DC)
 int32_t speed;
+int32_t preSpeed;
+
 #endif
 
 static void NVICInit(void);
@@ -30,15 +32,15 @@ void MainInit()
     CollectInit(); 
     EncoderInit();       
     DataCommInit();
-    Oled_Init_n();
+//		Oled_Init_n();
 //    BuzzleInit();
     NVICInit(); 
     ImgProcInit();     
     TimerInit();
     
     PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, ENABLE);
-    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
-    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
+//    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
+//    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
 }
 
 void NVICInit() 
@@ -51,8 +53,8 @@ void NVICInit()
 
 void BuzzleInit() 
 {
-    GPIO_QuickInit(BUZZLE_PORT, BUZZLE_PIN, kGPIO_Mode_OOD);
-    BUZZLE_OFF;
+    GPIO_QuickInit(BUZZLE_PORT, BUZZLE_PIN, kGPIO_Mode_OPP);//OPPø…œÏ
+		BUZZLE_OFF;
 }
 
 void TimerInit() 
@@ -64,19 +66,27 @@ void TimerInit()
 
 void MainProc()
 {
+    static  int8_t change = 0;
     static bool cnt = true;
-    static int16_t ring_time = 0;
+	static int16_t ring_time = 0;
     time += 0.005;
+    static int32_t count = 0;
+
     if(cnt)
-        {
+    {
             if(time < 1)
                     MODE.VC_Set = 0;
             else
             {
+                if(time >= 1 && time <= 1.050)
+                {
+                    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
+                    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
+                }
                     MODE.VC_Set = VC_Set;
                     cnt = false;
             }
-        }
+    }
     dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
 		    if( ring_time > 0 )
@@ -132,6 +142,12 @@ void MainProc()
 
     #if defined(VC) || defined(DC)
         speed = EncoderGet();
+        change = (speed - preSpeed) / (speed + 1);
+        if(change > 10) 
+            speed = preSpeed;
+        if(change < -10) 
+            speed = preSpeed;
+        preSpeed = speed;
 	if(inRing || ringEndDelay) 
     {
         ringDistance += speed * 5;
@@ -142,11 +158,15 @@ void MainProc()
     }
 
     #endif
+    #ifdef VC
+        VC_Out = 0.1 * VelocityProc(speed);
+    #endif
     #ifdef AC
         AC_Out = AngleProc();
-    #endif
-    #ifdef VC
-//        VC_Out = VelocityProc(speed);
+        if(AC_Out > AC_Out_MAX)
+            AC_Out = AC_Out_MAX;
+        if(AC_Out < -AC_Out_MAX)
+            AC_Out = -AC_Out_MAX;            
     #endif
     #ifdef DC
         DC_Out = DirectionProc(speed);
@@ -160,13 +180,32 @@ void MainProc()
         else
         {
     #endif
-//            Left_Out = AC_Out - VC_Out + DC_Out;
-//            Right_Out = AC_Out - VC_Out - DC_Out;
-            Left_Out = AC_Out + DC_Out;
-            Right_Out = AC_Out - DC_Out;
-
+            if(time < 1)
+            {
+                Left_Out = AC_Out;
+                Right_Out = AC_Out;
+            }            
+            else
+            {
+                Left_Out = AC_Out - DC_Out;
+                Right_Out = AC_Out + DC_Out;
+            }
             MotorOut(Left_Out, Right_Out);
-//            MotorOut(3000, 3000);
+//            MotorOut(5000, 5000);//fan
+//            if(count < 1000)
+//            {
+//                MotorOut(5000, 5000);
+
+//            }
+//            else if(count >= 1000 && count < 2000)
+//            {
+//                MotorOut(0, 0);
+//            }
+//            else if(count == 2000)
+//            {
+//                count = 0;
+//            }
+//            count++;
     #if defined(OUT_JUDGE) || defined(RS_JUDGE)
         }
     #endif

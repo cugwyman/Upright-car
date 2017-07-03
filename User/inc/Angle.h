@@ -17,7 +17,8 @@ extern float angle, angleSpeed;
 extern int16_t Angle_Kalman;
 extern int16_t Pre_Angle_Kalman;
 extern float angleSpeedIntegral;
-extern int32_t speed;
+extern int32_t VC_Out;
+
 int32_t AngleProc(void);
 
 #endif

@@ -1,5 +1,6 @@
 #include "Direction.h"
 #include "ImgProc.h"
+#include <fuzzy.h>
 
 //int32_t dirGyro;
 int32_t dirAngleSpeed;
@@ -34,21 +35,20 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
     int32_t P, D;
     int32_t incpid;
     int16_t absState;
-    int16_t absMiddleSlope;
+	  int16_t absMiddleSlope;
 
     state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
     if(state > 110)
-        state = 110;
+			state = 110;
     if(state < -110)
         state = -110;
     if(state >= 0)		
-        absState = state;
-    else
+		absState = state;
+	else
         absState = -state;
-    
     if(resultSet.middleSlope[MODE.pre_sight] >= 0)		
-        absMiddleSlope = resultSet.middleSlope[MODE.pre_sight];
-    else
+		absMiddleSlope = resultSet.middleSlope[MODE.pre_sight];
+	else
         absMiddleSlope = -resultSet.middleSlope[MODE.pre_sight];
 //		if(resultSet.imgProcFlag == STRAIGHT_ROAD)
 //				P = DC_PID_P * state/ 50 ;
@@ -57,7 +57,7 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
 //        P =300 * state;                            //  4000/50
 //    else 
 //				P = DC_PID_P * state * absState / 3000 + absMiddleSlope * 200;    //  50 / 50 
-    P = DC_PID_P * state/ 50;//+ absMiddleSlope * 200;    //  50 / 50 
+	P = DC_PID_P * state / 50 + absMiddleSlope * 200;    //  50 / 50 
 		
     D = DC_PID_D * dirAngleSpeed;
     
@@ -88,7 +88,7 @@ int32_t DirectionProc(int32_t speed)
 {
     static uint8_t count = 0;
     static int32_t DC_Out_Old = 0, DC_Out_New = 0;
-    int32_t DC_Out;
+      int32_t DC_Out;
     
     if( count >= DC_PERIOD )
     {
@@ -119,24 +119,24 @@ int32_t DirectionProc(int32_t speed)
 //            }
 //        #endif /* OUT_JUDGE */
                 
-        #ifdef DYNAMIC_DC_PID
-            DC_PID_P = MODE.DC_PID_P_COEF * speed ;//* speed;
-            if( DC_PID_P > MODE.DC_P_MAX )
-            {
-                DC_PID_P = MODE.DC_P_MAX;
-            }
-            else if( DC_PID_P < MODE.DC_P_MIN )
-            {
-                DC_PID_P = MODE.DC_P_MIN;
-            }
-        #endif
-                
-        DC_Out_New = Direction_PID(dirAngleSpeed
-                                   #ifdef DYNAMIC_DC_PID
-                                   , DC_PID_P, MODE.DC_PID_D
-                                   #endif
-                                   );
-            
+//        #ifdef DYNAMIC_DC_PID
+//            DC_PID_P = MODE.DC_PID_P_COEF * speed ;//* speed;
+//            if( DC_PID_P > MODE.DC_P_MAX )
+//            {
+//                DC_PID_P = MODE.DC_P_MAX;
+//            }
+//            else if( DC_PID_P < MODE.DC_P_MIN )
+//            {
+//                DC_PID_P = MODE.DC_P_MIN;
+//            }
+//        #endif
+//                
+//        DC_Out_New = Direction_PID(dirAngleSpeed
+//                                   #ifdef DYNAMIC_DC_PID
+//                                   , DC_PID_P, MODE.DC_PID_D
+//                                   #endif
+//                                   );
+//            
 //        if( DC_Out_New > MODE.DC_Out_MAX )
 //        {
 //            DC_Out_New = MODE.DC_Out_MAX;
@@ -145,10 +145,15 @@ int32_t DirectionProc(int32_t speed)
 //        {
 //            DC_Out_New = -MODE.DC_Out_MAX;
 //        }
+        state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
+//        if(state < 6 && state > -6)
+//            state = 0;
+        DC_Out_New = FUZZY_pid(state,dirAngleSpeed);
 
     }
     count++;
 
     DC_Out = DC_Out_Old + (DC_Out_New - DC_Out_Old) * count / DC_PERIOD;
+    
     return DC_Out;
 }
