@@ -7,7 +7,9 @@
 extern mode MODE;
 
 extern int16_t state;//传感器融合
-//extern float farimg, nearimg;
+extern int16_t preState;//传感器融合
+extern int32_t changeRate;
+
 //extern int32_t dirGyro;
 extern int32_t dirAngleSpeed;
 //extern float dirAngleSpeedIntegral;

@@ -33,7 +33,7 @@ void MainInit()
     EncoderInit();       
     DataCommInit();
 //		Oled_Init_n();
-//    BuzzleInit();
+    BuzzleInit();
     NVICInit(); 
     ImgProcInit();     
     TimerInit();
@@ -100,7 +100,7 @@ void MainProc()
 						{
 								MODE.VC_Set++;
 						}
-        }
+				}
 				else
 				{
 						if( resultSet.imgProcFlag == STRAIGHT_ROAD ) 
@@ -113,10 +113,10 @@ void MainProc()
 								{
 										MODE.VC_Set--;
 								}
-						} 
-						else if( resultSet.imgProcFlag == CIRCLE || resultSet.imgProcFlag == RAMP) 
+						} else
+						 if( resultSet.imgProcFlag == CIRCLE || resultSet.imgProcFlag == RAMP) 
 						{
-								ring_time = 300;
+								ring_time = 400;
 								if(MODE.VC_Set > VC_Min) 
 								{
 										MODE.VC_Set--;
@@ -142,31 +142,33 @@ void MainProc()
 
     #if defined(VC) || defined(DC)
         speed = EncoderGet();
-        change = (speed - preSpeed) / (speed + 1);
-        if(change > 10) 
-            speed = preSpeed;
-        if(change < -10) 
-            speed = preSpeed;
-        preSpeed = speed;
-	if(inRing || ringEndDelay) 
-    {
-        ringDistance += speed * 5;
+//        change = (speed - preSpeed) / (speed + 1);
+//        if(change > 10) 
+//            speed = preSpeed;
+//        if(change < -10) 
+//            speed = preSpeed;
+//        preSpeed = speed;
+	int16_t dist = speed *2.3;
+    if(inRing || ringEndDelay || ringInterval) {
+        ringDistance += dist;
     }
-    if(aroundBarrier) 
-    {
-        barrierDistance += speed * 5;
+    if(inCrossRoad) {
+        crossRoadDistance += dist;
+    }
+    if(aroundBarrier) {
+        barrierDistance += dist;
     }
 
     #endif
     #ifdef VC
-        VC_Out = 0.1 * VelocityProc(speed);
+        VC_Out = 0.01 * VelocityProc(speed);
     #endif
     #ifdef AC
         AC_Out = AngleProc();
-        if(AC_Out > AC_Out_MAX)
-            AC_Out = AC_Out_MAX;
-        if(AC_Out < -AC_Out_MAX)
-            AC_Out = -AC_Out_MAX;            
+//        if(AC_Out > AC_Out_MAX)
+//            AC_Out = AC_Out_MAX;
+//        if(AC_Out < -AC_Out_MAX)
+//            AC_Out = -AC_Out_MAX;            
     #endif
     #ifdef DC
         DC_Out = DirectionProc(speed);

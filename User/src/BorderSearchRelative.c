@@ -47,7 +47,16 @@ void MiddleLineUpdate(int16_t row)
 //    else if(resultSet.imgProcFlag == RINGEND)
 //                RingEndCompensateFromRight();
 //              else 
+	 		if(resultSet.imgProcFlag != CIRCLE )
                 resultSet.middleLine[row] = (resultSet.leftBorder[row] + resultSet.rightBorder[row]) / 2;
+//			if(resultSet.imgProcFlag != 1 || resultSet.imgProcFlag != 3 || resultSet.imgProcFlag != 6)
+//			{
+//				if(resultSet.middleLine[row] > 116)
+//					resultSet.middleLine[row] -= 1;
+//				if(resultSet.middleLine[row] < 108)
+//					resultSet.middleLine[row] += 1;
+//			}
+
 }
 
 void MiddleLineUpdateAll() 

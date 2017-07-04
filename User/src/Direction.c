@@ -1,12 +1,14 @@
 #include "Direction.h"
 #include "ImgProc.h"
-#include <fuzzy.h>
+#include "fuzzy.h"
+#include "PatternMatch.h"
 
 //int32_t dirGyro;
 int32_t dirAngleSpeed;
 //float dirAngleSpeedIntegral;
-
+int32_t changeRate;
 int16_t state;//传感器融合
+int16_t preState;//传感器融合
 
 int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle);
 
@@ -70,10 +72,19 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
 int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle) 
 {
     float avgMiddle = 0;
-    for(int16_t i = MODE.pre_sight - 3; i < MODE.pre_sight + 3; ++i) 
-    {
-        avgMiddle += middleLine[i];
-    }
+	for(int16_t i = MODE.pre_sight - 3; i < MODE.pre_sight + 3; ++i) 
+		avgMiddle += middleLine[i];
+
+//	if(resultSet.imgProcFlag == STRAIGHT_ROAD)
+//	{
+//	    for(int16_t i = MODE.pre_sight - 3; i < MODE.pre_sight + 3; ++i) 
+//			avgMiddle += middleLine[i];
+//	}
+//	else
+//	{
+//		for(int16_t i = MODE.pre_sight - 4; i < MODE.pre_sight + 2; ++i) 
+//			avgMiddle += middleLine[i];
+//	}
     avgMiddle /= 6;
     return avgMiddle - expectMiddle;
 }
@@ -94,30 +105,7 @@ int32_t DirectionProc(int32_t speed)
     {
         count = 0;
         DC_Out_Old = DC_Out_New;
-//        SensorGet(&leftSensor, &rightSensor);
-        
-//        dirGyro = DirGyroGet();
-//        dirAngleSpeed = -dirGyro;
-//        dirAngleSpeedIntegral += dirAngleSpeed * 0.0025;
-//        dirAngleSpeed = DirGyroGet();
-//        if( dirAngleSpeed > dirAngleSpeedMax )
-//        {
-//            dirAngleSpeed = dirAngleSpeedMax;
-//        }
-//        else if( dirAngleSpeed < dirAngleSpeedMin )
-//        {
-//            dirAngleSpeed = dirAngleSpeedMin;
-//        }
 
-//        dirGyro = -dirAngleSpeed;
-//        dirAngleSpeed = 0;
-
-//        #ifdef OUT_JUDGE
-//            if( farimg < OUT_JUDGE_STD && nearimg < OUT_JUDGE_STD )
-//            {
-//                out = true;
-//            }
-//        #endif /* OUT_JUDGE */
                 
 //        #ifdef DYNAMIC_DC_PID
 //            DC_PID_P = MODE.DC_PID_P_COEF * speed ;//* speed;
@@ -145,10 +133,16 @@ int32_t DirectionProc(int32_t speed)
 //        {
 //            DC_Out_New = -MODE.DC_Out_MAX;
 //        }
-        state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
-//        if(state < 6 && state > -6)
-//            state = 0;
-        DC_Out_New = FUZZY_pid(state,dirAngleSpeed);
+//		if(!ring_offset)
+		state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
+//		if(state > 10)
+//			state -= 1;
+//		if(state < -10)
+//			state += 1;
+
+        changeRate = (state - preState);
+        preState = state;
+        DC_Out_New = FUZZY_pid(state, changeRate);
 
     }
     count++;

@@ -7,6 +7,6 @@
 #define DC
 #define DYNAMIC_DC_PID
 //#define SLOW_DOWN
-//#define STOP
+#define STOP
 
 #endif

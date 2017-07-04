@@ -14,14 +14,17 @@ int main(void)
 //			BUZZLE_OFF;
 //        ImgTrans(&resultSet);
 //		StateTrans(Angle_Kalman , angleSpeedIntegral , angleSpeed , angle);
-//		printf("%d   %f     %d      %d\n", state , reFuzzy, DC_Out, DC_Out);
+//		printf("%d   %d     %f      %d\n", state , changeRate, reFuzzy, DC_Out);
+        printf("%d\n", resultSet.imgProcFlag);
+
+            
 //        MotorOut(3000, 3000);
 
-//					DelayMs(2000);
-////            BUZZLE_ON;
+					DelayMs(50);
+//            BUZZLE_ON;
 //                    MotorOut(-3000, -3000);
 
-//					DelayMs(2000);
+//					DelayMs(100);
 //			Oled_PrintfPhoto1(imgBuf);
 	}
 }

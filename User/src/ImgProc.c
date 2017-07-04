@@ -145,6 +145,7 @@ void ImgProc3()
 
 void ImgProcSummary()
 {
+	static unsigned short cnt = 0;
 	int i;
 	    resultSet.imgProcFlag = 0;
 //		BUZZLE_ON; OutOfRoadJudge()
@@ -165,52 +166,73 @@ void ImgProcSummary()
 					)
 					{
 						resultSet.imgProcFlag = RAMP;
-						BUZZLE_OFF;
+//						BUZZLE_ON;
 						break;
 					}
 				}
 					if(i==IMG_ROW)
 					{
 						resultSet.imgProcFlag = STRAIGHT_ROAD;
+                                        ring_offset = 0;
+
 						BUZZLE_OFF;
 					}
         }
         #ifdef STOP
         if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight ))
         {
-            while(1)
-                {
-                    MOTOR_STOP;
+				while(1)
+				{
+					MOTOR_STOP;
                 }
-        }
+		}
         #endif
        switch(GetRoadType())
        {
             case Ring:
                 BUZZLE_OFF;
-                RingCompensateGoRight();
-																resultSet.imgProcFlag = CIRCLE;
+                if(!MODE.ringDir)
+                    RingCompensateGoRight();
+                else
+                    RingCompensateGoLeft();
+
+				resultSet.imgProcFlag = CIRCLE;
+//                if(ring_offset >= 20)
+//                        ring_offset = ring_offset;
+//                else
+//                        ring_offset += 4;
+
                 break;
             case RingEnd:
-                BUZZLE_OFF;
-//								resultSet.imgProcFlag = RINGEND;
-                RingEndCompensateFromRight();
+                BUZZLE_ON;
+								resultSet.imgProcFlag = RINGEND;
+                if(!MODE.ringDir)
+                    RingEndCompensateFromRight();
+                else
+                    RingEndCompensateFromLeft();
+
+//                if(ring_offset >= 20)
+//                        ring_offset = ring_offset;
+//                else
+//                        ring_offset += 4;
                 break;
             case LeftCurve:
                 BUZZLE_OFF;
 //                LeftCurveCompensate();
-																resultSet.imgProcFlag = LEFTCURVE;
-								ring_offset = 0;
+				resultSet.imgProcFlag = LEFTCURVE;
+								                ring_offset = 0;
+
                 break;
             case RightCurve:
                 BUZZLE_OFF;
-																resultSet.imgProcFlag = RIGHTCURVE;
+				resultSet.imgProcFlag = RIGHTCURVE;
+                            ring_offset = 0;
+
 //                RightCurveCompensate();
-								ring_offset = 0;
-								break;
+                break;
             case CrossRoad:
                 BUZZLE_OFF;
-                                resultSet.imgProcFlag = CROSS_ROAD;
+                resultSet.imgProcFlag = CROSS_ROAD;
 //                CrossRoadCompensate();
                 break;
             case LeftBarrier:

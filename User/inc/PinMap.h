@@ -56,8 +56,8 @@
 //Alert
 #define  BUZZLE_PORT  HW_GPIOB
 #define  BUZZLE_PIN   9
-#define  BUZZLE_ON    (PBout(BUZZLE_PIN) = 0)
-#define  BUZZLE_OFF   (PBout(BUZZLE_PIN) = 1)
+#define  BUZZLE_ON    (PBout(BUZZLE_PIN) = 1)
+#define  BUZZLE_OFF   (PBout(BUZZLE_PIN) = 0)
 #define  BUZZLE_REVERSE			(PBout(BUZZLE_PIN) = !PBout(BUZZLE_PIN))
 //Infrared
 #define  IR_PORT  HW_GPIOD

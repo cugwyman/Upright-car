@@ -20,9 +20,12 @@ bool StraightLineJudge(void);
 
 extern int16_t ring_offset;
 extern int32_t ringDistance;
+extern int32_t crossRoadDistance;
 extern bool inRing;
 extern bool ringEndDelay;
 extern int32_t barrierDistance;
+extern bool ringInterval;
+extern bool inCrossRoad;
 extern bool aroundBarrier;
 
 #endif

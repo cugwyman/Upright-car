@@ -2,12 +2,12 @@
 #define _PARAM_H
 
 //Angle
-#define AC_Set              20//262
-#define AC_Out_MAX         8000//25000
+#define AC_Set              48//42//
+#define AC_Out_MAX         38000//25000
 
 #define Kalman_Sample_Time   0.0055
-#define AC_PID_P             100//160//120// 160.0
-#define AC_PID_D             5//8//6//3 //   3.5
+#define AC_PID_P             220//200//160
+#define AC_PID_D             6//6//
 #define MMAX_ZERO            1932
 #define MMAZ_ZERO            716
 #define GYRO_ZERO_SAMPLE     1000
@@ -15,10 +15,10 @@
 #define MMA_SCALE            3.178//*1.2//send to Kalman scale, end is 0.232
 
 /* Speed */
-#define VC_PID_P             32//90//150//180//250//150.0 //190.0// 
-#define VC_PID_I             0.01//0.3//   0.25
-#define VC_PID_D             6//20//20//30//60//90
-#define VC_Out_MAX         8000//25000
+#define VC_PID_P             122//140//90//
+#define VC_PID_I             0.3//0.3//   0.25
+#define VC_PID_D             4//20
+#define VC_Out_MAX           28000//25000
 #define VC_PERIOD            4//4
 
 /* Direction */
@@ -64,6 +64,8 @@
 #define  RINGEND        6
 #define  RAMP           7
 
+#define Left true
+#define Right false
 //Double Car Relative
 #define  ULTRA_SONIC_TIMER_CHL  HW_PIT_CH1
 #define  ULTRA_SONIC_TIMER_PRD  50000

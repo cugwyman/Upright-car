@@ -23,69 +23,59 @@ void GearInit(void)
     else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode3();}
     else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { Mode4();}
     else                                        { Mode0();}
-		VC_Max = MODE.VC_Set + 6;
-		VC_Min = MODE.VC_Set - 6;
+		VC_Max = MODE.VC_Set + 3;
+		VC_Min = MODE.VC_Set - 3;
 		VC_Set = MODE.VC_Set;
 }
 
 void Mode4(void)//不错good?!
 {
-    MODE.VC_Set = 55;
-    MODE.pre_sight = 20;
-    
-    MODE.DC_PID_P_COEF = 50;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 5000;
-    MODE.DC_PID_D = 3;
-    MODE.DC_Out_MAX = 6000;
+    MODE.VC_Set =78;
+    MODE.pre_sight = 5;
+    MODE.Ke = 0.045;
+    MODE.Kec = 0.6;
+    MODE.Ku = 8.8;
+    MODE.ringDir = Right;
 }
 
 void Mode3(void)//不错good?!
 {
-    MODE.VC_Set = 55;
-    MODE.pre_sight = 19;
-    
-    MODE.DC_PID_P_COEF = 40;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 4500;
-    MODE.DC_PID_D = 3;
-    MODE.DC_Out_MAX = 5000;
+    MODE.VC_Set =75;
+    MODE.pre_sight = 5;
+    MODE.Ke = 0.045;
+    MODE.Kec = 0.6;
+    MODE.Ku = 8.4;
+    MODE.ringDir = Right;
 }
     
 void Mode2(void)//不错good?!
 {
-    MODE.VC_Set = 55;
-    MODE.pre_sight = 18;
-    
-    MODE.DC_PID_P_COEF = 40;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 4000;
-    MODE.DC_PID_D = 3;
-    MODE.DC_Out_MAX = 4000;
+    MODE.VC_Set =70;
+    MODE.pre_sight = 5;
+    MODE.Ke = 0.045;
+    MODE.Kec = 0.6;
+    MODE.Ku = 8.0;
+    MODE.ringDir = Right;
 }
 
 void Mode1(void)
 {
-    MODE.VC_Set = 55;
-    MODE.pre_sight = 17;
-    
-    MODE.DC_PID_P_COEF = 40;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 4000;
-    MODE.DC_PID_D = 3;
-    MODE.DC_Out_MAX = 4000;
+    MODE.VC_Set =68;
+    MODE.pre_sight = 4;
+    MODE.Ke = 0.045;
+    MODE.Kec = 0.6;
+    MODE.Ku = 7.5;
+    MODE.ringDir = Right;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set = 55;
-    MODE.pre_sight = 16;
-    
-    MODE.DC_PID_P_COEF = 40;
-    MODE.DC_P_MIN = 1000;
-    MODE.DC_P_MAX = 4000;
-    MODE.DC_PID_D = 3;
-    MODE.DC_Out_MAX = 4000;
+    MODE.VC_Set =65;
+    MODE.pre_sight = 3;
+    MODE.Ke = 0.045;
+    MODE.Kec = 0.6;
+    MODE.Ku = 7;
+    MODE.ringDir = Right;
 }
 
 /**
@@ -102,15 +92,19 @@ int32_t VelocityPID(int32_t set, int32_t nextpoint)
 	static int32_t incpid = 0;
 
 	error = set - nextpoint;
-    if(error > 20)
-        error = 20;
-    if(error < -20)
-        error = -20;
+//    if(error > 30)
+//        error = 30;
+//    if(error < -30)
+//        error = -30;
 
 	P = VC_PID_P * ( error - lastError );
 	I = VC_PID_I * error;
 	D = VC_PID_D * ( error - 2 * lastError + prevError );
-	
+    if(I > 10)
+        I = 0;
+    if(I < -10)
+        I = 0;
+
 	prevError = lastError;
 	lastError = error;
 	 
@@ -136,14 +130,14 @@ int32_t VelocityProc(int32_t speed)
         count = 0;
         VC_Out_Old = VC_Out_New;
         VC_Out_New = VelocityPID(MODE.VC_Set, speed);
-        if( VC_Out_New > VC_Out_MAX )
-        {
-            VC_Out_New = VC_Out_MAX;
-        }
-        else if( VC_Out_New < -VC_Out_MAX )
-        {
-            VC_Out_New = -VC_Out_MAX;
-        }
+//        if( VC_Out_New > VC_Out_MAX )
+//        {
+//            VC_Out_New = VC_Out_MAX;
+//        }
+//        else if( VC_Out_New < -VC_Out_MAX )
+//        {
+//            VC_Out_New = -VC_Out_MAX;
+//        }
     }
     count++;
     
