@@ -10,9 +10,9 @@
 #define GYRO_ZERO_SAMPLE     1000
 
 /* Speed */
-#define VC_PID_P             50//72//120//               85//90//60//210//250//250//90//
+#define VC_PID_P             45//72//120//               85//90//60//210//250//250//90//
 #define VC_PID_I             0.2//0.1//1//2//2//   0.25
-#define VC_PID_D             6//20//22//25//                   6//8//10//5//50//3//50//25
+#define VC_PID_D             10//20//22//25//                   6//8//10//5//50//3//50//25
 #define VC_Out_MAX           12000//25000
 #define VC_PERIOD            4//4
 

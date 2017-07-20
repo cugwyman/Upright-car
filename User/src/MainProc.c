@@ -12,14 +12,12 @@ int32_t AC_Out;
 int32_t VC_Out;
 int32_t DC_Out;
 bool speed_up_down;
-bool ring_over = false;
-
 int32_t Left_Out, Right_Out;
 float distance;
 float time;
 int8_t change;
 bool start_deal = true;
-bool crossroad_deal = true;
+bool barrier_deal = true;
 
 //#if defined(SINGLE_VC) || defined(VC) || defined(DC)
 int32_t speed;
@@ -107,9 +105,9 @@ void MainProc()
             }
             else if(time >= 0.05 )
             {
-                    MODE.VC_Set = 48;
+                    MODE.VC_Set = VC_Set;
                     MODE.AC_Set = AC_Set;
-                    MODE.pre_sight = 8;
+
 //                if(MODE.VC_Set < VC_Set)
 //                    MODE.VC_Set ++;
 //                if(MODE.AC_Set < AC_Set)
@@ -130,7 +128,7 @@ void MainProc()
     }
     
     Read_Acc_Gry();
-
+    
 //    dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
 	{
@@ -145,41 +143,34 @@ void MainProc()
 //						MODE.VC_Set--;
 //				}
 //		} else
-//		if( resultSet.imgProcFlag == CIRCLE || resultSet.imgProcFlag == inRing) //  aroundBarrier || onRamp || RINGEND ||
-//		{
-//            if(rampDistance > 88000) {
-//                rampDistance = 0;
-//                onRamp = false;
-//            }
-//				if(MODE.VC_Set > VC_Min) 
-//				{
-//						MODE.VC_Set-=2;
-//				} 
-//				else if(MODE.VC_Set < VC_Min) 
-//				{
-//						MODE.VC_Set++;
-//				}
-//		}
-//		else
-        if( resultSet.imgProcFlag == RINGEND ) //  aroundBarrier || onRamp || ||
-//        MODE.VC_Set = VC_Set;
+		if( resultSet.imgProcFlag == CIRCLE || inRing) //  aroundBarrier || onRamp || RINGEND ||
 		{
-            ring_over = true;
+            if(rampDistance > 88000) {
+                rampDistance = 0;
+                onRamp = false;
+            }
+				if(MODE.VC_Set > VC_Min) 
+				{
+						MODE.VC_Set-=2;
+				} 
+				else if(MODE.VC_Set < VC_Min) 
+				{
+						MODE.VC_Set++;
+				}
+		}
+		else
+		{
+				if(MODE.VC_Set > VC_Set) 
+				{
+						MODE.VC_Set--;
+				} 
+				else if(MODE.VC_Set < VC_Set) 
+				{
+						MODE.VC_Set++;
+				}
 		}
     }
     #endif
-    if(ring_over)
-    {
-		if(MODE.VC_Set > VC_Set) 
-		{
-				MODE.VC_Set--;
-		} 
-		else if(MODE.VC_Set < VC_Set) 
-		{
-				MODE.VC_Set ++;
-		}
-    }
-                
 
     #if defined(VC) || defined(DC)
         speed = EncoderGet();
@@ -202,11 +193,12 @@ void MainProc()
     if(onRamp) {
         rampDistance += dist;
     }
-    if(crossroad_deal)
+    if(barrier_deal)
     {
-        crossDealDistance += dist;
-        if(crossDealDistance >= 100000)
-            crossroad_deal = false;
+        barrierDealDistance += dist;
+        if(barrierDealDistance >= 100000)
+            barrier_deal = false;
+
     }
     #endif
     #ifdef VC

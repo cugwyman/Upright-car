@@ -13,9 +13,9 @@ int16_t ring_end_offset;
 int16_t ringend_offset;
 int32_t ringDistance;
 int32_t crossRoadDistance;
-int32_t crossDealDistance;
+int32_t barrierDealDistance;
 
-extern bool crossroad_deal;
+extern bool barrier_deal;
 
 bool inRing;
 bool ringEndDelay;
@@ -72,7 +72,7 @@ bool OutOfRoadJudge()
 int16_t GetRoadType()
 {
     if(ringEndDelay) {
-        if(ringDistance < 5000) {
+        if(ringDistance < 2500) {
             return RingEnd;
         } else {
             ringDistance = 0;
@@ -89,7 +89,7 @@ int16_t GetRoadType()
         if(ringDistance > 250000) {
             ringDistance = 0;
             inRing = false;
-        } else if(ringDistance > 5000 && IsRingEnd()) {
+        } else if(ringDistance > 2700 && IsRingEnd()) {
             ringDistance = 0;
             ringEndDelay = true;
             inRing = false;
@@ -120,7 +120,7 @@ int16_t GetRoadType()
     return /*curve != Unknown ? curve
         : */!inRing && !ringEndDelay && !ringInterval && !inCrossRoad && IsRing() ? Ring
         : !inRing && !ringEndDelay && IsCrossRoad()  ? CrossRoad
-        : !inRing && !ringEndDelay && !inCrossRoad ? WhichBarrier()
+//        : !inRing && !ringEndDelay && !inCrossRoad ? WhichBarrier()
         : Unknown;
 }
 
@@ -326,9 +326,6 @@ bool IsCrossRoad()
     int16_t cnt1 = 0;
     int16_t cnt2 = 0;
 
-    if(crossroad_deal)
-        return false;
-
     for(int16_t i = 5; i < 45; ++i) {
         if(!resultSet.foundLeftBorder[i] && !resultSet.foundRightBorder[i]) {
             ++cnt1;
@@ -357,7 +354,7 @@ int16_t WhichBarrier()
     int16_t row;
     int16_t _barrierType;
     
-    if(!crossroad_deal)
+    if(!barrier_deal)
         return Unknown;
 
     for(row = 10; row < 45 && Abs(resultSet.middleLine[row] - resultSet.middleLine[row - 2]) <= 16; ++row) { }
@@ -404,7 +401,7 @@ int16_t WhichBarrier()
                 }
             }
         }
-        if(rowCnt > 0.7 * (outRow - inRow)) {
+        if(rowCnt > 0.6 * (outRow - inRow)) {
             aroundBarrier = true;
             return barrierType = _barrierType;
         } else {

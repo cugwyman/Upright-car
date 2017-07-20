@@ -45,71 +45,153 @@ void GearInit(void)
 
 }
 
-
-/*****************before*****************/
-void Mode3(void)//不错good?!
+void Mode3(void)//
 {
     MODE.VC_Set = 75;
-    MODE.pre_sight = 17;
+    MODE.pre_sight = 14;
     
-    MODE.DC_PID_P_COEF = 22;
+    MODE.DC_PID_P_COEF = 20;
     MODE.DC_P_MIN = 500;
     MODE.DC_P_MAX = 3000;
-    MODE.DC_PID_D = 46;
+    MODE.DC_PID_D = 43;
     MODE.DC_Out_MAX = 2500;
 
     MODE.pre_sight_offset = 3;
-    MODE.ring_offset = 68;
-    MODE.ring_end_offset = 38;
-}
-
-void Mode2(void)//712good
-{
-    MODE.VC_Set = 75;
-    MODE.pre_sight = 17;
-    
-    MODE.DC_PID_P_COEF = 22;
-    MODE.DC_P_MIN = 500;
-    MODE.DC_P_MAX = 3000;
-    MODE.DC_PID_D = 46;
-    MODE.DC_Out_MAX = 2500;
-
-    MODE.pre_sight_offset = 3;
-    MODE.ring_offset = 65;
-    MODE.ring_end_offset = 35;
-}
-
-void Mode1(void)// 新保底
-{
-    MODE.VC_Set = 75;
-    MODE.pre_sight = 16;
-    
-    MODE.DC_PID_P_COEF = 22;
-    MODE.DC_P_MIN = 500;
-    MODE.DC_P_MAX = 3000;
-    MODE.DC_PID_D = 45;
-    MODE.DC_Out_MAX = 2500;
-
-    MODE.pre_sight_offset = 3;
-    MODE.ring_offset = 62;
-    MODE.ring_end_offset = 32;
-}
-
-void Mode0(void)
-{
-    MODE.VC_Set = 75;
-    MODE.pre_sight = 16;
-    
-    MODE.DC_PID_P_COEF = 22;
-    MODE.DC_P_MIN = 500;
-    MODE.DC_P_MAX = 3000;
-    MODE.DC_PID_D = 45;
-    MODE.DC_Out_MAX = 2500;
-
-    MODE.pre_sight_offset = 3;
-    MODE.ring_offset = 59;
+    MODE.ring_offset = 50;
     MODE.ring_end_offset = 29;
 }
+    
+void Mode2(void)//
+{
+    MODE.VC_Set = 75;
+    MODE.pre_sight = 16;
+    
+    MODE.DC_PID_P_COEF = 21;
+    MODE.DC_P_MIN = 500;
+    MODE.DC_P_MAX = 3000;
+    MODE.DC_PID_D = 45;
+    MODE.DC_Out_MAX = 2500;
+
+    MODE.pre_sight_offset = 3;
+    MODE.ring_offset = 49;
+    MODE.ring_end_offset = 29;
+}
+
+void Mode1(void)//
+{
+    MODE.VC_Set = 75;
+    MODE.pre_sight = 15;
+    
+    MODE.DC_PID_P_COEF = 21;
+    MODE.DC_P_MIN = 500;
+    MODE.DC_P_MAX = 3000;
+    MODE.DC_PID_D = 45;
+    MODE.DC_Out_MAX = 2500;
+
+    MODE.pre_sight_offset = 3;
+    MODE.ring_offset = 48;
+    MODE.ring_end_offset = 30;
+}
+
+void Mode0(void)//
+{
+    MODE.VC_Set = 75;
+    MODE.pre_sight = 14;
+    
+    MODE.DC_PID_P_COEF = 21;
+    MODE.DC_P_MIN = 500;
+    MODE.DC_P_MAX = 3000;
+    MODE.DC_PID_D = 45;
+    MODE.DC_Out_MAX = 2500;
+
+    MODE.pre_sight_offset = 3;
+    MODE.ring_offset = 47;
+    MODE.ring_end_offset = 30;
+}
+
+/*************Switch*************/
+//void Mode3(void)//
+//{
+//    MODE.VC_Set = 78;
+//    MODE.pre_sight = 18;
+//    
+//    MODE.DC_PID_P_COEF = 23;
+//    MODE.DC_P_MIN = 500;
+//    MODE.DC_P_MAX = 3000;
+//    MODE.DC_PID_D = 45;
+//    MODE.DC_Out_MAX = 2500;
+
+//    MODE.pre_sight_offset = 3;
+//    MODE.ring_offset = 51;
+//    MODE.ring_end_offset = 29;
+//}
+//    
+//void Mode2(void)//
+//{
+//    MODE.VC_Set = 75;
+//    MODE.pre_sight = 16;
+//    
+//    MODE.DC_PID_P_COEF = 22;
+//    MODE.DC_P_MIN = 500;
+//    MODE.DC_P_MAX = 3000;
+//    MODE.DC_PID_D = 45;
+//    MODE.DC_Out_MAX = 2500;
+
+//    MODE.pre_sight_offset = 3;
+//    MODE.ring_offset = 47;
+//    MODE.ring_end_offset = 30;
+//}
+
+//void Mode1(void)//
+//{
+//    MODE.VC_Set = 70;
+//    MODE.pre_sight = 16;
+//    
+//    MODE.DC_PID_P_COEF = 20;
+//    MODE.DC_P_MIN = 500;
+//    MODE.DC_P_MAX = 3000;
+//    MODE.DC_PID_D = 43;
+//    MODE.DC_Out_MAX = 2500;
+
+//    MODE.pre_sight_offset = 2;
+//    MODE.ring_offset = 45;
+//    MODE.ring_end_offset = 31;
+//}
+
+//void Mode0(void)// 新保底
+//{
+//    MODE.VC_Set = 65;
+//    MODE.pre_sight = 15;
+//    
+//    MODE.DC_PID_P_COEF = 20;
+//    MODE.DC_P_MIN = 500;
+//    MODE.DC_P_MAX = 3000;
+//    MODE.DC_PID_D = 43;
+//    MODE.DC_Out_MAX = 2500;
+
+//    MODE.pre_sight_offset = 2;
+//    MODE.ring_offset = 42;
+//    MODE.ring_end_offset = 32;
+//}
+
+
+// 冲
+//{
+//    MODE.VC_Set = 88;
+//    MODE.pre_sight = 26;
+//    
+//    MODE.DC_PID_P_COEF = 28;
+//    MODE.DC_P_MIN = 500;
+//    MODE.DC_P_MAX = 3400;
+//    MODE.DC_PID_D = 50;
+//    MODE.DC_Out_MAX = 2500;
+
+//    MODE.pre_sight_offset = 4;
+//    MODE.ring_offset = 55;
+//    MODE.ring_end_offset = 27;
+//}
+
+
 
 
 /**

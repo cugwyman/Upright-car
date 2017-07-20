@@ -8,7 +8,7 @@
 #define VC
 #define DC
 #define DYNAMIC_DC_PID
-#define SLOW_DOWN
+//#define SLOW_DOWN
 #define STOP
 //#define TEST_MODE
 #define DynamicPreSight

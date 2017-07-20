@@ -22,7 +22,7 @@ int main(void)
 
 //		printf("  AC = %d\t VC = %d\t DC = %d\t Left = %d\t Right = %d\t angle = %f   as = %f\n ", AC_Out, VC_Out, DC_Out, Left_Out, Right_Out, Angle_Kalman, angleSpeed);
 //        printf("%d\n", resultSet.imgProcFlag);
-//		printf("%d\t  ring = %d\t    AC = %d\t      VC = %d\t    DC = %d\t    state = %d\t    Right = %d\t    speed = %d\t   angle = %f\n",resultSet.imgProcFlag, crossDealDistance, AC_Out, VC_Out, DC_Out,  state, Right_Out, speed, Angle_Kalman);
+//		printf("%d\t  ring = %d\t    AC = %d\t      VC = %d\t    DC = %d\t    state = %d\t    Right = %d\t    speed = %d\t   angle = %f\n",resultSet.imgProcFlag, ringDistance, AC_Out, VC_Out, DC_Out,  state, Right_Out, speed, Angle_Kalman);
 //   printf("state=%d\t, changeRate=%d\n", state, changeRate);         
 //        MotorOut(3000, 3000);
 //BUZZLE_OFF;
