@@ -15,8 +15,6 @@ bool LeftBorderSearchFrom(int16_t row, int16_t startIndex)
         }
     resultSet.leftBorder[row] = 0;
     ++resultSet.leftBorderNotFoundCnt;
-//		if(resultSet.imgProcFlag == CROSS_ROAD)
-//			CrossRoadCompensate();
     return false;
 }
 
@@ -30,33 +28,15 @@ bool RightBorderSearchFrom(int16_t row, int16_t startIndex)
                     return true;
                 }
         }
-//         else if(resultSet.imgProcFlag == CROSS_ROAD)
-//                CrossRoadCompensate();
     resultSet.rightBorder[row] = IMG_COL - 1;
     ++resultSet.rightBorderNotFoundCnt;
-//		if(resultSet.imgProcFlag == CROSS_ROAD)
-//			CrossRoadCompensate();
     return false;
 }
 
 void MiddleLineUpdate(int16_t row)
 {
-//	if(resultSet.imgProcFlag == CIRCLE)
-//                RingCompensateGoRight();
-//	resultSet.middleLine[row] = resultSet.rightBorder[row] - 65;
-//    else if(resultSet.imgProcFlag == RINGEND)
-//                RingEndCompensateFromRight();
-//              else 
-	 		if(resultSet.imgProcFlag != CIRCLE )
+	 		if(resultSet.imgProcFlag != CIRCLE && resultSet.imgProcFlag != BARRIER && resultSet.imgProcFlag!=   RINGEND )
                 resultSet.middleLine[row] = (resultSet.leftBorder[row] + resultSet.rightBorder[row]) / 2;
-//			if(resultSet.imgProcFlag != 1 || resultSet.imgProcFlag != 3 || resultSet.imgProcFlag != 6)
-//			{
-//				if(resultSet.middleLine[row] > 116)
-//					resultSet.middleLine[row] -= 1;
-//				if(resultSet.middleLine[row] < 108)
-//					resultSet.middleLine[row] += 1;
-//			}
-
 }
 
 void MiddleLineUpdateAll() 

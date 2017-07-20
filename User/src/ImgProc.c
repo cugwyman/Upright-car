@@ -5,12 +5,20 @@
 #include "ImgUtility.h"
 #include "DataComm.h"
 #include "uart.h"
+#include "Velocity.h"
+#include "Angle.h"
+
+extern mode MODE;
 
 #ifdef USE_BMP
 byte imgBuf[IMG_ROW][1 + IMG_COL / 8]; // Important extra 1 byte against overflow
 #else
 byte imgBuf[IMG_ROW][IMG_COL];
 #endif
+
+extern bool start_deal;
+bool onRamp;
+int32_t rampDistance;
 
 int16_t dirError;
 bool direction_control_on;
@@ -20,6 +28,7 @@ static uint8_t imgBufRow = 0;
 static uint8_t imgRealRow = 0;
 static int16_t searchForBordersStartIndex = IMG_COL / 2;
 
+static int16_t GetPresight(int32_t speed, int16_t VC_Set, float offset);
 static void ImgProcHREF(uint32_t pinxArray);
 static void ImgProcVSYN(uint32_t pinxArray);
 static void ImgProc0(void);
@@ -139,111 +148,199 @@ void ImgProc2()
 
 void ImgProc3()
 {
-    CurveSlopeUpdate(imgBufRow);
+//    CurveSlopeUpdate(imgBufRow);
     imgBufRow++;
 }
 
 void ImgProcSummary()
 {
 	static unsigned short cnt = 0;
+	static unsigned short error = 0;
 	int i;
 	    resultSet.imgProcFlag = 0;
-//		BUZZLE_ON; OutOfRoadJudge()
-//    if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight )) {
-//			while(1){
-//        MOTOR_STOP;
-//			}
-////			printf("123\n");
-//    } else {
-	BUZZLE_OFF;
+    #ifdef DynamicPreSight
+	MODE.pre_sight = Pre_Sight_Set + GetPresight(speed, MODE.VC_Set, MODE.pre_sight_offset);
+	if(MODE.pre_sight < 4)
+		MODE.pre_sight = 4;
+    #endif
+//	BUZZLE_OFF;
         if(StraightLineJudge())
         {
-			for(i=1;i<IMG_ROW;i++)
-			{
-				if(
-					(resultSet.rightBorder[i] - resultSet.leftBorder[i] > resultSet.rightBorder[i-1] - resultSet.leftBorder[i-1]) && ((Angle_Kalman - Pre_Angle_Kalman) > 10 && time > 3)
-				
-					)
-					{
-						resultSet.imgProcFlag = RAMP;
-//						BUZZLE_ON;
-						break;
-					}
-				}
-					if(i==IMG_ROW)
-					{
-						resultSet.imgProcFlag = STRAIGHT_ROAD;
-                                        ring_offset = 0;
+            for(i=40;i<IMG_ROW;i++)
+            {
+                if(((resultSet.rightBorder[i] - resultSet.leftBorder[i]) - (resultSet.rightBorder[i+1] - resultSet.leftBorder[i+1])) > 30)
+                {
+                    if((resultSet.rightBorder[IMG_ROW-1] - resultSet.leftBorder[IMG_ROW-1]) < 30 && time > 3)
+                    {
+                        resultSet.imgProcFlag = RAMP;
+                        break;
+                    }
+                }
+            }
 
-						BUZZLE_OFF;
-					}
+		if(i==IMG_ROW)
+		{
+			resultSet.imgProcFlag = STRAIGHT_ROAD;
+            ring_offset = 0;
+            ring_end_offset = 0;
+            }
         }
         #ifdef STOP
-        if(OutOfRoadJudge() || StartLineJudge(MODE.pre_sight ))
+        if(!start_deal)
         {
-				while(1)
+            if(OutOfRoadJudge())
+            {
+				cnt++;
+				if(cnt >= 1)
 				{
-					MOTOR_STOP;
-                }
-		}
+					cnt = 0;
+                    while(1)
+                    {
+                        MOTOR_STOP;
+                    }
+				}
+            }
+            if(StartLineJudge(MODE.pre_sight))
+            {
+                    while(1)
+                    {
+                        MOTOR_STOP;
+                    }
+            }
+        }
         #endif
        switch(GetRoadType())
        {
             case Ring:
-                BUZZLE_OFF;
+//                BUZZLE_ON;
                 if(!MODE.ringDir)
                     RingCompensateGoRight();
                 else
                     RingCompensateGoLeft();
 
 				resultSet.imgProcFlag = CIRCLE;
-//                if(ring_offset >= 20)
-//                        ring_offset = ring_offset;
+//                if(ringDistance < 800)
+//                {
+//                    if(ring_offset >= 12)
+//                            ring_offset = ring_offset;
+//                    else
+//                            ring_offset += 2;
+//                }
 //                else
-//                        ring_offset += 4;
-
+//                {
+//                    if(ring_offset >= 24)
+//                            ring_offset = ring_offset;
+//                    else
+//                            ring_offset += 4;
+//                }
+//                if(ringDistance < 800)
+//                {
+//                    
+//                    if(ring_offset >= 8)
+//                            ring_offset = ring_offset;
+//                    else
+//                            ring_offset += 1;
+//                }
+//                else if(ringDistance < 1400)
+//                {
+//                    
+//                    if(ring_offset >= 12)
+//                            ring_offset = ring_offset;
+//                    else
+//                            ring_offset += 2;
+//                }
+//                else
+//                {
+//                    if(ring_offset >= 20)
+//                            ring_offset = ring_offset;
+//                    else
+//                            ring_offset += 4;
+//                }
                 break;
             case RingEnd:
-                BUZZLE_ON;
-								resultSet.imgProcFlag = RINGEND;
+//                BUZZLE_OFF;
+				resultSet.imgProcFlag = RINGEND;
                 if(!MODE.ringDir)
                     RingEndCompensateFromRight();
                 else
                     RingEndCompensateFromLeft();
 
-//                if(ring_offset >= 20)
-//                        ring_offset = ring_offset;
+//                if(ringDistance < 500)
+//                {
+//                    if(ring_end_offset >= 6)
+//                            ring_end_offset = ring_end_offset;
+//                    else
+//                            ring_end_offset += 1;
+//                }
+//                else if(ringDistance < 800)
+//                {
+//                    if(ring_end_offset >= 16)
+//                            ring_end_offset = ring_end_offset;
+//                    else
+//                            ring_end_offset += 2;
+//                }
 //                else
-//                        ring_offset += 4;
+//                {
+//                    if(ring_end_offset >= 28)
+//                            ring_end_offset = ring_end_offset;
+//                    else
+//                            ring_end_offset += 4;
+//                }
+//                if(ringDistance < 800)
+//                {
+//                    if(ring_end_offset >= 12)
+//                            ring_end_offset = ring_end_offset;
+//                    else
+//                            ring_end_offset += 3;
+//                }
+//                else
+//                {
+//                    if(ring_end_offset >= 32)
+//                            ring_end_offset = ring_end_offset;
+//                    else
+//                            ring_end_offset += 5;
+//                }
                 break;
-            case LeftCurve:
-                BUZZLE_OFF;
-//                LeftCurveCompensate();
-				resultSet.imgProcFlag = LEFTCURVE;
-								                ring_offset = 0;
+//            case LeftCurve:
+//                BUZZLE_OFF;
+////                LeftCurveCompensate();
+//				resultSet.imgProcFlag = LEFTCURVE;
+//								                ring_offset = 0;
 
-                break;
-            case RightCurve:
-                BUZZLE_OFF;
-				resultSet.imgProcFlag = RIGHTCURVE;
-                            ring_offset = 0;
+//                break;
+//            case RightCurve:
+//                BUZZLE_OFF;
+//				resultSet.imgProcFlag = RIGHTCURVE;
+//                            ring_offset = 0;
 
-//                RightCurveCompensate();
-                break;
+////                RightCurveCompensate();
+//                break;
             case CrossRoad:
-                BUZZLE_OFF;
+//                BUZZLE_OFF;
                 resultSet.imgProcFlag = CROSS_ROAD;
 //                CrossRoadCompensate();
                 break;
             case LeftBarrier:
-//                BUZZLE_OFF;
+                resultSet.imgProcFlag = BARRIER;
+                LeftBarrierCompensate() ;
+//                BUZZLE_ON;
                 break;
             case RightBarrier:
-//                BUZZLE_OFF;
+                resultSet.imgProcFlag = BARRIER;
+                RightBarrierCompensate() ;
+//                BUZZLE_ON;
                 break;
             default:
-						break;
+				break;
                          
         }
 }
 
+//int16_t GetPresight(int16_t angle, int8_t mid, int8_t offset) {
+//    return angle < mid-4*offset ? -4 : angle < mid-3*offset ? -3 : angle < mid-2*offset ? -2 : angle < mid-offset ? -1 : angle < mid ? 0 :
+//        angle < mid+offset ? 1 : angle < mid+2*offset ? 2 : angle < mid+2*offset ? 3 : 4;
+//}
+int16_t GetPresight(int32_t speed, int16_t VC_Set, float offset) {
+    return speed < VC_Set-4*offset ? -3 : speed < VC_Set-3*offset ? -2 : speed < VC_Set-2*offset ? -1 : speed < VC_Set+3*offset ? 0 : speed < VC_Set+5.5*offset ? 1 : 2;
+        //speed < VC_Set+4*offset ? 1 //2 : 3;//
+}

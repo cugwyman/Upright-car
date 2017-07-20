@@ -2,30 +2,26 @@
 #define _PARAM_H
 
 //Angle
-#define AC_Set              48//42//
-#define AC_Out_MAX         38000//25000
+#define AC_Out_MAX           18000//25000
 
-#define Kalman_Sample_Time   0.0055
-#define AC_PID_P             220//200//160
-#define AC_PID_D             6//6//
-#define MMAX_ZERO            1932
-#define MMAZ_ZERO            716
+#define Kalman_Sample_Time   0.005
+#define AC_PID_P             360//360//1000//600//        520//500//
+#define AC_PID_D             42//33//8//20//45//39//           42///38////55//45//6//
 #define GYRO_ZERO_SAMPLE     1000
-#define MMA_GAIN             0.073//0.232//    //0-90°,??????z-x?max?min=2000?,90/2000????
-#define MMA_SCALE            3.178//*1.2//send to Kalman scale, end is 0.232
 
 /* Speed */
-#define VC_PID_P             122//140//90//
-#define VC_PID_I             0.3//0.3//   0.25
-#define VC_PID_D             4//20
-#define VC_Out_MAX           28000//25000
+#define VC_PID_P             50//72//120//               85//90//60//210//250//250//90//
+#define VC_PID_I             0.2//0.1//1//2//2//   0.25
+#define VC_PID_D             6//20//22//25//                   6//8//10//5//50//3//50//25
+#define VC_Out_MAX           12000//25000
 #define VC_PERIOD            4//4
 
 /* Direction */
-#define DC_PERIOD            2
+//#define DC_Out_MAX           15000//25000
+#define DC_PERIOD            2//2
 
 /* Motor */
-#define MOTOR_OUT_MAX     7500
+#define MOTOR_OUT_MAX     7800
 #define FIX_OUT           0
 
 //NVIC
@@ -38,9 +34,9 @@
 #define  PIT_PRD  5000
 
 //Camera
-#define  IMG_ABDN_ROW    19//33//50//47
+#define  IMG_ABDN_ROW    50//33//50//47
 #define  IMG_ROW_INTV    4
-#define  IMG_READ_DELAY  105 //170 for 8 nops
+#define  IMG_READ_DELAY  114 //170 for 8 nops
 
 //Image Proc Bit Map Relative
 /* byte is 8 (2^3) bits */
@@ -63,15 +59,9 @@
 #define  RIGHTCURVE     5
 #define  RINGEND        6
 #define  RAMP           7
+#define  BARRIER        8
 
 #define Left true
 #define Right false
-//Double Car Relative
-#define  ULTRA_SONIC_TIMER_CHL  HW_PIT_CH1
-#define  ULTRA_SONIC_TIMER_PRD  50000
-#define  TIMER_INIT_COUNT       2349993uL
-#define  AVG_DISTANCE_BETWEEN   100
-#define  DIFF_DISTANCE_MAX      20
-#define  OVER_TAKING            0x0001
 
 #endif

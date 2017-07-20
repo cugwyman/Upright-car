@@ -21,5 +21,7 @@ extern byte imgBuf[IMG_ROW][IMG_COL];
 extern int16_t dirError;
 extern bool direction_control_on;
 extern img_proc_struct resultSet;
+extern bool onRamp;
+extern int32_t rampDistance;
 
 #endif

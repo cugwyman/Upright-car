@@ -3,19 +3,29 @@
 #include "pit.h"
 #include "stdlib.h"
 #include "gpio.h"
+#include "stdarg.h"
+#include "stdio.h"
+#include "oledbase.h"
+#include "Joystick.h"
 
 int32_t AC_Out;
 int32_t VC_Out;
 int32_t DC_Out;
+bool speed_up_down;
+bool ring_over = false;
+
 int32_t Left_Out, Right_Out;
 float distance;
 float time;
+int8_t change;
+bool start_deal = true;
+bool crossroad_deal = true;
 
-#if defined(SINGLE_VC) || defined(VC) || defined(DC)
+//#if defined(SINGLE_VC) || defined(VC) || defined(DC)
 int32_t speed;
 int32_t preSpeed;
 
-#endif
+//#endif
 
 static void NVICInit(void);
 static void BuzzleInit(void);
@@ -26,21 +36,23 @@ static void MainProc(void);
 void MainInit() 
 {
     DelayInit();
+    DelayMs(1000);
 //    SwitchAndParamLoad();
     GearInit();    
     MotorInit();   
     CollectInit(); 
     EncoderInit();       
     DataCommInit();
-//		Oled_Init_n();
-    BuzzleInit();
+//	Oled_Init_n();
+//	JoystickInit();
+//    BuzzleInit();
     NVICInit(); 
     ImgProcInit();     
     TimerInit();
-    
+
     PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, ENABLE);
-//    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
-//    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
+    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
+    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
 }
 
 void NVICInit() 
@@ -64,91 +76,120 @@ void TimerInit()
     PIT_ITDMAConfig(PIT_CHL, kPIT_IT_TOF, DISABLE);
 }
 
+void OLEDPrintf(uint8_t x, uint8_t y, char *str, ...) {
+    static char buf[255];
+    va_list ap;
+    va_start(ap, str);
+    
+    vsprintf(buf, str, ap);
+    OLED_DispStr(x,y,buf,&tFont12);
+}
+
+void OLEDClrRow(uint8_t row) {
+    // 21 spaces
+    OLEDPrintf(0, row, "                     ");
+}
+
+
+
 void MainProc()
 {
-    static  int8_t change = 0;
-    static bool cnt = true;
 	static int16_t ring_time = 0;
     time += 0.005;
     static int32_t count = 0;
 
-    if(cnt)
+    if(start_deal)
     {
-            if(time < 1)
-                    MODE.VC_Set = 0;
-            else
+            if(time < 0.05)
             {
-                if(time >= 1 && time <= 1.050)
+                MODE.VC_Set = 0;
+                MODE.AC_Set = 0;
+            }
+            else if(time >= 0.05 )
+            {
+                    MODE.VC_Set = 48;
+                    MODE.AC_Set = AC_Set;
+                    MODE.pre_sight = 8;
+//                if(MODE.VC_Set < VC_Set)
+//                    MODE.VC_Set ++;
+//                if(MODE.AC_Set < AC_Set)
+//                    MODE.AC_Set ++;
+            #ifdef TEST_MODE
+                if(time >= 0.1)
+            #endif
+            #ifndef TEST_MODE
+                if(time >= 8)
+            #endif
+            
                 {
-                    GPIO_ITDMAConfig(CAMERA_HREF_PORT, CAMERA_HREF_PIN, kGPIO_IT_RisingEdge, ENABLE );
-                    GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, ENABLE );
-                }
-                    MODE.VC_Set = VC_Set;
-                    cnt = false;
+//                    MODE.VC_Set = VC_Set;
+//                    MODE.AC_Set = AC_Set;
+                    start_deal = false;
+                }           
             }
     }
-    dirAngleSpeed = DirGyroGet();
+    
+    Read_Acc_Gry();
+
+//    dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
-		    if( ring_time > 0 )
-				{
-						ring_time--;
-						if(MODE.VC_Set > VC_Min) 
-						{
-								MODE.VC_Set--;
-						} 
-						else if(MODE.VC_Set < VC_Min) 
-						{
-								MODE.VC_Set++;
-						}
-				}
-				else
-				{
-						if( resultSet.imgProcFlag == STRAIGHT_ROAD ) 
-						{
-								if(MODE.VC_Set < VC_Max) 
-								{
-										MODE.VC_Set++;
-								} 
-								else if(MODE.VC_Set > VC_Max) 
-								{
-										MODE.VC_Set--;
-								}
-						} else
-						 if( resultSet.imgProcFlag == CIRCLE || resultSet.imgProcFlag == RAMP) 
-						{
-								ring_time = 400;
-								if(MODE.VC_Set > VC_Min) 
-								{
-										MODE.VC_Set--;
-								} 
-								else if(MODE.VC_Set < VC_Min) 
-								{
-										MODE.VC_Set++;
-								}
-						}
-						else
-						{
-								if(MODE.VC_Set > VC_Set) 
-								{
-										MODE.VC_Set--;
-								} 
-								else if(MODE.VC_Set < VC_Set) 
-								{
-										MODE.VC_Set++;
-								}
-						}
-			  }
+	{
+//		if( resultSet.imgProcFlag == STRAIGHT_ROAD ) 
+//		{
+//				if(MODE.VC_Set < VC_Max) 
+//				{
+//						MODE.VC_Set++;
+//				} 
+//				else if(MODE.VC_Set > VC_Max) 
+//				{
+//						MODE.VC_Set--;
+//				}
+//		} else
+//		if( resultSet.imgProcFlag == CIRCLE || resultSet.imgProcFlag == inRing) //  aroundBarrier || onRamp || RINGEND ||
+//		{
+//            if(rampDistance > 88000) {
+//                rampDistance = 0;
+//                onRamp = false;
+//            }
+//				if(MODE.VC_Set > VC_Min) 
+//				{
+//						MODE.VC_Set-=2;
+//				} 
+//				else if(MODE.VC_Set < VC_Min) 
+//				{
+//						MODE.VC_Set++;
+//				}
+//		}
+//		else
+        if( resultSet.imgProcFlag == RINGEND ) //  aroundBarrier || onRamp || ||
+//        MODE.VC_Set = VC_Set;
+		{
+            ring_over = true;
+		}
+    }
     #endif
+    if(ring_over)
+    {
+		if(MODE.VC_Set > VC_Set) 
+		{
+				MODE.VC_Set--;
+		} 
+		else if(MODE.VC_Set < VC_Set) 
+		{
+				MODE.VC_Set ++;
+		}
+    }
+                
 
     #if defined(VC) || defined(DC)
         speed = EncoderGet();
-//        change = (speed - preSpeed) / (speed + 1);
+        change = (speed - preSpeed);// / (speed + 1);
 //        if(change > 10) 
 //            speed = preSpeed;
 //        if(change < -10) 
 //            speed = preSpeed;
-//        preSpeed = speed;
-	int16_t dist = speed *2.3;
+        preSpeed = speed;
+	int16_t dist = speed *3;
     if(inRing || ringEndDelay || ringInterval) {
         ringDistance += dist;
     }
@@ -158,17 +199,27 @@ void MainProc()
     if(aroundBarrier) {
         barrierDistance += dist;
     }
-
+    if(onRamp) {
+        rampDistance += dist;
+    }
+    if(crossroad_deal)
+    {
+        crossDealDistance += dist;
+        if(crossDealDistance >= 100000)
+            crossroad_deal = false;
+    }
     #endif
     #ifdef VC
-        VC_Out = 0.01 * VelocityProc(speed);
+//        VC_Out = (int32_t)(0.01 * VelocityProc(speed));
+        VC_Out = VelocityProc(speed);
     #endif
     #ifdef AC
         AC_Out = AngleProc();
-//        if(AC_Out > AC_Out_MAX)
-//            AC_Out = AC_Out_MAX;
-//        if(AC_Out < -AC_Out_MAX)
-//            AC_Out = -AC_Out_MAX;            
+
+        if(AC_Out > AC_Out_MAX)
+            AC_Out = AC_Out_MAX;
+        if(AC_Out < -AC_Out_MAX)
+            AC_Out = -AC_Out_MAX;            
     #endif
     #ifdef DC
         DC_Out = DirectionProc(speed);
@@ -182,70 +233,29 @@ void MainProc()
         else
         {
     #endif
-            if(time < 1)
+//            if(time < 0.03)
+//            {
+//                Left_Out = AC_Out - VC_Out;
+//                Right_Out = AC_Out - VC_Out;
+//            }            
+//            else
             {
-                Left_Out = AC_Out;
-                Right_Out = AC_Out;
-            }            
-            else
-            {
-                Left_Out = AC_Out - DC_Out;
-                Right_Out = AC_Out + DC_Out;
+                Left_Out = AC_Out - VC_Out + DC_Out;
+                Right_Out = AC_Out - VC_Out - DC_Out;
+//                if(time >= 2)
+//                {
+//                    if(Left_Out < 0)
+//                        Left_Out = 0;
+//                    if(Right_Out < 0)
+//                        Right_Out = 0;
+//                }
             }
             MotorOut(Left_Out, Right_Out);
+//            MotorOut(VC_Out, VC_Out);
 //            MotorOut(5000, 5000);//fan
-//            if(count < 1000)
-//            {
-//                MotorOut(5000, 5000);
-
-//            }
-//            else if(count >= 1000 && count < 2000)
-//            {
-//                MotorOut(0, 0);
-//            }
-//            else if(count == 2000)
-//            {
-//                count = 0;
-//            }
-//            count++;
     #if defined(OUT_JUDGE) || defined(RS_JUDGE)
         }
     #endif
 
-//    if(speed_control_on) {
-//        SpeedControlProc(leftSpeed, rightSpeed);
-//    }
 }
 
-//static void SwitchAndParamLoad(void) {
-//    motor_on = true;
-//    encoder_on = true;
-//    speed_control_on = true;
-//    direction_control_on = true;
-//    steer_actuator_on = true;
-//    img_trans_on = false;
-//    state_trans_on = true;
-//    mode_switch_on = false;
-//    
-//    speed_control_speed = 111;
-//    speed_control_sum_err_max = 2000;
-//    
-//    speed_control_acc_speed = 90;
-//    speed_control_dec_speed = 50;
-//    
-//    leftPid.targetValue = speed_control_speed;
-//    rightPid.targetValue = speed_control_speed;
-//    leftPid.kp = 125;
-//    leftPid.ki = 5;
-//    leftPid.kd = 10;
-//    rightPid.kp = 125;
-//    rightPid.ki = 5;
-//    rightPid.kd = 10;
-//    
-//    MODE.pre_sight = 28;
-//    
-//    direction_control_kd = 0.2;
-//    direction_control_kpj = 0.025;
-//    direction_control_kpc = 0.000133;
-//    
-//}

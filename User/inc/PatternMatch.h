@@ -14,13 +14,17 @@ void RingEndCompensateFromRight(void);
 void LeftCurveCompensate(void);
 void RightCurveCompensate(void);
 void CrossRoadCompensate(void);
-void BarrierCompensate(void);
+void LeftBarrierCompensate(void);
+void RightBarrierCompensate(void); 
 bool StartLineJudge(int16_t row);
 bool StraightLineJudge(void);
-
+bool IsCrossRoad(void);
+ 
 extern int16_t ring_offset;
+extern int16_t ring_end_offset;
 extern int32_t ringDistance;
 extern int32_t crossRoadDistance;
+extern int32_t crossDealDistance;
 extern bool inRing;
 extern bool ringEndDelay;
 extern int32_t barrierDistance;

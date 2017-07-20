@@ -38,7 +38,6 @@
 #define		OELD_D0_PIN	   6
 
 
-
 //__________________________________________________________________
 
  enum
@@ -83,6 +82,7 @@ void OLED_DrawCircle(uint16_t _usX, uint16_t _usY, uint16_t _usRadius, uint8_t _
 void OLED_DrawBMP(uint16_t _usX, uint16_t _usY, uint16_t _usHeight, uint16_t _usWidth, uint8_t *_ptr);
 void OLED_DrawWave(uint16_t _ptr, uint16_t Y);
 void OLED_Disp_Data(int x,int y,int value);
+void OLED_P6x8Str(unsigned char x,unsigned char y,unsigned char ch[]);
 
-
+extern FONT_T tFont12, tFont16;
 #endif

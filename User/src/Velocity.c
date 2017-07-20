@@ -7,76 +7,110 @@ mode MODE;
 int16_t VC_Max;
 int16_t VC_Min;
 int16_t VC_Set;
+int32_t AC_Max;
+int32_t AC_Min;
+int32_t AC_Set;
+int16_t Pre_Sight_Set;
 
 /**
  * @brief  拨码开关获取速度档位, 共4+1档速度, 于头文件Param.h中定义
  */
 void GearInit(void)
 {
+    MODE.AC_Set = 2;//无配重4;12
+//	#ifdef SLOW_DOWN
+//		MODE.mid_angle = MODE.AC_Set + 5;
+//	#endif
+//	#ifndef SLOW_DOWN
+//		MODE.mid_angle = MODE.AC_Set + 6;
+//	#endif
     MODE.VC_Set = 0;
     GPIO_QuickInit(DIP_PORT, DIP1_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP2_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP3_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP4_PIN, kGPIO_Mode_IPU);
+    if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) {MODE.ringDir = Right;}
+    else                                   {MODE.ringDir = Left;}
     if     ( !GPIO_ReadBit(DIP_PORT,DIP4_PIN) ) { Mode1();}
     else if( !GPIO_ReadBit(DIP_PORT,DIP3_PIN) ) { Mode2();}
     else if( !GPIO_ReadBit(DIP_PORT,DIP2_PIN) ) { Mode3();}
-    else if( !GPIO_ReadBit(DIP_PORT,DIP1_PIN) ) { Mode4();}
     else                                        { Mode0();}
-		VC_Max = MODE.VC_Set + 3;
-		VC_Min = MODE.VC_Set - 3;
-		VC_Set = MODE.VC_Set;
+	VC_Max = MODE.VC_Set + 2;
+	VC_Min = MODE.VC_Set - 10;
+	VC_Set = MODE.VC_Set;
+//    AC_Max = MODE.AC_Set + 6;
+//    AC_Min = MODE.AC_Set - 6;
+	AC_Set = MODE.AC_Set;
+	Pre_Sight_Set = MODE.pre_sight;
+
 }
 
-void Mode4(void)//不错good?!
-{
-    MODE.VC_Set =78;
-    MODE.pre_sight = 5;
-    MODE.Ke = 0.045;
-    MODE.Kec = 0.6;
-    MODE.Ku = 8.8;
-    MODE.ringDir = Right;
-}
 
+/*****************before*****************/
 void Mode3(void)//不错good?!
 {
-    MODE.VC_Set =75;
-    MODE.pre_sight = 5;
-    MODE.Ke = 0.045;
-    MODE.Kec = 0.6;
-    MODE.Ku = 8.4;
-    MODE.ringDir = Right;
-}
+    MODE.VC_Set = 75;
+    MODE.pre_sight = 17;
     
-void Mode2(void)//不错good?!
-{
-    MODE.VC_Set =70;
-    MODE.pre_sight = 5;
-    MODE.Ke = 0.045;
-    MODE.Kec = 0.6;
-    MODE.Ku = 8.0;
-    MODE.ringDir = Right;
+    MODE.DC_PID_P_COEF = 22;
+    MODE.DC_P_MIN = 500;
+    MODE.DC_P_MAX = 3000;
+    MODE.DC_PID_D = 46;
+    MODE.DC_Out_MAX = 2500;
+
+    MODE.pre_sight_offset = 3;
+    MODE.ring_offset = 68;
+    MODE.ring_end_offset = 38;
 }
 
-void Mode1(void)
+void Mode2(void)//712good
 {
-    MODE.VC_Set =68;
-    MODE.pre_sight = 4;
-    MODE.Ke = 0.045;
-    MODE.Kec = 0.6;
-    MODE.Ku = 7.5;
-    MODE.ringDir = Right;
+    MODE.VC_Set = 75;
+    MODE.pre_sight = 17;
+    
+    MODE.DC_PID_P_COEF = 22;
+    MODE.DC_P_MIN = 500;
+    MODE.DC_P_MAX = 3000;
+    MODE.DC_PID_D = 46;
+    MODE.DC_Out_MAX = 2500;
+
+    MODE.pre_sight_offset = 3;
+    MODE.ring_offset = 65;
+    MODE.ring_end_offset = 35;
+}
+
+void Mode1(void)// 新保底
+{
+    MODE.VC_Set = 75;
+    MODE.pre_sight = 16;
+    
+    MODE.DC_PID_P_COEF = 22;
+    MODE.DC_P_MIN = 500;
+    MODE.DC_P_MAX = 3000;
+    MODE.DC_PID_D = 45;
+    MODE.DC_Out_MAX = 2500;
+
+    MODE.pre_sight_offset = 3;
+    MODE.ring_offset = 62;
+    MODE.ring_end_offset = 32;
 }
 
 void Mode0(void)
 {
-    MODE.VC_Set =65;
-    MODE.pre_sight = 3;
-    MODE.Ke = 0.045;
-    MODE.Kec = 0.6;
-    MODE.Ku = 7;
-    MODE.ringDir = Right;
+    MODE.VC_Set = 75;
+    MODE.pre_sight = 16;
+    
+    MODE.DC_PID_P_COEF = 22;
+    MODE.DC_P_MIN = 500;
+    MODE.DC_P_MAX = 3000;
+    MODE.DC_PID_D = 45;
+    MODE.DC_Out_MAX = 2500;
+
+    MODE.pre_sight_offset = 3;
+    MODE.ring_offset = 59;
+    MODE.ring_end_offset = 29;
 }
+
 
 /**
  * @brief  速度PID闭环
@@ -130,14 +164,11 @@ int32_t VelocityProc(int32_t speed)
         count = 0;
         VC_Out_Old = VC_Out_New;
         VC_Out_New = VelocityPID(MODE.VC_Set, speed);
-//        if( VC_Out_New > VC_Out_MAX )
-//        {
-//            VC_Out_New = VC_Out_MAX;
-//        }
-//        else if( VC_Out_New < -VC_Out_MAX )
-//        {
-//            VC_Out_New = -VC_Out_MAX;
-//        }
+//        VC_Out_New = VelocityPID(30, speed);        
+        if( VC_Out_New > VC_Out_MAX )
+            VC_Out_New = VC_Out_MAX;
+        else if( VC_Out_New < -VC_Out_MAX )
+            VC_Out_New = -VC_Out_MAX;
     }
     count++;
     

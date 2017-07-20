@@ -4,6 +4,7 @@
 #include "OLED.h"
 #include "root.h"
 #include "ImgProc.h"
+#include "MainProc.h"
 
 //****************************************************************************
 //  函数名：Oled_Init_n(void)
@@ -16,6 +17,10 @@ void Oled_Init_n(void)
 	OLED_StartDraw();                            
 	OLED_ClrScr(0);
 	OLED_EndDraw();
+//	OLED_DispStr(54,24,"CUG",&tFont16);
+//	OLEDPrintf(0,0,"Welcome!");
+//	OLED_DrawCircle(64,32,30,0xff);
+//	OLED_Disp_Data(60,30,6);
 }
 
 /*oled显示信息函数_______________________*/

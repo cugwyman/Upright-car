@@ -540,11 +540,6 @@
               <FilePath>.\User\src\Angle.c</FilePath>
             </File>
             <File>
-              <FileName>CollectData.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\User\src\CollectData.c</FilePath>
-            </File>
-            <File>
               <FileName>Direction.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\src\Direction.c</FilePath>
@@ -558,6 +553,11 @@
               <FileName>Fuzzy.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\User\src\Fuzzy.c</FilePath>
+            </File>
+            <File>
+              <FileName>MPU6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\src\MPU6050.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -608,6 +608,11 @@
               <FileName>oledbase.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\Debug\src\oledbase.c</FilePath>
+            </File>
+            <File>
+              <FileName>Joystick.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\User\src\Joystick.c</FilePath>
             </File>
           </Files>
         </Group>

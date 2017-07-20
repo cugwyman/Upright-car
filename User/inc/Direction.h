@@ -11,7 +11,7 @@ extern int16_t preState;//传感器融合
 extern int32_t changeRate;
 
 //extern int32_t dirGyro;
-extern int32_t dirAngleSpeed;
+extern int16_t dirAngleSpeed;
 //extern float dirAngleSpeedIntegral;
 
 

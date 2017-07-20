@@ -211,10 +211,12 @@ float   Fuzzy(float P,float D)   /*Ä£ºýÔËËãÒýÇæ*/
 
 
 
-int32_t FUZZY_pid(int E,int EC)
-{
-//    return  Ku* MODE.VC_Set *(Fuzzy(Ke*MODE.VC_Set*E,Kec*EC));
-     reFuzzy = (Fuzzy(MODE.Ke*E,MODE.Kec*EC));
-    return  MODE.Ku* MODE.VC_Set * reFuzzy;
+//int32_t FUZZY_pid(int E,int EC)
+//{
+////    return  Ku* MODE.VC_Set *(Fuzzy(Ke*MODE.VC_Set*E,Kec*EC));
+//     reFuzzy = (Fuzzy(MODE.Ke*E,MODE.Kec*EC));
+//    #ifdef DC
+//    return  MODE.Ku* MODE.VC_Set * reFuzzy;
+//    #endif
 
-}
+//}
