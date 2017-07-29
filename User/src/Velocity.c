@@ -1,14 +1,11 @@
 #include "Velocity.h"
 #include "gpio.h"
-//#include "TrackIdentify.h"
 
 mode MODE;
 
 int16_t VC_Max;
 int16_t VC_Min;
 int16_t VC_Set;
-int32_t AC_Max;
-int32_t AC_Min;
 int32_t AC_Set;
 int16_t Pre_Sight_Set;
 
@@ -17,13 +14,7 @@ int16_t Pre_Sight_Set;
  */
 void GearInit(void)
 {
-    MODE.AC_Set = 2;//无配重4;12
-//	#ifdef SLOW_DOWN
-//		MODE.mid_angle = MODE.AC_Set + 5;
-//	#endif
-//	#ifndef SLOW_DOWN
-//		MODE.mid_angle = MODE.AC_Set + 6;
-//	#endif
+    MODE.AC_Set = 2;
     MODE.VC_Set = 0;
     GPIO_QuickInit(DIP_PORT, DIP1_PIN, kGPIO_Mode_IPU);
     GPIO_QuickInit(DIP_PORT, DIP2_PIN, kGPIO_Mode_IPU);
@@ -38,14 +29,11 @@ void GearInit(void)
 	VC_Max = MODE.VC_Set + 2;
 	VC_Min = MODE.VC_Set - 10;
 	VC_Set = MODE.VC_Set;
-//    AC_Max = MODE.AC_Set + 6;
-//    AC_Min = MODE.AC_Set - 6;
 	AC_Set = MODE.AC_Set;
 	Pre_Sight_Set = MODE.pre_sight;
-
 }
 
-void Mode3(void)//
+void Mode3(void)
 {
     MODE.VC_Set = 75;
     MODE.pre_sight = 14;
@@ -61,7 +49,7 @@ void Mode3(void)//
     MODE.ring_end_offset = 29;
 }
     
-void Mode2(void)//
+void Mode2(void)
 {
     MODE.VC_Set = 75;
     MODE.pre_sight = 16;
@@ -77,7 +65,7 @@ void Mode2(void)//
     MODE.ring_end_offset = 29;
 }
 
-void Mode1(void)//
+void Mode1(void)
 {
     MODE.VC_Set = 75;
     MODE.pre_sight = 15;
@@ -93,7 +81,7 @@ void Mode1(void)//
     MODE.ring_end_offset = 30;
 }
 
-void Mode0(void)//
+void Mode0(void)
 {
     MODE.VC_Set = 75;
     MODE.pre_sight = 14;
@@ -109,91 +97,6 @@ void Mode0(void)//
     MODE.ring_end_offset = 30;
 }
 
-/*************Switch*************/
-//void Mode3(void)//
-//{
-//    MODE.VC_Set = 78;
-//    MODE.pre_sight = 18;
-//    
-//    MODE.DC_PID_P_COEF = 23;
-//    MODE.DC_P_MIN = 500;
-//    MODE.DC_P_MAX = 3000;
-//    MODE.DC_PID_D = 45;
-//    MODE.DC_Out_MAX = 2500;
-
-//    MODE.pre_sight_offset = 3;
-//    MODE.ring_offset = 51;
-//    MODE.ring_end_offset = 29;
-//}
-//    
-//void Mode2(void)//
-//{
-//    MODE.VC_Set = 75;
-//    MODE.pre_sight = 16;
-//    
-//    MODE.DC_PID_P_COEF = 22;
-//    MODE.DC_P_MIN = 500;
-//    MODE.DC_P_MAX = 3000;
-//    MODE.DC_PID_D = 45;
-//    MODE.DC_Out_MAX = 2500;
-
-//    MODE.pre_sight_offset = 3;
-//    MODE.ring_offset = 47;
-//    MODE.ring_end_offset = 30;
-//}
-
-//void Mode1(void)//
-//{
-//    MODE.VC_Set = 70;
-//    MODE.pre_sight = 16;
-//    
-//    MODE.DC_PID_P_COEF = 20;
-//    MODE.DC_P_MIN = 500;
-//    MODE.DC_P_MAX = 3000;
-//    MODE.DC_PID_D = 43;
-//    MODE.DC_Out_MAX = 2500;
-
-//    MODE.pre_sight_offset = 2;
-//    MODE.ring_offset = 45;
-//    MODE.ring_end_offset = 31;
-//}
-
-//void Mode0(void)// 新保底
-//{
-//    MODE.VC_Set = 65;
-//    MODE.pre_sight = 15;
-//    
-//    MODE.DC_PID_P_COEF = 20;
-//    MODE.DC_P_MIN = 500;
-//    MODE.DC_P_MAX = 3000;
-//    MODE.DC_PID_D = 43;
-//    MODE.DC_Out_MAX = 2500;
-
-//    MODE.pre_sight_offset = 2;
-//    MODE.ring_offset = 42;
-//    MODE.ring_end_offset = 32;
-//}
-
-
-// 冲
-//{
-//    MODE.VC_Set = 88;
-//    MODE.pre_sight = 26;
-//    
-//    MODE.DC_PID_P_COEF = 28;
-//    MODE.DC_P_MIN = 500;
-//    MODE.DC_P_MAX = 3400;
-//    MODE.DC_PID_D = 50;
-//    MODE.DC_Out_MAX = 2500;
-
-//    MODE.pre_sight_offset = 4;
-//    MODE.ring_offset = 55;
-//    MODE.ring_end_offset = 27;
-//}
-
-
-
-
 /**
  * @brief  速度PID闭环
  * @param[in]  set 设定目标速度, 不可小于0也不应过大, 在头文件Param.h中定义为MODE.VC_Set
@@ -203,16 +106,11 @@ void Mode0(void)//
 int32_t VelocityPID(int32_t set, int32_t nextpoint) 
 {
 	float error;
-  static float lastError = 0, prevError = 0;
+    static float lastError = 0, prevError = 0;
 	float P, I, D;
 	static int32_t incpid = 0;
 
 	error = set - nextpoint;
-//    if(error > 30)
-//        error = 30;
-//    if(error < -30)
-//        error = -30;
-
 	P = VC_PID_P * ( error - lastError );
 	I = VC_PID_I * error;
 	D = VC_PID_D * ( error - 2 * lastError + prevError );
@@ -220,13 +118,9 @@ int32_t VelocityPID(int32_t set, int32_t nextpoint)
         I = 0;
     if(I < -10)
         I = 0;
-
 	prevError = lastError;
 	lastError = error;
-	 
-	incpid += P + I + D;
-//	incpid = P + I + D;
-	 
+	incpid += P + I + D;	 
 	return incpid;
 }
 
@@ -246,14 +140,12 @@ int32_t VelocityProc(int32_t speed)
         count = 0;
         VC_Out_Old = VC_Out_New;
         VC_Out_New = VelocityPID(MODE.VC_Set, speed);
-//        VC_Out_New = VelocityPID(30, speed);        
         if( VC_Out_New > VC_Out_MAX )
             VC_Out_New = VC_Out_MAX;
         else if( VC_Out_New < -VC_Out_MAX )
             VC_Out_New = -VC_Out_MAX;
     }
     count++;
-    
     VC_Out = VC_Out_Old + (VC_Out_New - VC_Out_Old) * count / VC_PERIOD;
     return VC_Out;
 }

@@ -60,7 +60,6 @@ bool OutOfRoadJudge()
             ++line;
             if(line >= 6) 
             {
-//                printf("Outside\n");
                 return true;
             }
         }
@@ -93,7 +92,6 @@ int16_t GetRoadType()
             ringDistance = 0;
             ringEndDelay = true;
             inRing = false;
-//            BUZZLE_ON;
             return RingEnd;
         } else if(ringDistance < 2200) {
             return Ring;
@@ -113,10 +111,8 @@ int16_t GetRoadType()
         } else {
             return barrierType;
         }
-    }
-    
-//    int16_t curve = WhichCurve();
-    
+    }  
+//    int16_t curve = WhichCurve();    
     return /*curve != Unknown ? curve
         : */!inRing && !ringEndDelay && !ringInterval && !inCrossRoad && IsRing() ? Ring
         : !inRing && !ringEndDelay && IsCrossRoad()  ? CrossRoad
@@ -545,12 +541,10 @@ void LeftCurveCompensate()
     for (int row_ = IMG_ROW - 1; row_ > black_pt_row; --row_)
     {
         resultSet.middleLine[row_] = 0;
-//			printf("LeftCurveCompensate111111\n");
     }
     for (int i=MODE.pre_sight; i < MODE.pre_sight+3; ++i)
     {
         resultSet.middleLine[i] =resultSet.middleLine[MODE.pre_sight]-resultSet.middleLine[MODE.pre_sight]*(i-MODE.pre_sight)/8;
-//			printf("LeftCurveCompensate222222\n");
     }
 //	for(int row=0;row<IMG_ROW;row++) 
 //  {
@@ -563,12 +557,10 @@ void RightCurveCompensate()
     for (int row_ = IMG_ROW - 1; row_ > black_pt_row; --row_)
     {
         resultSet.middleLine[row_] = IMG_COL - 1;
-//			printf("RightCurveCompensate111111\n");
     }
     for (int i=MODE.pre_sight; i < MODE.pre_sight+3; ++i)
     {
         resultSet.middleLine[i] = resultSet.middleLine[MODE.pre_sight]+(IMG_COL-1-resultSet.middleLine[MODE.pre_sight])*(i-MODE.pre_sight)/8;
-//			printf("RightCurveCompensate222222\n");
     }
 }
 
@@ -693,18 +685,12 @@ bool StartLineJudge(int16_t row)
                     toggleCnt = 0;
                     ++patternRowCnt;
                     if(patternRowCnt > 3) 
-                    {
                         return true;
-                    } 
                     else 
-                    {
                         break;
-                    }
                 } 
                 else 
-                {
                     ++toggleCnt;
-                }
             }
         }
     }

@@ -66,21 +66,11 @@ void ImgProcInit(void)
     GPIO_ITDMAConfig(CAMERA_VSYN_PORT, CAMERA_VSYN_PIN, kGPIO_IT_RisingEdge, DISABLE);
     
     GPIO_QuickInit(CAMERA_DATA_PORT, CAMERA_DATA_PIN, kGPIO_Mode_IPU);
-		GPIO_QuickInit(CAMERA_ODEV_PORT, CAMERA_ODEV_PIN, kGPIO_Mode_IPU);
+	GPIO_QuickInit(CAMERA_ODEV_PORT, CAMERA_ODEV_PIN, kGPIO_Mode_IPU);
 }
 
 void ImgProcHREF(uint32_t pinxArray) 
 {
-    //if pinxArray & (1 << CAMERA_HREF_PIN) then
-//		static bool cnt = true;
-//		static uint32_t debug_cnt = 0;
-//		if(debug_cnt > 10000)
-//    {
-//				BUZZLE_REVERSE;
-//				debug_cnt = 0;
-//		}
-//		debug_cnt++;
-
     if(imgBufRow < IMG_ROW && imgRealRow > IMG_ABDN_ROW)
     {
         imgProc[imgRealRow % IMG_ROW_INTV]();
@@ -90,15 +80,6 @@ void ImgProcHREF(uint32_t pinxArray)
 
 void ImgProcVSYN(uint32_t pinxArray) 
 {
-    //if pinxArray & (1 << CAMERA_VSYN_PIN) then
-//			static uint32_t debug_cnt = 0;
-//		if(debug_cnt > 50)
-//    {
-//				BUZZLE_REVERSE;
-//				debug_cnt = 0;
-//		}
-//		debug_cnt++;
-
     ImgProcSummary();
     imgRealRow = 0;
     imgBufRow = 0;
@@ -212,135 +193,129 @@ void ImgProcSummary()
        switch(GetRoadType())
        {
             case Ring:
-//                BUZZLE_ON;
                 if(!MODE.ringDir)
                     RingCompensateGoRight();
                 else
                     RingCompensateGoLeft();
 
 				resultSet.imgProcFlag = CIRCLE;
-//                if(ringDistance < 800)
-//                {
-//                    if(ring_offset >= 12)
-//                            ring_offset = ring_offset;
-//                    else
-//                            ring_offset += 2;
-//                }
-//                else
-//                {
-//                    if(ring_offset >= 24)
-//                            ring_offset = ring_offset;
-//                    else
-//                            ring_offset += 4;
-//                }
-//                if(ringDistance < 800)
-//                {
-//                    
-//                    if(ring_offset >= 8)
-//                            ring_offset = ring_offset;
-//                    else
-//                            ring_offset += 1;
-//                }
-//                else if(ringDistance < 1400)
-//                {
-//                    
-//                    if(ring_offset >= 12)
-//                            ring_offset = ring_offset;
-//                    else
-//                            ring_offset += 2;
-//                }
-//                else
-//                {
-//                    if(ring_offset >= 20)
-//                            ring_offset = ring_offset;
-//                    else
-//                            ring_offset += 4;
-//                }
+                /*分段offset
+                if(ringDistance < 800)
+                {
+                    if(ring_offset >= 12)
+                            ring_offset = ring_offset;
+                    else
+                            ring_offset += 2;
+                }
+                else
+                {
+                    if(ring_offset >= 24)
+                            ring_offset = ring_offset;
+                    else
+                            ring_offset += 4;
+                }
+                if(ringDistance < 800)
+                {
+                    
+                    if(ring_offset >= 8)
+                            ring_offset = ring_offset;
+                    else
+                            ring_offset += 1;
+                }
+                else if(ringDistance < 1400)
+                {
+                    
+                    if(ring_offset >= 12)
+                            ring_offset = ring_offset;
+                    else
+                            ring_offset += 2;
+                }
+                else
+                {
+                    if(ring_offset >= 20)
+                            ring_offset = ring_offset;
+                    else
+                            ring_offset += 4;
+                }   */
                 break;
             case RingEnd:
-//                BUZZLE_OFF;
 				resultSet.imgProcFlag = RINGEND;
                 if(!MODE.ringDir)
                     RingEndCompensateFromRight();
                 else
                     RingEndCompensateFromLeft();
-
-//                if(ringDistance < 500)
-//                {
-//                    if(ring_end_offset >= 6)
-//                            ring_end_offset = ring_end_offset;
-//                    else
-//                            ring_end_offset += 1;
-//                }
-//                else if(ringDistance < 800)
-//                {
-//                    if(ring_end_offset >= 16)
-//                            ring_end_offset = ring_end_offset;
-//                    else
-//                            ring_end_offset += 2;
-//                }
-//                else
-//                {
-//                    if(ring_end_offset >= 28)
-//                            ring_end_offset = ring_end_offset;
-//                    else
-//                            ring_end_offset += 4;
-//                }
-//                if(ringDistance < 800)
-//                {
-//                    if(ring_end_offset >= 12)
-//                            ring_end_offset = ring_end_offset;
-//                    else
-//                            ring_end_offset += 3;
-//                }
-//                else
-//                {
-//                    if(ring_end_offset >= 32)
-//                            ring_end_offset = ring_end_offset;
-//                    else
-//                            ring_end_offset += 5;
-//                }
+                /*分段offset
+                if(ringDistance < 500)
+                {
+                    if(ring_end_offset >= 6)
+                            ring_end_offset = ring_end_offset;
+                    else
+                            ring_end_offset += 1;
+                }
+                else if(ringDistance < 800)
+                {
+                    if(ring_end_offset >= 16)
+                            ring_end_offset = ring_end_offset;
+                    else
+                            ring_end_offset += 2;
+                }
+                else
+                {
+                    if(ring_end_offset >= 28)
+                            ring_end_offset = ring_end_offset;
+                    else
+                            ring_end_offset += 4;
+                }
+                if(ringDistance < 800)
+                {
+                    if(ring_end_offset >= 12)
+                            ring_end_offset = ring_end_offset;
+                    else
+                            ring_end_offset += 3;
+                }
+                else
+                {
+                    if(ring_end_offset >= 32)
+                            ring_end_offset = ring_end_offset;
+                    else
+                            ring_end_offset += 5;
+                }   */
                 break;
 //            case LeftCurve:
 //                BUZZLE_OFF;
-////                LeftCurveCompensate();
-//				resultSet.imgProcFlag = LEFTCURVE;
-//								                ring_offset = 0;
-
+//                LeftCurveCompensate();
+//				  resultSet.imgProcFlag = LEFTCURVE;
+//				  ring_offset = 0;
 //                break;
 //            case RightCurve:
 //                BUZZLE_OFF;
-//				resultSet.imgProcFlag = RIGHTCURVE;
-//                            ring_offset = 0;
-
-////                RightCurveCompensate();
+//				  resultSet.imgProcFlag = RIGHTCURVE;
+//                ring_offset = 0;
+//                RightCurveCompensate();
 //                break;
             case CrossRoad:
-//                BUZZLE_OFF;
                 resultSet.imgProcFlag = CROSS_ROAD;
 //                CrossRoadCompensate();
                 break;
             case LeftBarrier:
                 resultSet.imgProcFlag = BARRIER;
                 LeftBarrierCompensate() ;
-//                BUZZLE_ON;
                 break;
             case RightBarrier:
                 resultSet.imgProcFlag = BARRIER;
                 RightBarrierCompensate() ;
-//                BUZZLE_ON;
                 break;
             default:
 				break;
-                         
         }
 }
-
-//int16_t GetPresight(int16_t angle, int8_t mid, int8_t offset) {
-//    return angle < mid-4*offset ? -4 : angle < mid-3*offset ? -3 : angle < mid-2*offset ? -2 : angle < mid-offset ? -1 : angle < mid ? 0 :
-//        angle < mid+offset ? 1 : angle < mid+2*offset ? 2 : angle < mid+2*offset ? 3 : 4;
-//}
+/*角度动态前瞻
+int16_t GetPresight(int16_t angle, int8_t mid, int8_t offset) {
+    return angle < mid-4*offset ? -4 : angle < mid-3*offset ? -3 : angle < mid-2*offset ? -2 : angle < mid-offset ? -1 : angle < mid ? 0 :
+        angle < mid+offset ? 1 : angle < mid+2*offset ? 2 : angle < mid+2*offset ? 3 : 4;
+}*/
+/*速度动态前瞻*/
 int16_t GetPresight(int32_t speed, int16_t VC_Set, float offset) {
-    return speed < VC_Set-4*offset ? -3 : speed < VC_Set-3*offset ? -2 : speed < VC_Set-2*offset ? -1 : speed < VC_Set+3*offset ? 0 : speed < VC_Set+5.5*offset ? 1 : 2;
-        //speed < VC_Set+4*offset ? 1 //2 : 3;//
+    return speed < VC_Set-4*offset ? -3 : speed < VC_Set-3*offset ?  -2 : speed < VC_Set-2*offset ? -1 : 
+           speed < VC_Set+3*offset ?  0 : speed < VC_Set+5.5*offset ? 1 : 2;
 }

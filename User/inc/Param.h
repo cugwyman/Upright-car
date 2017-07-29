@@ -2,23 +2,22 @@
 #define _PARAM_H
 
 //Angle
-#define AC_Out_MAX           18000//25000
+#define AC_Out_MAX           18000
 
 #define Kalman_Sample_Time   0.005
-#define AC_PID_P             360//360//1000//600//        520//500//
-#define AC_PID_D             42//33//8//20//45//39//           42///38////55//45//6//
+#define AC_PID_P             360
+#define AC_PID_D             42
 #define GYRO_ZERO_SAMPLE     1000
 
 /* Speed */
-#define VC_PID_P             45//72//120//               85//90//60//210//250//250//90//
-#define VC_PID_I             0.2//0.1//1//2//2//   0.25
-#define VC_PID_D             10//20//22//25//                   6//8//10//5//50//3//50//25
-#define VC_Out_MAX           12000//25000
-#define VC_PERIOD            4//4
+#define VC_PID_P             45
+#define VC_PID_I             0.2
+#define VC_PID_D             10
+#define VC_Out_MAX           12000
+#define VC_PERIOD            4
 
 /* Direction */
-//#define DC_Out_MAX           15000//25000
-#define DC_PERIOD            2//2
+#define DC_PERIOD            2
 
 /* Motor */
 #define MOTOR_OUT_MAX     7800
@@ -34,7 +33,7 @@
 #define  PIT_PRD  5000
 
 //Camera
-#define  IMG_ABDN_ROW    50//33//50//47
+#define  IMG_ABDN_ROW    50
 #define  IMG_ROW_INTV    4
 #define  IMG_READ_DELAY  114 //170 for 8 nops
 

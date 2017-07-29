@@ -1,5 +1,10 @@
 #include "Fuzzy.h"
 #include "math.h" 
+
+/*
+ *  Finally, not used
+*/
+
 /*量化因子要根据经验确定一个大致的值*/
 /*调整ke,kec相当于kp,kd.至于ku的整定则可以和速度相关联*/
 //float Ke=20.0;

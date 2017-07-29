@@ -31,9 +31,6 @@
 #define  DATACOMM_IMG_TRANS_CHL     HW_UART0
 #define  DATACOMM_IMG_TRANS_BAUD    115200
 #define  DATACOMM_VISUALSCOPE_CHL   DATACOMM_IMG_TRANS_CHL
-//#define  DATACOMM_DEBUG_MAP         UART4_RX_PE25_TX_PE24 // only a place-holder, depending on hardware
-//#define  DATACOMM_DEBUG_CHL         HW_UART4
-//#define  DATACOMM_DEBUG_BAUD        115200
 
 //Camera
 #define  CAMERA_HREF_PORT  HW_GPIOD

@@ -24,12 +24,6 @@ int32_t EncoderGet(void) {
     FTM_QD_GetData(RIGHT_ENCODER_CHL, &rightSpeed, &rightDir);
     FTM_QD_ClearCount(RIGHT_ENCODER_CHL);
     
-//    StateTrans( leftSpeed , rightSpeed , speed ,  0);//lianhe
-//	printf("%d, %d\n", leftSpeed, rightSpeed);
-//    rightSpeed = -rightSpeed;
-        leftSpeed = -leftSpeed;
-
+    leftSpeed = -leftSpeed;
 	return (leftSpeed + rightSpeed) / 2;
-//    	return rightSpeed;
-
 }

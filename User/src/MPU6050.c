@@ -9,8 +9,7 @@ int16_t g_Acc_xtemp = 0, g_Acc_ztemp = 0, g_Gry_ztemp = 0, g_Gry_ytemp = 0;
 float  Angle = 0, Gyro_y = 0;
 float  acc = 0 , gry = 0;
 
-float   OutData[4] ={0};                   //
-
+float   OutData[4] ={0};
 
 //*********************************************************
 //              mpu6050初始化
@@ -82,7 +81,6 @@ void CollectInit(void)
         }
 		DelayMs(1);
     }
-
 }
 
 //*********************************************************
@@ -94,50 +92,23 @@ void Read_Acc_Gry(void)
     uint8_t acc_ztemp1 = 0,acc_ztemp2 = 0;
 	uint8_t gry_ztemp1 = 0,gry_ztemp2 = 0;//方向陀螺仪
 	uint8_t gry_ytemp1 = 0,gry_ytemp2 = 0;//角度陀螺仪
-//	int16_t Acc_xtemp = 0, Acc_ztemp = 0, Gry_ztemp = 0, Gry_ytemp = 0;
-//	uint8_t i;
-//	for( i = 0 ; i < 10 ; i++ )
-//	{
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x3B, &acc_xtemp1);       //读取高八位
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x3C, &acc_xtemp2);     //读取低八位
-		g_Acc_xtemp = ((int16_t)acc_xtemp1<<8) + (int16_t)acc_xtemp2;
-//		g_Acc_xtemp += Acc_xtemp;
-	
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x3F, &acc_ztemp1);       //读取高八位
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x40, &acc_ztemp2);     //读取低八位
-		g_Acc_ztemp = ((int16_t)acc_ztemp1<<8) + (int16_t)acc_ztemp2;
-//		g_Acc_ztemp += Acc_ztemp;
-	
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x47, &gry_ztemp1);       //读取高八位
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x48, &gry_ztemp2);     //读取低八位
-		g_Gry_ztemp = ((int16_t)gry_ztemp1<<8) + (int16_t)gry_ztemp2;
-//		g_Gry_ztemp += Gry_ztemp;
-        
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x45, &gry_ytemp1);       //读取高八位
-		I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x46, &gry_ytemp2);     //读取低八位
-		g_Gry_ytemp = ((int16_t)gry_ytemp1<<8) + (int16_t)gry_ytemp2;
-//		g_Gry_ytemp += Gry_ytemp;
-//        if(i > 0)
-//        {
-//            g_Acc_xtemp /= 2;
-//            g_Acc_ztemp /= 2;
-//            g_Gry_ztemp /= 2;
-//            g_Gry_ytemp /= 2;
-//        }
-//	}
-//    StateTrans( g_Acc_xtemp , g_Acc_ztemp , g_Gry_ztemp , g_Gry_ytemp );//lianhe
 
+    I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x3B, &acc_xtemp1);     //读取高八位
+	I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x3C, &acc_xtemp2);     //读取低八位
+	g_Acc_xtemp = ((int16_t)acc_xtemp1<<8) + (int16_t)acc_xtemp2;
+	
+	I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x3F, &acc_ztemp1);     //读取高八位
+	I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x40, &acc_ztemp2);     //读取低八位
+	g_Acc_ztemp = ((int16_t)acc_ztemp1<<8) + (int16_t)acc_ztemp2;
+
+	I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x47, &gry_ztemp1);     //读取高八位
+	I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x48, &gry_ztemp2);     //读取低八位
+	g_Gry_ztemp = ((int16_t)gry_ztemp1<<8) + (int16_t)gry_ztemp2;
+    
+	I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x45, &gry_ytemp1);     //读取高八位
+	I2C_ReadSingleRegister(HW_I2C0, 0x68, 0x46, &gry_ytemp2);     //读取低八位
+	g_Gry_ytemp = ((int16_t)gry_ytemp1<<8) + (int16_t)gry_ytemp2;
 }
-
-//*********************************************************
-//              角度融合 
-//*********************************************************
-//void AngleCalculate(void)
-//{
-//	acc = (float)g_Acc_xtemp / 182.04;
-//	gry = (float)(g_Gry_ztemp/16.4);
-//	Kalman_Filter( acc , gry);
-//}
 
 /**
  * @brief  陀螺仪采集, 用于直立环控制(需经过滤波)

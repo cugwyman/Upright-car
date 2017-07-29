@@ -18,24 +18,18 @@ float time;
 int8_t change;
 bool start_deal = true;
 bool barrier_deal = true;
-
-//#if defined(SINGLE_VC) || defined(VC) || defined(DC)
 int32_t speed;
 int32_t preSpeed;
-
-//#endif
 
 static void NVICInit(void);
 static void BuzzleInit(void);
 static void TimerInit(void);
 static void MainProc(void);
-//static void SwitchAndParamLoad(void);
 
 void MainInit() 
 {
     DelayInit();
     DelayMs(1000);
-//    SwitchAndParamLoad();
     GearInit();    
     MotorInit();   
     CollectInit(); 
@@ -43,7 +37,7 @@ void MainInit()
     DataCommInit();
 //	Oled_Init_n();
 //	JoystickInit();
-//    BuzzleInit();
+//  BuzzleInit();
     NVICInit(); 
     ImgProcInit();     
     TimerInit();
@@ -64,7 +58,7 @@ void NVICInit()
 void BuzzleInit() 
 {
     GPIO_QuickInit(BUZZLE_PORT, BUZZLE_PIN, kGPIO_Mode_OPP);//OPPø…œÏ
-		BUZZLE_OFF;
+	BUZZLE_OFF;
 }
 
 void TimerInit() 
@@ -88,8 +82,6 @@ void OLEDClrRow(uint8_t row) {
     OLEDPrintf(0, row, "                     ");
 }
 
-
-
 void MainProc()
 {
 	static int16_t ring_time = 0;
@@ -98,38 +90,27 @@ void MainProc()
 
     if(start_deal)
     {
-            if(time < 0.05)
-            {
-                MODE.VC_Set = 0;
-                MODE.AC_Set = 0;
-            }
-            else if(time >= 0.05 )
-            {
-                    MODE.VC_Set = VC_Set;
-                    MODE.AC_Set = AC_Set;
-
-//                if(MODE.VC_Set < VC_Set)
-//                    MODE.VC_Set ++;
-//                if(MODE.AC_Set < AC_Set)
-//                    MODE.AC_Set ++;
+        if(time < 0.05)
+        {
+            MODE.VC_Set = 0;
+            MODE.AC_Set = 0;
+        }
+        else if(time >= 0.05 )
+        {
+            MODE.VC_Set = VC_Set;
+            MODE.AC_Set = AC_Set;
             #ifdef TEST_MODE
-                if(time >= 0.1)
+            if(time >= 0.1)
             #endif
             #ifndef TEST_MODE
-                if(time >= 8)
+            if(time >= 8)
             #endif
-            
-                {
-//                    MODE.VC_Set = VC_Set;
-//                    MODE.AC_Set = AC_Set;
-                    start_deal = false;
-                }           
-            }
+                start_deal = false;
+        }
     }
     
     Read_Acc_Gry();
     
-//    dirAngleSpeed = DirGyroGet();
     #ifdef SLOW_DOWN
 	{
 //		if( resultSet.imgProcFlag == STRAIGHT_ROAD ) 
@@ -173,81 +154,41 @@ void MainProc()
     #endif
 
     #if defined(VC) || defined(DC)
-        speed = EncoderGet();
-        change = (speed - preSpeed);// / (speed + 1);
-//        if(change > 10) 
-//            speed = preSpeed;
-//        if(change < -10) 
-//            speed = preSpeed;
-        preSpeed = speed;
+    speed = EncoderGet();
+    change = (speed - preSpeed);
+    preSpeed = speed;
 	int16_t dist = speed *3;
-    if(inRing || ringEndDelay || ringInterval) {
+    if(inRing || ringEndDelay || ringInterval)
         ringDistance += dist;
-    }
-    if(inCrossRoad) {
+    if(inCrossRoad)
         crossRoadDistance += dist;
-    }
-    if(aroundBarrier) {
+    if(aroundBarrier)
         barrierDistance += dist;
-    }
-    if(onRamp) {
+    if(onRamp)
         rampDistance += dist;
-    }
     if(barrier_deal)
     {
         barrierDealDistance += dist;
         if(barrierDealDistance >= 100000)
             barrier_deal = false;
-
     }
     #endif
     #ifdef VC
-//        VC_Out = (int32_t)(0.01 * VelocityProc(speed));
-        VC_Out = VelocityProc(speed);
+    VC_Out = VelocityProc(speed);
     #endif
     #ifdef AC
-        AC_Out = AngleProc();
-
-        if(AC_Out > AC_Out_MAX)
-            AC_Out = AC_Out_MAX;
-        if(AC_Out < -AC_Out_MAX)
-            AC_Out = -AC_Out_MAX;            
+    AC_Out = AngleProc();
+    if(AC_Out > AC_Out_MAX)
+        AC_Out = AC_Out_MAX;
+    if(AC_Out < -AC_Out_MAX)
+        AC_Out = -AC_Out_MAX;            
     #endif
     #ifdef DC
-        DC_Out = DirectionProc(speed);
+    DC_Out = DirectionProc(speed);
     #endif
-
-    #if defined(OUT_JUDGE) || defined(RS_JUDGE)
-        if(out)
-        {
-            MOTOR_STOP;
-        }
-        else
-        {
-    #endif
-//            if(time < 0.03)
-//            {
-//                Left_Out = AC_Out - VC_Out;
-//                Right_Out = AC_Out - VC_Out;
-//            }            
-//            else
-            {
-                Left_Out = AC_Out - VC_Out + DC_Out;
-                Right_Out = AC_Out - VC_Out - DC_Out;
-//                if(time >= 2)
-//                {
-//                    if(Left_Out < 0)
-//                        Left_Out = 0;
-//                    if(Right_Out < 0)
-//                        Right_Out = 0;
-//                }
-            }
-            MotorOut(Left_Out, Right_Out);
-//            MotorOut(VC_Out, VC_Out);
-//            MotorOut(5000, 5000);//fan
-    #if defined(OUT_JUDGE) || defined(RS_JUDGE)
-        }
-    #endif
-
+    
+    Left_Out = AC_Out - VC_Out + DC_Out;
+    Right_Out = AC_Out - VC_Out - DC_Out;
+    MotorOut(Left_Out, Right_Out);
 }
 

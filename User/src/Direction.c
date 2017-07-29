@@ -37,29 +37,16 @@ static int32_t Direction_PID(int32_t dirAngleSpeed
 {
     int32_t P, D;
     int32_t incpid;
-//    int16_t absState;
 
     state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
-//    state = state * (state * state / 1250 + 2) / 10;
     if(state > 110)
 			state = 110;
     if(state < -110)
         state = -110;
-//    if(state >= 0)		
-//		absState = state;
-//	else
-//        absState = -state;
     P = DC_PID_P * state / 25 ;
-
-//        P = DC_PID_P * state * absState / 2500;    //  50 / 50
-//        P =300 * state;                            //  4000/50
-//    else 
-//				P = DC_PID_P * state * absState / 3000 + absMiddleSlope * 200;    //  50 / 50 
-		
     D = DC_PID_D * dirAngleSpeed / 100;
     
     incpid = P + D;
-    
     return incpid;
 }
 
@@ -69,9 +56,7 @@ int16_t DirectionErrorGet(int16_t* middleLine, int16_t expectMiddle)
     int32_t avgMiddle = 0;
 	for(int16_t i = MODE.pre_sight - 3; i < MODE.pre_sight + 3; i++) 
 		avgMiddle += middleLine[i];
-
     avgMiddle /= 6;
-
     return avgMiddle - expectMiddle;
 }
 
@@ -95,12 +80,8 @@ int32_t DirectionProc(int32_t speed)
     {
         count = 0;
         DC_Out_Old = DC_Out_New;
-
-                
         #ifdef DYNAMIC_DC_PID
-            DC_PID_P = MODE.DC_PID_P_COEF * speed ;//* speed;
-//            DC_PID_P = MODE.DC_PID_P_COEF * ((speed * speed) / (MODE.VC_Set * MODE.VC_Set) + 1);
-//            printf("%f\n" , DC_PID_P);
+            DC_PID_P = MODE.DC_PID_P_COEF * speed ;
             if( DC_PID_P > MODE.DC_P_MAX )
             {
                 DC_PID_P = MODE.DC_P_MAX;
@@ -110,7 +91,6 @@ int32_t DirectionProc(int32_t speed)
                 DC_PID_P = MODE.DC_P_MIN;
             }
         #endif
-                
         DC_Out_New = Direction_PID(dirAngleSpeed
                                    #ifdef DYNAMIC_DC_PID
                                    , DC_PID_P, MODE.DC_PID_D
@@ -125,21 +105,8 @@ int32_t DirectionProc(int32_t speed)
         {
             DC_Out_New = -MODE.DC_Out_MAX;
         }
-//		if(!ring_offset)
-//		state = DirectionErrorGet(resultSet.middleLine,IMG_COL / 2);
-//		if(state > 10)
-//			state -= 1;
-//		if(state < -10)
-//			state += 1;
-
-//        changeRate = (state - preState);
-//        preState = state;
-//        DC_Out_New = FUZZY_pid(state, changeRate);
-    
     }
     count++;
-
     DC_Out = DC_Out_Old + (DC_Out_New - DC_Out_Old) * count / DC_PERIOD;
-    
     return DC_Out;
 }
